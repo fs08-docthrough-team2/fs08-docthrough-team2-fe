@@ -1,0 +1,58 @@
+@use './_variable' as v;
+
+.trigger {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.5rem;
+  width: 100%;
+  padding: 0.6rem 0.75rem;
+  background-color: #ffffff;
+  border: 1px solid v.$gray-200;
+  border-radius: 4px;
+  box-shadow: 0 1px 2px rgba(15, 23, 42, 0.08);
+  cursor: pointer;
+}
+
+.trigger:hover,
+.trigger:focus-visible {
+  border-color: v.$gray-500;
+  box-shadow: 0 2px 6px rgba(15, 23, 42, 0.12);
+  outline: none;
+}
+
+.triggerActive {
+  border-color: v.$gray-500;
+}
+
+.triggerLabel {
+  color: v.$gray-400;
+  font-size: 16px;
+  font-weight: 400;
+  line-height: normal;
+  // 문자 길이가 넘어가면 ...로 표시되도록 설정
+  min-width: 0;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+// 기본 값 말고 다른게 선택되었으면 진하게
+.triggerLabelSelected {
+  color: v.$gray-900;
+}
+
+.triggerIcon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-left: 0.75rem;
+  color: v.$gray-600;
+  transition: transform 0.2s ease;
+}
+
+.triggerIconImage {
+  display: block;
+  width: 16px;
+  height: 16px;
+}

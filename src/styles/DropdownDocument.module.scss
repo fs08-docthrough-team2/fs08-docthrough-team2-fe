@@ -1,0 +1,21 @@
+@use './_variable' as v;
+@use './mixin' as m;
+
+.dropdown {
+  position: relative;
+  display: inline-flex;
+  flex-direction: column;
+  align-items: flex-start;
+  width: 100%;
+  max-width: 590px;
+  font-size: 0.95rem;
+  color: v.$gray-800;
+
+  @include m.tablet {
+    max-width: 80%;
+  }
+
+  @include m.mobile {
+    max-width: 80%;
+  }
+}
