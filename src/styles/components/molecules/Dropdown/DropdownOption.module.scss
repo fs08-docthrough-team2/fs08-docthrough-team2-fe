@@ -1,0 +1,23 @@
+@use '../../../variable' as v;
+@use '../../../mixin' as m;
+
+.dropdown {
+  position: relative;
+  display: inline-flex;
+  flex-direction: column;
+  align-items: flex-start;
+  width: 100%;
+  max-width: 140px;
+  font-size: 16px;
+  color: v.$gray-500;
+}
+
+.optionTriggerButton {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0;
+  border: none;
+  background: transparent;
+  cursor: pointer;
+}
