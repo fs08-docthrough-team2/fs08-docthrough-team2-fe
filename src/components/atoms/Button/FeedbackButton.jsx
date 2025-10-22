@@ -4,13 +4,13 @@ import feedbackButton from '/public/button/feedbackButton.svg';
 import feedbackButtonActive from '/public/button/feedbackButtonActive.svg';
 import Image from 'next/image';
 
-const FeedbackButton = ({ isActive = false }) => {
+const FeedbackButton = ({ isActive = false, onClick = () => {} }) => {
   return (
-    <button className={styles.feedbackButton}>
+    <button className={styles.feedbackButton} onClick={onClick}>
       {isActive ? (
-        <Image src={feedbackButtonActive} alt="feedback" fill sizes="100%" />
+        <Image src={feedbackButtonActive} alt="feedback" />
       ) : (
-        <Image src={feedbackButton} alt="feedback" fill sizes="100%" />
+        <Image src={feedbackButton} alt="feedback" />
       )}
     </button>
   );
