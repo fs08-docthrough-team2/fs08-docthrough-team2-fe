@@ -3,7 +3,8 @@ import { useState } from 'react';
 import EmailInput from '@/components/atoms/input/EmailInput';
 import PasswordInput from '@/components/atoms/input/PasswordInput';
 import BaseInput from '@/components/atoms/input/BaseInput';
-import SearchInput from '@/components/atoms/input/SearchInput.jsx';
+import SearchInput from '@/components/atoms/input/SearchInput';
+import TextBox from '@/components/atoms/input/TextBox';
 
 export default function ExamplePage() {
   const [email, setEmail] = useState('');
@@ -11,6 +12,7 @@ export default function ExamplePage() {
   const [confirm, setConfirm] = useState('');
   const [expire, setExpire] = useState('');
   const [keyword, setKeyword] = useState('');
+  const [feedback, setFeedback] = useState('');
 
   return (
     <main
@@ -75,6 +77,8 @@ export default function ExamplePage() {
             onChange={(e) => setKeyword(e.target.value)}
             onSearch={(v) => console.log('검색:', v)}
           />
+
+          <TextBox value={feedback} onChange={(e) => setFeedback(e.target.value)} />
         </div>
       </div>
     </main>

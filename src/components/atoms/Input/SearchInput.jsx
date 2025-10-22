@@ -1,36 +1,24 @@
 import { useState } from 'react';
-import styles from '@/styles/components/atoms/Input/SearchInput.module.scss';
+import styles from '@/styles/components/atoms/input/SearchInput.module.scss';
 
 export default function SearchInput({
-  placeholder = '챌린지 이름을 검색해보세요',
   value,
   onChange,
   onSearch,
+  placeholder = '챌린지 이름을 검색해보세요',
 }) {
-  const [keyword, setKeyword] = useState(value ?? '');
-
-  const handleKeyDown = (e) => {
-    if (e.key === 'Enter') {
-      onSearch?.(keyword.trim());
-    }
-  };
-
   return (
-    <div className={styles.inputWrap}>
-      <div className={styles.leftNode}>
-        <img src="/icons/search.svg" alt="검색" width={24} height={24} />
+    <div className={styles.siWrap}>
+      <div className={styles.siLeft}>
+        <img src="/icons/search.svg" alt="검색" width={16} height={16} />
       </div>
-
       <input
-        className={styles.input}
+        className={styles.siInput}
         type="search"
+        value={value}
         placeholder={placeholder}
-        value={keyword}
-        onChange={(e) => {
-          setKeyword(e.target.value);
-          onChange?.(e);
-        }}
-        onKeyDown={handleKeyDown}
+        onChange={onChange}
+        onKeyDown={(e) => e.key === 'Enter' && onSearch?.(value.trim())}
       />
     </div>
   );

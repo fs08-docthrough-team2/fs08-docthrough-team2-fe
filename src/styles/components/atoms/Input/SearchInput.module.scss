@@ -1,36 +1,31 @@
-.inputWrap {
+.siWrap {
   display: flex;
   align-items: center;
-  width: 375px; /* 피그마 width */
-  height: 40px; /* 피그마 height */
+  width: 375px;
+  height: 40px;
   padding: 0 16px;
   gap: 8px;
-
-  border-radius: 20px; /* 둥글게 */
+  border-radius: 20px;
   border: 1px solid #e5e5e5;
-  background: #ffffff;
-  transition: border-color 0.2s ease;
-
-  &:focus-within {
-    border-color: #9b9b9b;
-  }
+  background: #fff;
+  transition: border-color 0.2s;
 }
-
-.leftNode {
+.siWrap:focus-within {
+  border-color: #9b9b9b;
+}
+.siLeft {
   display: flex;
   align-items: center;
   justify-content: center;
 }
-
-.input {
+.siInput {
   flex: 1;
   border: none;
-  outline: none;
+  outline: 0;
   background: transparent;
   font-size: 15px;
   color: #333;
-
-  &::placeholder {
-    color: #9b9b9b;
-  }
+}
+.siInput::placeholder {
+  color: #9b9b9b;
 }

@@ -1,5 +1,5 @@
 import { useId } from 'react';
-import styles from '@/styles/components/atoms/Input/BaseInput.module.scss';
+import styles from '@/styles/components/atoms/input/BaseInput.module.scss';
 
 export default function BaseInput({
   label,

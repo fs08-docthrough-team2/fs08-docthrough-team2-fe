@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import BaseInput from './BaseInput';
-import styles from '@/styles/components/atoms/Input/BaseInput.module.scss';
+import styles from '@/styles/components/atoms/input/BaseInput.module.scss';
 
 export default function PasswordInput({
   label = '비밀번호',
