@@ -1,5 +1,5 @@
-@use './_variable' as v;
-@use './mixin' as m;
+@use '../../../variable' as v;
+@use '../../../mixin' as m;
 
 .dropdown {
   position: relative;

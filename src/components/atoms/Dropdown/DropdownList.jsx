@@ -1,5 +1,5 @@
 // Dropdown에서 항목들을 보여주는 list
-import styles from '@/styles/DropdownList.module.scss';
+import styles from '@/styles/components/atoms/Dropdown/DropdownList.module.scss';
 
 function DropdownList({ options, isOpen, onSelect }) {
   if (!isOpen) {

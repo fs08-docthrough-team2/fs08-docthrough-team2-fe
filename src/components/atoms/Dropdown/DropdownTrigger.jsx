@@ -1,7 +1,7 @@
 // Dropdown을 열기위해 누르는 trigger
 import toggleCloseIcon from '@/../public/toggle_close.svg';
 import toggleOpenIcon from '@/../public/toggle_open.svg';
-import styles from '@/styles/DropdownTrigger.module.scss';
+import styles from '@/styles/components/atoms/Dropdown/DropdownTrigger.module.scss';
 
 function DropdownTrigger({ label, isOpen, onToggle, isSelected = false }) {
   // label의 색상을 결정하기 위해 사용(default면 연하게, 선택되었으면 진하게)

@@ -4,7 +4,7 @@
 import { useState } from 'react';
 import DropdownList from '../../atoms/Dropdown/DropdownList';
 import DropdownTrigger from '../../atoms/Dropdown/DropdownTrigger';
-import styles from '@/styles/DropdownSort.module.scss';
+import styles from '@/styles/components/molecules/DropdownSort/DropdownSort.module.scss';
 
 const DROPDOWN_OPTIONS = [
   '승인 요청',

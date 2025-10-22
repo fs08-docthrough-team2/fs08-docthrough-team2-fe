@@ -4,7 +4,7 @@
 import { useState } from 'react';
 import DropdownList from '../../atoms/Dropdown/DropdownList';
 import DropdownTrigger from '../../atoms/Dropdown/DropdownTrigger';
-import styles from '@/styles/DropdownDocument.module.scss';
+import styles from '@/styles/components/molecules/DropdownDocument/DropdownDocument.module.scss';
 
 const DROPDOWN_OPTIONS = ['공식문서', '블로그'];
 const DEFAULT_LABEL = '카테고리';

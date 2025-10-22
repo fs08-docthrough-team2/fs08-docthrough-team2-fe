@@ -3,7 +3,7 @@
 
 import { useState } from 'react';
 import Tab from '../../atoms/Tab/Tab';
-import styles from '@/styles/Tabs.module.scss';
+import styles from '@/styles/components/molecules/Tabs/Tabs.module.scss';
 
 const DEFAULT_TABS = ['참여중인 챌린지', '완료한 챌린지', '신청한 챌린지'];
 
