@@ -2,20 +2,12 @@
 
 'use client';
 
-import ToggleButton from '@/components/atoms/Button/ToggleButton';
-import FeedbackButton from '@/components/atoms/Button/FeedbackButton';
-import NextButton from '@/components/atoms/Button/NextButton';
+import ChallengeContainer from '@/components/molecules/ChallengeContainer/ChallengeContainer';
 
 const UiTest = () => {
-  const handleClick = () => {
-    console.log('click');
-  };
-
   return (
-    <div>
-      <NextButton onClick={handleClick} />
-      <FeedbackButton onClick={handleClick} />
-      <FeedbackButton isActive={true} onClick={handleClick} />
+    <div style={{ backgroundColor: '#f5f5f5', minHeight: '100vh', padding: '100px' }}>
+      <ChallengeContainer />
     </div>
   );
 };
