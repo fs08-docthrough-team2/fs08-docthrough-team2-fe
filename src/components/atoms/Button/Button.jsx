@@ -1,3 +1,5 @@
+'use client';
+
 import styles from '@/styles/components/atoms/Button/Button.module.scss';
 import clsx from 'clsx';
 import Image from 'next/image';
@@ -9,7 +11,7 @@ import ic_document from '/public/icon/ic_document.svg';
 import ic_plus from '/public/icon/ic_plus.svg';
 
 /*
-variant: tonal | outline | transparent | solid
+variant: tonal | outline | transparent | solid | filled
 size: xs | sm | md | lg | pill
 icon: quit | arrowRight | click | document | plus
 */

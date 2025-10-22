@@ -153,3 +153,20 @@
     }
   }
 }
+
+.filled {
+  @include defaultBtn;
+  width: 100%;
+  border-radius: 12px;
+  border: 2px solid v.$brand-black;
+  background: v.$brand-yellow;
+  height: 40px;
+  padding: 7px 0;
+
+  .btnContent {
+    color: v.$brand-black;
+    font-size: 14px;
+    font-weight: 700;
+    line-height: 26px;
+  }
+}
