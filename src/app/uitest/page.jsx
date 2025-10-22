@@ -2,12 +2,12 @@
 
 'use client';
 
-import ChallengeContainer from '@/components/molecules/ChallengeContainer/ChallengeContainer';
+import ChallengeCard from '@/components/molecules/ChallengeCard/ChallengeCard';
 
 const UiTest = () => {
   return (
     <div style={{ backgroundColor: '#f5f5f5', minHeight: '100vh', padding: '100px' }}>
-      <ChallengeContainer />
+      <ChallengeCard />
     </div>
   );
 };

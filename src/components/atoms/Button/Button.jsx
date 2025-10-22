@@ -52,7 +52,7 @@ const Button = ({
     <div>
       <button className={className} onClick={onClick}>
         <div className={styles.btnContent}>{children}</div>
-        {icon}
+        {iconImg}
       </button>
     </div>
   );
