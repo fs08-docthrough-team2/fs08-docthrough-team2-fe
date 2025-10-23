@@ -7,6 +7,7 @@ import Button from '@/components/atoms/Button/Button';
 import { formatKoreanDate } from '@/lib/day.js';
 import TypeChip from '@/components/atoms/Chips/TypeChip';
 import CategoryChip from '@/components/atoms/Chips/CategoryChip';
+import DropdownOption from '@/components/molecules/Dropdown/DropdownOption.jsx';
 
 const ChallengeCard = ({
   isAdmin = false,
@@ -25,7 +26,7 @@ const ChallengeCard = ({
         <div className={styles.titleWrapper}>
           <div className={styles.statusWrapper}>
             <div>모집이 완료된 상태에요</div>
-            {isAdmin && <button>드롭다운</button>}
+            {isAdmin && <DropdownOption />}
           </div>
           <div className={styles.title}>{challengeName}</div>
         </div>

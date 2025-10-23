@@ -4,7 +4,6 @@
 
 import { useState } from 'react';
 import ChallengeCard from '@/components/molecules/ChallengeCard/ChallengeCard';
-import DropdownOption from '@/components/molecules/Dropdown/DropdownOption';
 
 const UiTest = () => {
   const [page, setPage] = useState(1);
