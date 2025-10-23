@@ -31,6 +31,7 @@ function DropdownOption() {
         listClassName={styles.optionList}
         listItemClassName={styles.optionListItem}
         optionClassName={styles.optionButton}
+        placement="right"
       />
     </div>
   );

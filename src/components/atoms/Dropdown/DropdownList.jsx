@@ -12,6 +12,7 @@ function DropdownList({
   getOptionClassName,
   showDivider = true,
   variant = 'dropdown',
+  placement = 'stretch',
 }) {
   if (!isOpen) {
     return null;
@@ -23,8 +24,24 @@ function DropdownList({
     }
   };
 
+  const placementClassName =
+    variant === 'dropdown'
+      ? ({
+          stretch: styles.listStretch,
+          left: styles.listAlignLeft,
+          right: styles.listAlignRight,
+        }[placement] ?? styles.listStretch)
+      : null;
+
   return (
-    <ul className={clsx(styles.list, variant === 'inline' && styles.listInline, listClassName)}>
+    <ul
+      className={clsx(
+        styles.list,
+        variant === 'inline' && styles.listInline,
+        placementClassName,
+        listClassName,
+      )}
+    >
       {options.map((option) => (
         <li
           key={option}
