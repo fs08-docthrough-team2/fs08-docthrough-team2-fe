@@ -4,7 +4,6 @@
 
 import { useState } from 'react';
 import ChallengeCard from '@/components/molecules/ChallengeCard/ChallengeCard';
-import CardStatusChip from '@/components/atoms/Chips/CardStatusChip';
 
 const UiTest = () => {
   const [page, setPage] = useState(1);
@@ -12,9 +11,7 @@ const UiTest = () => {
 
   return (
     <div style={{ backgroundColor: '#f5f5f5', minHeight: '100vh', padding: '100px' }}>
-      {/* <ChallengeCard isAdmin={true} /> */}
-      <CardStatusChip status="isCompleted" />
-      <CardStatusChip status="isClosed" />
+      <ChallengeCard isAdmin={true} />
     </div>
   );
 };

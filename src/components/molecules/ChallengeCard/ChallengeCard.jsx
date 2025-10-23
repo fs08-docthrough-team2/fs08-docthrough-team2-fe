@@ -3,12 +3,23 @@ import Image from 'next/image';
 import stroke_lg from '/public/stroke_lg.svg';
 import ic_deadline from '/public/icon/ic_deadline.svg';
 import ic_person from '/public/icon/ic_person.svg';
-import Button from '@/components/atoms/Button/Button';
+import Button from '@/components/atoms/Button/Button.jsx';
 import { formatKoreanDate } from '@/lib/day.js';
-import TypeChip from '@/components/atoms/Chips/TypeChip';
-import CategoryChip from '@/components/atoms/Chips/CategoryChip';
+import TypeChip from '@/components/atoms/Chips/TypeChip.jsx';
+import CategoryChip from '@/components/atoms/Chips/CategoryChip.jsx';
 import DropdownOption from '@/components/molecules/Dropdown/DropdownOption.jsx';
+import CardStatusChip from '@/components/atoms/Chips/CardStatusChip.jsx';
 
+/*
+isAdmin: 어드민 여부
+dueDate: 챌린지 마감일
+total: 챌린지 총 인원
+capacity: 챌린지 참여 가능 인원
+challengeName: 챌린지 이름
+type: 챌린지 타입
+category: 챌린지 카테고리
+status: 챌린지 상태
+*/
 const ChallengeCard = ({
   isAdmin = false,
   dueDate = '2025-10-22T08:30:00.000Z',
@@ -17,6 +28,7 @@ const ChallengeCard = ({
   challengeName = 'Next.js - App Router: Routing Fundamentals',
   type = 'Next.js',
   category = '공식문서',
+  status = 'isCompleted',
 }) => {
   const formattedDueDate = formatKoreanDate(dueDate);
 
@@ -25,7 +37,7 @@ const ChallengeCard = ({
       <div className={styles.contentWrapper}>
         <div className={styles.titleWrapper}>
           <div className={styles.statusWrapper}>
-            <div>모집이 완료된 상태에요</div>
+            <CardStatusChip status={status} />
             {isAdmin && <DropdownOption />}
           </div>
           <div className={styles.title}>{challengeName}</div>
