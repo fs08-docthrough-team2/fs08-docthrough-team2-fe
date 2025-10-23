@@ -9,6 +9,5 @@ dayjs.tz.setDefault('Asia/Seoul');
 
 export const formatKoreanDate = (dateString) => {
   const date = dayjs.tz(dateString).format('YYYY년 MM월 DD일');
-  console.log(date);
   return date;
 };
