@@ -4,7 +4,6 @@
   position: absolute;
   top: calc(100% + 0.4rem);
   left: 0;
-  right: 0;
   z-index: 10;
   margin: 0;
   padding: 0.35rem 0;
@@ -13,6 +12,21 @@
   border: 1px solid v.$gray-200;
   border-radius: 4px;
   box-shadow: 0 10px 25px rgba(15, 23, 42, 0.12);
+  min-width: 100%;
+}
+
+.listStretch {
+  right: 0;
+  width: 100%;
+}
+
+.listAlignLeft {
+  right: auto;
+}
+
+.listAlignRight {
+  left: auto;
+  right: 0;
 }
 
 .listInline {
@@ -47,6 +61,7 @@
   text-align: center;
   font-size: 0.9rem;
   cursor: pointer;
+  white-space: nowrap;
 }
 
 .option:hover,
