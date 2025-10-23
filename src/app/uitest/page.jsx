@@ -3,7 +3,8 @@
 'use client';
 
 import { useState } from 'react';
-import Pagination from '@/components/molecules/Pagination/Pagination';
+import ChallengeCard from '@/components/molecules/ChallengeCard/ChallengeCard';
+import DropdownOption from '@/components/molecules/Dropdown/DropdownOption';
 
 const UiTest = () => {
   const [page, setPage] = useState(1);
@@ -11,7 +12,7 @@ const UiTest = () => {
 
   return (
     <div style={{ backgroundColor: '#f5f5f5', minHeight: '100vh', padding: '100px' }}>
-      <Pagination currentPage={page} totalPages={totalPages} onPageChange={setPage} />
+      <ChallengeCard isAdmin={true} />
     </div>
   );
 };
