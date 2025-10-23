@@ -8,13 +8,34 @@
   z-index: 10;
   margin: 0;
   padding: 0.35rem 0;
-  background-color: #ffffff;
+  list-style: none;
+  background-color: v.$white;
   border: 1px solid v.$gray-200;
   border-radius: 4px;
   box-shadow: 0 10px 25px rgba(15, 23, 42, 0.12);
 }
 
-.listItem + .listItem {
+.listInline {
+  position: static;
+  top: auto;
+  left: auto;
+  right: auto;
+  z-index: auto;
+  width: 100%;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  background-color: transparent;
+  border: none;
+  border-radius: 0;
+  box-shadow: none;
+}
+
+.listItem {
+  margin: 0;
+}
+
+.listItemDivider + .listItemDivider {
   border-top: 1px solid v.$gray-100;
 }
 
