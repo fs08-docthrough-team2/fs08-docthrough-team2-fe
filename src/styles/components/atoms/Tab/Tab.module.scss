@@ -1,0 +1,31 @@
+@use '../../../variable' as v;
+
+.tab {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0.5rem 1rem;
+  font-size: 1rem;
+  font-weight: 500;
+  color: v.$gray-500;
+  background: none;
+  border: none;
+  border-bottom: 2px solid transparent;
+  cursor: pointer;
+  transition:
+    color 0.2s ease,
+    border-color 0.2s ease;
+}
+
+.tab:hover,
+.tab:focus-visible {
+  color: v.$gray-700;
+  outline: none;
+}
+
+// 활성화된 tab은 색을 진하게 + 아래에 밑줄 진하게 생성
+.tabActive {
+  color: v.$gray-800;
+  border-bottom-color: #000000;
+  border-bottom-width: 3px;
+}

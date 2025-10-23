@@ -1,0 +1,14 @@
+@use '../../../variable' as v;
+
+.wrapper {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+.tabs {
+  display: flex;
+  align-items: flex-end;
+  gap: 0.5rem;
+  border-bottom: 1px solid v.$gray-200;
+}
