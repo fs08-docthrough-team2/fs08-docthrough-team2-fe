@@ -5,6 +5,8 @@ import ic_deadline from '/public/icon/ic_deadline.svg';
 import ic_person from '/public/icon/ic_person.svg';
 import Button from '@/components/atoms/Button/Button';
 import { formatKoreanDate } from '@/lib/day.js';
+import TypeChip from '@/components/atoms/Chips/TypeChip';
+import CategoryChip from '@/components/atoms/Chips/CategoryChip';
 
 const ChallengeCard = ({
   isAdmin = false,
@@ -12,6 +14,8 @@ const ChallengeCard = ({
   total = 15,
   capacity = 15,
   challengeName = 'Next.js - App Router: Routing Fundamentals',
+  type = 'Next.js',
+  category = '공식문서',
 }) => {
   const formattedDueDate = formatKoreanDate(dueDate);
 
@@ -26,8 +30,8 @@ const ChallengeCard = ({
           <div className={styles.title}>{challengeName}</div>
         </div>
         <div className={styles.chipWrapper}>
-          <div>Next.js</div>
-          <div>공식문서</div>
+          <TypeChip label={type} color="green" />
+          <CategoryChip label={category} />
         </div>
       </div>
       <Image className={styles.stroke} src={stroke_lg} alt="stroke" />
