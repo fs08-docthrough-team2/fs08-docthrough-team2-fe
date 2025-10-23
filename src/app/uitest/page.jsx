@@ -2,12 +2,16 @@
 
 'use client';
 
-import ChallengeCard from '@/components/molecules/ChallengeCard/ChallengeCard';
+import { useState } from 'react';
+import Pagination from '@/components/molecules/Pagination/Pagination';
 
 const UiTest = () => {
+  const [page, setPage] = useState(1);
+  const totalPages = 10;
+
   return (
     <div style={{ backgroundColor: '#f5f5f5', minHeight: '100vh', padding: '100px' }}>
-      <ChallengeCard />
+      <Pagination currentPage={page} totalPages={totalPages} onPageChange={setPage} />
     </div>
   );
 };

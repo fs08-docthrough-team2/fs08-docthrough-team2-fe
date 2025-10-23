@@ -1,0 +1,44 @@
+@use '@/styles/mixin' as m;
+@use '@/styles/variable' as v;
+
+.pagination {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: center;
+  gap: 12px;
+}
+
+.pageNumbers {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+}
+
+.button {
+  @include m.reset-button;
+  display: flex;
+  width: 40px;
+  height: 40px;
+  padding: 11.5px 16.5px;
+  justify-content: center;
+  align-items: center;
+  gap: 10px;
+
+  color: v.$gray-400;
+  font-size: 14px;
+  font-weight: 500;
+  line-height: normal;
+
+  &.active {
+    border-radius: 8px;
+    background: v.$gray-800;
+
+    color: v.$brand-yellow;
+    font-size: 14px;
+    font-weight: 500;
+    line-height: normal;
+  }
+}
