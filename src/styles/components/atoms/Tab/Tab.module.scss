@@ -26,6 +26,6 @@
 // 활성화된 tab은 색을 진하게 + 아래에 밑줄 진하게 생성
 .tabActive {
   color: v.$gray-800;
-  border-bottom-color: #000000;
+  border-bottom-color: v.$black;
   border-bottom-width: 3px;
 }
