@@ -8,6 +8,7 @@ import TextBox from '@/components/atoms/input/TextBox';
 import TypeChip from '@/components/atoms/chips/TypeChip';
 import CategoryChip from '@/components/atoms/chips/CategoryChip';
 import StatusChip from '@/components/atoms/chips/StatusChip';
+import DateInput from '@/components/atoms/input/DateInput';
 
 export default function ExamplePage() {
   const [email, setEmail] = useState('');
@@ -46,14 +47,7 @@ export default function ExamplePage() {
             onChange={(e) => setEmail(e.target.value)}
           />
 
-          <BaseInput
-            label="마감 기한"
-            placeholder="YY/MM/DD"
-            value={expire}
-            onChange={(e) => setExpire(e.target.value)}
-            type="date"
-            rightNode={<img src="/icons/calendar.svg" alt="" width={32} height={32} />}
-          />
+          <DateInput label="마감 기한" value={expire} onChange={(e) => setExpire(e.target.value)} />
         </div>
 
         {/*  오른쪽 열 */}

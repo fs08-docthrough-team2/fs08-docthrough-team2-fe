@@ -49,6 +49,14 @@
   width: 32px;
   height: 32px;
 
+  &:focus,
+  &:focus-visible,
+  &:active {
+    outline: 0;
+    box-shadow: none;
+    background: transparent;
+  }
+
   img {
     width: 32px;
     height: 32px;
