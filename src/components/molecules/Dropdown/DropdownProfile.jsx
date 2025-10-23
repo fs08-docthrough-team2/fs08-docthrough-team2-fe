@@ -27,7 +27,7 @@ const PROFILE_CONFIG = {
       height: 32,
     },
     userInfo: {
-      name: '어드민 체다치즈',
+      name: '어드민 체다asdfasdfasd치즈',
     },
     options: ['로그아웃'],
   },
@@ -39,7 +39,7 @@ const ROLE_LABEL_BY_TYPE = {
   specialist: '전문가',
 };
 
-function DropdownProfile({ userType = 'user', options, userInfo, onSelect }) {
+function DropdownProfile({ userType = 'specialist', options, userInfo, onSelect }) {
   const [isOpen, setIsOpen] = useState(false);
 
   const baseConfig = PROFILE_CONFIG[userType] ?? PROFILE_CONFIG.user;

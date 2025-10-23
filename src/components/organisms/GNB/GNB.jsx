@@ -3,6 +3,7 @@ import Link from 'next/link';
 import Image from 'next/image';
 import styles from '@/styles/components/organisms/GNB/GNB.module.scss';
 import Button from '@/components/atoms/Button/Button';
+import DropdownProfile from '@/components/molecules/Dropdown/DropdownProfile';
 
 // 사용자 유형 임시 설정 -> ERD 참고해서 변경
 const USER_TYPES = {
@@ -50,30 +51,12 @@ const GNB = ({ userType = USER_TYPES.GUEST, onLogin }) => {
                   className={styles.notificationImage}
                 />
               </div>
-              <div className={styles.iconWrapper}>
-                <Image
-                  src="/image/img_profile_user.svg"
-                  alt="유저 프로필"
-                  width={32}
-                  height={32}
-                  className={styles.profileImage}
-                />
-              </div>
+              <DropdownProfile userType={USER_TYPES.USER} />
             </>
           )}
 
           {/* 3. admin 로그인 */}
-          {userType === USER_TYPES.ADMIN && (
-            <div className={styles.iconWrapper}>
-              <Image
-                src="/image/img_profile_admin.svg"
-                alt="관리자 프로필"
-                width={32}
-                height={32}
-                className={styles.profileImage}
-              />
-            </div>
-          )}
+          {userType === USER_TYPES.ADMIN && <DropdownProfile userType={USER_TYPES.ADMIN} />}
         </nav>
       </div>
     </header>

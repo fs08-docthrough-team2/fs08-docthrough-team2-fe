@@ -27,12 +27,13 @@
 .profileMenu {
   position: absolute;
   top: calc(100% + 0.4rem);
-  left: 0;
+  left: auto;
+  right: 0;
   z-index: 10;
   display: flex;
   flex-direction: column;
   align-items: stretch;
-  width: 100%;
+  width: 152px;
   margin: 0;
   padding: 0;
   background: v.$white;
@@ -53,16 +54,22 @@
 }
 
 .headerText {
+  min-width: 0;
   display: flex;
   flex-direction: column;
   align-items: flex-start;
+  flex: 1;
 }
 
 .headerName {
+  display: block;
   color: v.$gray-800;
   font-size: 14px;
   font-weight: 500;
   white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  max-width: 100%;
 }
 
 .headerRole {
