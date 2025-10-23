@@ -6,6 +6,8 @@ import BaseInput from '@/components/atoms/input/BaseInput';
 import SearchInput from '@/components/atoms/input/SearchInput';
 import TextBox from '@/components/atoms/input/TextBox';
 import TypeChip from '@/components/atoms/chips/TypeChip';
+import CategoryChip from '@/components/atoms/chips/CategoryChip';
+import StatusChip from '@/components/atoms/chips/StatusChip';
 
 export default function ExamplePage() {
   const [email, setEmail] = useState('');
@@ -97,6 +99,20 @@ export default function ExamplePage() {
             <TypeChip label="Career" color="blue" />
             <TypeChip label="Modern JS" color="red" />
             <TypeChip label="Web" color="yellow" />
+          </div>
+
+          <h2>Category Chip</h2>
+          <div style={{ display: 'flex', flexDirection: 'column', gap: '8px' }}>
+            <CategoryChip label="블로그" />
+            <CategoryChip label="공식문서" />
+          </div>
+
+          <h2>Status Chip</h2>
+          <div style={{ display: 'flex', flexDirection: 'column', gap: '8px' }}>
+            <StatusChip label="승인 대기" type="pending" />
+            <StatusChip label="신청 거절" type="rejected" />
+            <StatusChip label="신청 승인" type="approved" />
+            <StatusChip label="챌린지 삭제" type="deleted" />
           </div>
         </section>
       </div>
