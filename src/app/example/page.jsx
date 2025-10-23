@@ -5,6 +5,7 @@ import PasswordInput from '@/components/atoms/input/PasswordInput';
 import BaseInput from '@/components/atoms/input/BaseInput';
 import SearchInput from '@/components/atoms/input/SearchInput';
 import TextBox from '@/components/atoms/input/TextBox';
+import TypeChip from '@/components/atoms/chips/TypeChip';
 
 export default function ExamplePage() {
   const [email, setEmail] = useState('');
@@ -14,6 +15,7 @@ export default function ExamplePage() {
   const [keyword, setKeyword] = useState('');
   const [feedback, setFeedback] = useState('');
 
+  /* 인풋 테스트 */
   return (
     <main
       style={{
@@ -49,7 +51,7 @@ export default function ExamplePage() {
             value={expire}
             onChange={(e) => setExpire(e.target.value)}
             type="date"
-            rightNode={<span aria-hidden="true"></span>}
+            rightNode={<img src="/icons/calendar.svg" alt="" width={32} height={32} />}
           />
         </div>
 
@@ -80,6 +82,18 @@ export default function ExamplePage() {
 
           <TextBox value={feedback} onChange={(e) => setFeedback(e.target.value)} />
         </div>
+
+        {/* 🔸 칩 테스트 */}
+        <section>
+          <h2>Chip Components</h2>
+          <div style={{ display: 'flex', flexDirection: 'column', gap: '8px' }}>
+            <TypeChip label="Next.js" color="green" />
+            <TypeChip label="API" color="orange" />
+            <TypeChip label="Career" color="blue" />
+            <TypeChip label="Modern JS" color="red" />
+            <TypeChip label="Web" color="yellow" />
+          </div>
+        </section>
       </div>
     </main>
   );

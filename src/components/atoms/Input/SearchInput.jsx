@@ -10,7 +10,7 @@ export default function SearchInput({
   return (
     <div className={styles.siWrap}>
       <div className={styles.siLeft}>
-        <img src="/icons/search.svg" alt="검색" width={16} height={16} />
+        <img src="/icons/search.svg" alt="검색" width={24} height={24} />
       </div>
       <input
         className={styles.siInput}
