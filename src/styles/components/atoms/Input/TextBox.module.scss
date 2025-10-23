@@ -1,49 +1,37 @@
-.tbWrap {
-  box-sizing: border-box;
-  width: 100%;
-  max-width: 794px;
-  min-height: 89px;
-  padding: 16px;
-  border-radius: 12px;
-  border: 1px solid #e5e5e5;
-  background: #fff;
-  position: relative;
-
+.textBox {
   display: flex;
-  flex-direction: column;
+  width: 100%;
+  max-width: 100%;
+  flex: 1;
+  height: 89px;
+  padding: 16px;
+  align-items: flex-start;
+  gap: 10px;
+  flex-shrink: 0;
+  border-radius: 12px;
+  border: 1px solid var(--gray-200, #e5e5e5);
+  background: #fff;
+  box-sizing: border-box;
+  overflow: hidden;
 }
 
-.tbArea {
-  box-sizing: border-box;
+.field {
+  flex: 1 1 auto;
   width: 100%;
-  flex: 1;
+  height: 89px;
+  border: 0;
+  outline: 0;
   resize: none;
-  border: none;
-  outline: none;
-  padding: 0;
-  margin: 0;
   background: transparent;
-
-  font-size: 15px;
-  line-height: 1.5;
-  color: #333;
-  font-family: inherit;
+  color: var(--text, #a3a3a3);
+  font-family: Pretendard;
+  font-size: 16px;
+  font-weight: 500;
+  line-height: normal;
+  box-sizing: border-box;
+  overflow-y: auto;
 
   &::placeholder {
-    color: #9b9b9b;
+    color: rgba(0, 0, 0, 0.35);
   }
-
-  &::-webkit-scrollbar {
-    width: 0;
-    height: 0;
-  }
-}
-
-/* 글자 수 카운트 */
-.tbCount {
-  position: absolute;
-  right: 12px;
-  bottom: 8px;
-  font-size: 12px;
-  color: #9b9b9b;
 }

@@ -13,9 +13,8 @@ export default function ExamplePage() {
   const [confirm, setConfirm] = useState('');
   const [expire, setExpire] = useState('');
   const [keyword, setKeyword] = useState('');
-  const [feedback, setFeedback] = useState('');
+  const [text, setText] = useState('');
 
-  /* 인풋 테스트 */
   return (
     <main
       style={{
@@ -29,14 +28,14 @@ export default function ExamplePage() {
       <div
         style={{
           display: 'grid',
-          gridTemplateColumns: '1fr 1fr',
+          gridTemplateColumns: '1fr 1fr', // ✅ 2열
           gap: '40px',
           background: '#2f2f2f',
           padding: '40px',
           width: '900px',
         }}
       >
-        {/* ✅ 왼쪽: 이메일 + 날짜 */}
+        {/*  왼쪽 열 */}
         <div style={{ display: 'flex', flexDirection: 'column', gap: '24px' }}>
           <EmailInput
             label="이메일"
@@ -55,7 +54,7 @@ export default function ExamplePage() {
           />
         </div>
 
-        {/* ✅ 오른쪽: 비밀번호 */}
+        {/*  오른쪽 열 */}
         <div style={{ display: 'flex', flexDirection: 'column', gap: '24px' }}>
           <PasswordInput
             label="비밀번호"
@@ -79,11 +78,17 @@ export default function ExamplePage() {
             onChange={(e) => setKeyword(e.target.value)}
             onSearch={(v) => console.log('검색:', v)}
           />
-
-          <TextBox value={feedback} onChange={(e) => setFeedback(e.target.value)} />
         </div>
 
-        {/* 🔸 칩 테스트 */}
+        <div style={{ gridColumn: '1 / -1', width: '100%' }}>
+          <TextBox
+            value={text}
+            onChange={(e) => setText(e.target.value)}
+            placeholder="피드백을 남겨주세요"
+          />
+        </div>
+
+        {/*  칩 테스트  */}
         <section>
           <h2>Chip Components</h2>
           <div style={{ display: 'flex', flexDirection: 'column', gap: '8px' }}>

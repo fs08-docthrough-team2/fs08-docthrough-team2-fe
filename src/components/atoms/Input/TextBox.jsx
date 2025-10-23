@@ -1,23 +1,29 @@
+import clsx from 'clsx';
 import styles from '@/styles/components/atoms/input/TextBox.module.scss';
 
 export default function TextBox({
   value,
   onChange,
-  maxLength = 300,
   placeholder = '피드백을 남겨주세요',
+  className,
+  disabled = false,
+  readOnly = false,
+  name,
+  id,
 }) {
   return (
-    <div className={styles.tbWrap}>
+    <label className={clsx(styles.textBox, className)}>
       <textarea
-        className={styles.tbArea}
+        id={id}
+        name={name}
+        className={styles.field}
         value={value}
         onChange={onChange}
         placeholder={placeholder}
-        maxLength={maxLength}
+        disabled={disabled}
+        readOnly={readOnly}
+        rows={3}
       />
-      <span className={styles.tbCount}>
-        {value.length}/{maxLength}
-      </span>
-    </div>
+    </label>
   );
 }
