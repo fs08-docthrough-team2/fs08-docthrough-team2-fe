@@ -1,0 +1,43 @@
+.chip {
+  display: inline-flex;
+  width: max-content;
+  flex: 0 0 auto;
+  align-items: center;
+  align-self: flex-start;
+  white-space: nowrap;
+  justify-content: center;
+  padding: 3px 12px;
+  border-radius: 8px;
+  font-feature-settings:
+    'liga' off,
+    'clig' off;
+  font-family: Quantico;
+  font-weight: 700;
+  font-size: 14px;
+  color: #fff; /* 공통 텍스트 컬러 */
+  line-height: 1.2;
+  text-align: center;
+  user-select: none;
+  color: #525252;
+}
+
+/* 색상 팔레트 (피그마 기준) */
+.green {
+  background: #79e16a; /* Next.js */
+}
+
+.orange {
+  background: #ff905e; /* API */
+}
+
+.blue {
+  background: #7eb2ee; /* Career */
+}
+
+.red {
+  background: #f66e6b; /* Modern JS */
+}
+
+.yellow {
+  background: #f7ea5d; /* Web */
+}

@@ -1,0 +1,31 @@
+.siWrap {
+  display: flex;
+  align-items: center;
+  width: 375px;
+  height: 40px;
+  padding: 0 16px;
+  gap: 8px;
+  border-radius: 20px;
+  border: 1px solid #e5e5e5;
+  background: #fff;
+  transition: border-color 0.2s;
+}
+.siWrap:focus-within {
+  border-color: #9b9b9b;
+}
+.siLeft {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.siInput {
+  flex: 1;
+  border: none;
+  outline: 0;
+  background: transparent;
+  font-size: 15px;
+  color: #333;
+}
+.siInput::placeholder {
+  color: #9b9b9b;
+}
