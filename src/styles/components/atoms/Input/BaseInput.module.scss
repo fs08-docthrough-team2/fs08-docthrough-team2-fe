@@ -1,3 +1,5 @@
+@use '@/styles/variable' as v;
+
 .field {
   display: flex;
   flex-direction: column;
@@ -5,8 +7,10 @@
 }
 
 .label {
+  color: v.$gray-900;
   font-size: 14px;
-  color: #171717;
+  font-weight: 500;
+  line-height: normal;
 }
 
 .inputWrap {

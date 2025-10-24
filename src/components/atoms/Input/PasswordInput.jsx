@@ -1,3 +1,5 @@
+'use client';
+
 import { useState } from 'react';
 import BaseInput from './BaseInput';
 import styles from '@/styles/components/atoms/input/BaseInput.module.scss';

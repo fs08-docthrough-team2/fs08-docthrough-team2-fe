@@ -57,3 +57,8 @@
     @content;
   }
 }
+
+@mixin margin-auto($width: 100%) {
+  width: $width;
+  margin: 0 auto;
+}
