@@ -8,8 +8,7 @@ import {
   isValidateNickname,
   isValidatePassword,
   isValidateConfirmPassword,
-} from '@/lib/validator.js';
-import api from '@/lib/api.js';
+} from '@/libs/validator.js';
 import { useRouter } from 'next/navigation';
 
 import img_logo from '/public/image/img_logo.svg';
@@ -19,6 +18,7 @@ import Button from '@/components/atoms/Button/Button.jsx';
 import AuthEntry from '@/components/atoms/AuthEntry/AuthEntry.jsx';
 import GoogleButton from '@/components/atoms/Button/GoogleButton.jsx';
 import BaseInput from '@/components/atoms/Input/BaseInput.jsx';
+import { useSignupMutation } from '@/hooks/mutations/useSignupMutation';
 
 export default function SignupPage() {
   const router = useRouter();
@@ -28,6 +28,14 @@ export default function SignupPage() {
     nickname: '',
     password: '',
     confirmPassword: '',
+  });
+
+  const {
+    mutate: signupMutation,
+    isPending,
+    error,
+  } = useSignupMutation(() => {
+    router.push('/auth/login');
   });
 
   const handleChange = (e) => {
@@ -47,15 +55,7 @@ export default function SignupPage() {
       alert('유효하지 않은 입력입니다.');
       return;
     }
-
-    try {
-      const response = await api.post('/auth/signup', { email, nickname, password });
-      if (response.status === 200) {
-        router.push('/auth/login');
-      }
-    } catch (error) {
-      console.error(error);
-    }
+    signupMutation(form);
   };
 
   return (

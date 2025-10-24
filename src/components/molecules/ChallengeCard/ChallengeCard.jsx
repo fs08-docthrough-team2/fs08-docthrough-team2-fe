@@ -4,7 +4,7 @@ import stroke_lg from '/public/stroke_lg.svg';
 import ic_deadline from '/public/icon/ic_deadline.svg';
 import ic_person from '/public/icon/ic_person.svg';
 import Button from '@/components/atoms/Button/Button.jsx';
-import { formatKoreanDate } from '@/lib/day.js';
+import { formatKoreanDate } from '@/libs/day.js';
 import TypeChip from '@/components/atoms/Chips/TypeChip.jsx';
 import CategoryChip from '@/components/atoms/Chips/CategoryChip.jsx';
 import DropdownOption from '@/components/molecules/Dropdown/DropdownOption.jsx';
