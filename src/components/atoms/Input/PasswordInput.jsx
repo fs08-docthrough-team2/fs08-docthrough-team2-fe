@@ -9,6 +9,7 @@ import ic_eye from '/public/icons/eye.svg';
 import ic_eye_off from '/public/icons/eye-off.svg';
 
 export default function PasswordInput({
+  name = 'password',
   label = '비밀번호',
   placeholder = '비밀번호를 입력해주세요',
   value,
@@ -50,6 +51,7 @@ export default function PasswordInput({
 
   return (
     <BaseInput
+      name={name}
       label={label}
       placeholder={placeholder}
       value={value}

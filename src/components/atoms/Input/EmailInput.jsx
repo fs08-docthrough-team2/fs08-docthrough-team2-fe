@@ -8,6 +8,7 @@ const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/i;
 export default function EmailInput({
   label = '이메일',
   placeholder = '이메일을 입력해주세요',
+  name = 'email',
   value,
   onChange,
   required = true,
@@ -19,6 +20,7 @@ export default function EmailInput({
 
   return (
     <BaseInput
+      name={name}
       label={label}
       placeholder={placeholder}
       value={value}
