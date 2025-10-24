@@ -18,7 +18,6 @@ import Button from '@/components/atoms/Button/Button.jsx';
 import AuthEntry from '@/components/atoms/AuthEntry/AuthEntry.jsx';
 import GoogleButton from '@/components/atoms/Button/GoogleButton.jsx';
 import BaseInput from '@/components/atoms/Input/BaseInput.jsx';
-import { useSignupMutation } from '@/hooks/mutations/useSignupMutation';
 
 export default function SignupPage() {
   const router = useRouter();
@@ -28,14 +27,6 @@ export default function SignupPage() {
     nickname: '',
     password: '',
     confirmPassword: '',
-  });
-
-  const {
-    mutate: signupMutation,
-    isPending,
-    error,
-  } = useSignupMutation(() => {
-    router.push('/auth/login');
   });
 
   const handleChange = (e) => {
@@ -55,7 +46,6 @@ export default function SignupPage() {
       alert('유효하지 않은 입력입니다.');
       return;
     }
-    signupMutation(form);
   };
 
   return (
