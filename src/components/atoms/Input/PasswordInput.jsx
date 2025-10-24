@@ -3,6 +3,10 @@
 import { useState } from 'react';
 import BaseInput from './BaseInput';
 import styles from '@/styles/components/atoms/input/BaseInput.module.scss';
+import Image from 'next/image';
+
+import ic_eye from '/public/icons/eye.svg';
+import ic_eye_off from '/public/icons/eye-off.svg';
 
 export default function PasswordInput({
   label = '비밀번호',
@@ -34,12 +38,12 @@ export default function PasswordInput({
       onClick={() => setShow((s) => !s)}
       aria-label={show ? '비밀번호 숨기기' : '비밀번호 표시'}
     >
-      <img
-        src={show ? '/icons/eye-off.svg' : '/icons/eye.svg'}
-        alt=""
-        width={20}
-        height={20}
-        draggable="false"
+      <Image
+        src={show ? ic_eye : ic_eye_off}
+        alt="eye"
+        width={24}
+        height={24}
+        className={styles.icon}
       />
     </button>
   );

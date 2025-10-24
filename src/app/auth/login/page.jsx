@@ -14,12 +14,8 @@ export default function LoginPage() {
       <div className={styles.pageWrapper}>
         <Image src={img_logo} alt="logo" width={320} height={72} />
         <div className={styles.loginForm}>
-          <div className={styles.emailForm}>
-            <EmailInput />
-          </div>
-          <div className={styles.passwordForm}>
-            <PasswordInput />
-          </div>
+          <EmailInput />
+          <PasswordInput />
           <div className={styles.buttonWrapper}>
             <Button variant="solid" size="lg" children="로그인" />
             <GoogleButton />

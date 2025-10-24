@@ -50,16 +50,10 @@
   padding: 0;
   display: grid;
   place-items: center;
-  width: 32px;
-  height: 32px;
 
-  img {
-    width: 32px;
-    height: 32px;
-  }
-
-  &:hover img {
-    filter: brightness(0.6); // hover 시 색 살짝 어둡게
+  .icon {
+    width: 24px;
+    height: 24px;
   }
 }
 

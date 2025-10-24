@@ -1,0 +1,47 @@
+@use '@/styles/mixin' as m;
+@use '@/styles/variable' as v;
+
+.signupPage {
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+
+  padding: 120px 0;
+
+  @include m.tablet {
+    padding: 124.5px 0 547.5px 0;
+  }
+
+  @include m.mobile {
+    padding: 59.5px 0 103.5px 0;
+  }
+}
+
+.pageWrapper {
+  @include m.margin-auto(518px);
+
+  @include m.mobile {
+    @include m.margin-auto(375px);
+  }
+
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 40px;
+}
+
+.signupForm {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  gap: 24px;
+}
+
+.buttonWrapper {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  gap: 18px;
+}
