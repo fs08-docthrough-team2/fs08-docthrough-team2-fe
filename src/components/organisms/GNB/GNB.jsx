@@ -5,10 +5,10 @@ import styles from '@/styles/components/organisms/GNB/GNB.module.scss';
 import Button from '@/components/atoms/Button/Button';
 import DropdownProfile from '@/components/molecules/Dropdown/DropdownProfile';
 
-// 사용자 유형 임시 설정 -> ERD 참고해서 변경
 const USER_TYPES = {
   GUEST: 'guest',
   USER: 'user',
+  EXPERT: 'expert',
   ADMIN: 'admin',
 };
 
@@ -40,7 +40,7 @@ const GNB = ({ userType = USER_TYPES.GUEST, onLogin }) => {
           )}
 
           {/* 2. 일반 사용자 로그인 */}
-          {userType === USER_TYPES.USER && (
+          {(userType === USER_TYPES.USER || userType === USER_TYPES.EXPERT) && (
             <>
               <div className={styles.iconWrapper}>
                 <Image
@@ -51,7 +51,7 @@ const GNB = ({ userType = USER_TYPES.GUEST, onLogin }) => {
                   className={styles.notificationImage}
                 />
               </div>
-              <DropdownProfile userType={USER_TYPES.USER} />
+              <DropdownProfile userType={userType} />
             </>
           )}
 

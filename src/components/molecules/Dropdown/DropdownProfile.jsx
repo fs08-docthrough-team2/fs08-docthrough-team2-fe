@@ -36,10 +36,10 @@ const PROFILE_CONFIG = {
 const ROLE_LABEL_BY_TYPE = {
   admin: '어드민',
   user: '유저',
-  specialist: '전문가',
+  expert: '전문가',
 };
 
-function DropdownProfile({ userType = 'specialist', options, userInfo, onSelect }) {
+function DropdownProfile({ userType = 'user', options, userInfo, onSelect }) {
   const [isOpen, setIsOpen] = useState(false);
 
   const baseConfig = PROFILE_CONFIG[userType] ?? PROFILE_CONFIG.user;
