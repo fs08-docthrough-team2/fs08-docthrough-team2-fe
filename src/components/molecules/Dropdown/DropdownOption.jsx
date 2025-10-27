@@ -34,7 +34,7 @@ function DropdownOption({ onEdit = () => {}, onDelete = () => {} }) {
     setIsOpen(false);
     onSelect?.(option);
   };
-
+ 
   // 바깥 클릭 시 닫기 (UX 보완)
   useEffect(() => {
     const close = (e) => ref.current && !ref.current.contains(e.target) && setIsOpen(false);
