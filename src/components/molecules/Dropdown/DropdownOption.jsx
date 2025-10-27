@@ -1,7 +1,7 @@
 'use client';
 
 import Image from 'next/image';
-import { useState, useMemo } from 'react';
+import { useState, useMemo, useRef } from 'react';
 import DropdownList from '../../atoms/Dropdown/DropdownList';
 import optionTriggerIcon from '/public/icon/ic_option_trigger.svg';
 import styles from '@/styles/components/molecules/Dropdown/DropdownOption.module.scss';
@@ -13,6 +13,7 @@ const DROPDOWN_OPTIONS = [
 
 function DropdownOption({ onEdit = () => {}, onDelete = () => {} }) {
   const [isOpen, setIsOpen] = useState(false);
+  const ref = useRef(null);
 
   const optionLabels = useMemo(() => DROPDOWN_OPTIONS.map((option) => option.label), []);
 
@@ -31,11 +32,25 @@ function DropdownOption({ onEdit = () => {}, onDelete = () => {} }) {
     const handler = option ? handlersByKey[option.key] : undefined;
     handler?.();
     setIsOpen(false);
+    onSelect?.(option);
   };
 
+  // 바깥 클릭 시 닫기 (UX 보완)
+  useEffect(() => {
+    const close = (e) => ref.current && !ref.current.contains(e.target) && setIsOpen(false);
+    if (isOpen) document.addEventListener('mousedown', close);
+    return () => document.removeEventListener('mousedown', close);
+  }, [isOpen]);
+
   return (
-    <div className={styles.dropdown}>
-      <button type="button" className={styles.optionTriggerButton} onClick={handleToggle}>
+    <div className={`${styles.dropdown} ${className}`} ref={ref}>
+      <button
+        type="button"
+        className={styles.optionTriggerButton}
+        onClick={handleToggle}
+        aria-haspopup="menu"
+        aria-expanded={isOpen}
+      >
         <Image src={optionTriggerIcon} alt="option button" width={16} height={16} priority />
       </button>
       <DropdownList
@@ -45,10 +60,8 @@ function DropdownOption({ onEdit = () => {}, onDelete = () => {} }) {
         listClassName={styles.optionList}
         listItemClassName={styles.optionListItem}
         optionClassName={styles.optionButton}
-        placement="right"
+        placement={placement}
       />
     </div>
   );
 }
-
-export default DropdownOption;
