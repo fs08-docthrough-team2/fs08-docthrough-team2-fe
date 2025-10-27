@@ -42,7 +42,7 @@ export default function SignupPage() {
     } else {
       setIsValidate(false);
     }
-  });
+  }, [form.email, form.nickname, form.password, form.confirmPassword]);
 
   const handleChange = (e) => {
     const { name, value } = e.target;
