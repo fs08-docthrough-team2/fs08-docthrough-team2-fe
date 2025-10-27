@@ -1,25 +1,36 @@
 'use client';
 
 import Image from 'next/image';
-import { useEffect, useRef, useState } from 'react';
-import DropdownList from '@/components/atoms/Dropdown/DropdownList';
+import { useState, useMemo, useRef } from 'react';
+import DropdownList from '../../atoms/Dropdown/DropdownList';
 import optionTriggerIcon from '/public/icon/ic_option_trigger.svg';
 import styles from '@/styles/components/molecules/Dropdown/DropdownOption.module.scss';
 
-const DEFAULT_OPTIONS = ['수정하기', '삭제하기'];
+const DROPDOWN_OPTIONS = [
+  { key: 'edit', label: '수정하기' },
+  { key: 'delete', label: '삭제하기' },
+];
 
-export default function DropdownOption({
-  options = DEFAULT_OPTIONS,
-  onSelect,
-  placement = 'right',
-  className = '',
-}) {
+function DropdownOption({ onEdit = () => {}, onDelete = () => {} }) {
   const [isOpen, setIsOpen] = useState(false);
   const ref = useRef(null);
 
+  const optionLabels = useMemo(() => DROPDOWN_OPTIONS.map((option) => option.label), []);
+
+  const handlersByKey = useMemo(
+    () => ({
+      edit: onEdit,
+      delete: onDelete,
+    }),
+    [onEdit, onDelete],
+  );
+
   const handleToggle = () => setIsOpen((prev) => !prev);
 
-  const handleSelect = (option) => {
+  const handleSelect = (selectedLabel) => {
+    const option = DROPDOWN_OPTIONS.find((item) => item.label === selectedLabel);
+    const handler = option ? handlersByKey[option.key] : undefined;
+    handler?.();
     setIsOpen(false);
     onSelect?.(option);
   };
@@ -43,7 +54,7 @@ export default function DropdownOption({
         <Image src={optionTriggerIcon} alt="option button" width={16} height={16} priority />
       </button>
       <DropdownList
-        options={options}
+        options={optionLabels}
         isOpen={isOpen}
         onSelect={handleSelect}
         listClassName={styles.optionList}

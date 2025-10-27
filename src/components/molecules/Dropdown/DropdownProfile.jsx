@@ -27,7 +27,7 @@ const PROFILE_CONFIG = {
       height: 32,
     },
     userInfo: {
-      name: '어드민 체다치즈',
+      name: '어드민 체다asdfasdfasd치즈',
     },
     options: ['로그아웃'],
   },
@@ -36,7 +36,7 @@ const PROFILE_CONFIG = {
 const ROLE_LABEL_BY_TYPE = {
   admin: '어드민',
   user: '유저',
-  specialist: '전문가',
+  expert: '전문가',
 };
 
 function DropdownProfile({ userType = 'user', options, userInfo, onSelect }) {
