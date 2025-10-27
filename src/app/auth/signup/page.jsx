@@ -11,6 +11,7 @@ import {
 } from '@/libs/validator.js';
 import { useRouter } from 'next/navigation';
 import api from '@/libs/api.js';
+import { getAccessToken, setAccessToken } from '@/libs/token.js';
 
 import img_logo from '/public/image/img_logo.svg';
 import EmailInput from '@/components/atoms/Input/EmailInput.jsx';
@@ -20,7 +21,7 @@ import AuthEntry from '@/components/atoms/AuthEntry/AuthEntry.jsx';
 import GoogleButton from '@/components/atoms/Button/GoogleButton.jsx';
 import BaseInput from '@/components/atoms/Input/BaseInput.jsx';
 
-export default function SignupPage() {
+const SignupPage = () => {
   const router = useRouter();
 
   const [form, setForm] = useState({
@@ -30,6 +31,7 @@ export default function SignupPage() {
     confirmPassword: '',
   });
   const [isValidate, setIsValidate] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
 
   useEffect(() => {
     if (
@@ -44,6 +46,13 @@ export default function SignupPage() {
     }
   }, [form.email, form.nickname, form.password, form.confirmPassword]);
 
+  useEffect(() => {
+    const token = getAccessToken();
+    if (token) {
+      router.replace('/');
+    }
+  }, [router]);
+
   const handleChange = (e) => {
     const { name, value } = e.target;
     setForm({ ...form, [name]: value });
@@ -51,14 +60,20 @@ export default function SignupPage() {
 
   const handleSignup = async () => {
     try {
+      setIsLoading(true);
       const { email, nickname, password } = form;
 
       const response = await api.post('/auth/signup', { email, nickname, password });
-      if (response.status === 200) {
-        router.push('/auth/login');
+      const token = response.data?.accessToken;
+
+      if (response.status === 200 && token) {
+        setAccessToken(token);
+        router.push('/');
       }
     } catch (error) {
       console.error(error);
+    } finally {
+      setIsLoading(false);
     }
   };
 
@@ -94,12 +109,14 @@ export default function SignupPage() {
             size="lg"
             children="회원가입"
             onClick={handleSubmit}
-            disabled={!isValidate}
+            disabled={!isValidate || isLoading}
           />
-          <GoogleButton />
+          <GoogleButton disabled={isLoading} />
         </div>
         <AuthEntry type="login" />
       </div>
     </div>
   );
-}
+};
+
+export default SignupPage;
