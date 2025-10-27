@@ -10,6 +10,16 @@ import CategoryChip from '@/components/atoms/Chips/CategoryChip.jsx';
 import DropdownOption from '@/components/molecules/Dropdown/DropdownOption.jsx';
 import CardStatusChip from '@/components/atoms/Chips/CardStatusChip.jsx';
 
+const CARD_DATA = {
+  challengeName: 'Next.js - App Router: Routing Fundamentals',
+  type: 'Next.js',
+  category: '공식문서',
+  status: 'isCompleted',
+  dueDate: '2025-10-22T08:30:00.000Z',
+  total: 15,
+  capacity: 15,
+};
+
 /*
 isAdmin: 어드민 여부
 dueDate: 챌린지 마감일
@@ -22,13 +32,15 @@ status: 챌린지 상태
 */
 const ChallengeCard = ({
   isAdmin = false,
-  dueDate = '2025-10-22T08:30:00.000Z',
-  total = 15,
-  capacity = 15,
-  challengeName = 'Next.js - App Router: Routing Fundamentals',
-  type = 'Next.js',
-  category = '공식문서',
-  status = 'isCompleted',
+  challengeName = CARD_DATA.challengeName,
+  type = CARD_DATA.type,
+  category = CARD_DATA.category,
+  status = CARD_DATA.status,
+  dueDate = CARD_DATA.dueDate,
+  total = CARD_DATA.total,
+  capacity = CARD_DATA.capacity,
+  onEdit = () => {},
+  onDelete = () => {},
 }) => {
   const formattedDueDate = formatKoreanDate(dueDate);
 
@@ -38,7 +50,7 @@ const ChallengeCard = ({
         <div className={styles.titleWrapper}>
           <div className={styles.statusWrapper}>
             <CardStatusChip status={status} />
-            {isAdmin && <DropdownOption />}
+            {isAdmin && <DropdownOption onEdit={onEdit} onDelete={onDelete} />}
           </div>
           <div className={styles.title}>{challengeName}</div>
         </div>

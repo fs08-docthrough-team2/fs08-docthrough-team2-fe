@@ -1,0 +1,64 @@
+@use '@/styles/mixin' as m;
+@use '@/styles/variable' as v;
+
+.card {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.header {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.headerTop {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+
+  .title {
+    color: v.$gray-800;
+    font-size: 24px;
+    font-weight: 600;
+    line-height: normal;
+    align-self: stretch;
+  }
+}
+
+.headerBottom {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.content {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+
+  .description {
+    color: v.$gray-700;
+    font-size: 16px;
+    font-weight: 400;
+    line-height: 130%;
+    align-self: stretch;
+    word-wrap: break-word;
+    word-break: break-word;
+    white-space: pre-wrap;
+  }
+}
+
+.userInfo {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+
+  .user {
+    color: v.$gray-800;
+    font-size: 12px;
+    font-weight: 500;
+    line-height: normal;
+  }
+}

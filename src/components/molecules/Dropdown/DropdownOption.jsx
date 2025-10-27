@@ -11,7 +11,7 @@ const DROPDOWN_OPTIONS = [
   { key: 'delete', label: '삭제하기' },
 ];
 
-function DropdownOption({ onEdit, onDelete }) {
+function DropdownOption({ onEdit = () => {}, onDelete = () => {} }) {
   const [isOpen, setIsOpen] = useState(false);
 
   const optionLabels = useMemo(() => DROPDOWN_OPTIONS.map((option) => option.label), []);
