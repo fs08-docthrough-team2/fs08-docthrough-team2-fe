@@ -1,142 +1,140 @@
-import { useState, useRef, useEffect, useCallback } from 'react';
+import { useEffect, useRef, useState, useCallback } from 'react';
 import Image from 'next/image';
 import clsx from 'clsx';
-
 import userIcon from '/public/image/img_profile_user.svg';
 import styles from '@/styles/components/molecules/comment/CommentCard.module.scss';
-import tb from '@/styles/components/atoms/input/TextBox.module.scss'; // 높이/패딩 톤 맞추려면 사용
 
 export default function CommentCard({
-  name, // 이름
-  date, // "24/01/17 15:38" 같은 문자열
-  text, // 본문
-  onUpdate = () => {}, // 수정 완료 시 (draftText) 전달
-  onCancel = () => {}, // 취소 시 콜백
-  canEdit = true, // 점3개 노출 여부
+  variant = 'user', // 'admin' | 'user'
+  name = '',
+  date = '',
+  text = '',
   className = '',
+  onUpdate = () => {},
+  onCancel = () => {},
+  onDelete = () => {},
 }) {
+  const [editing, setEditing] = useState(false); // admin에서만 사용
   const [menuOpen, setMenuOpen] = useState(false);
-  const [editing, setEditing] = useState(false);
   const [draft, setDraft] = useState(text);
 
-  const wrapRef = useRef(null);
+  useEffect(() => setDraft(text), [text]);
 
-  // 메뉴 바깥 클릭 닫기
+  // 외부 클릭 시 드롭다운 닫기
+  const wrapRef = useRef(null);
   useEffect(() => {
-    const onDocClick = (e) => {
-      if (!wrapRef.current) return;
-      if (!wrapRef.current.contains(e.target)) setMenuOpen(false);
-    };
-    if (menuOpen) document.addEventListener('mousedown', onDocClick);
-    return () => document.removeEventListener('mousedown', onDocClick);
+    const close = (e) =>
+      wrapRef.current && !wrapRef.current.contains(e.target) && setMenuOpen(false);
+    if (menuOpen) document.addEventListener('mousedown', close);
+    return () => document.removeEventListener('mousedown', close);
   }, [menuOpen]);
 
-  // 편집 시작
-  const startEdit = () => {
-    setDraft(text);
-    setEditing(true);
-    setMenuOpen(false);
-  };
-
-  // 취소
-  const handleCancel = () => {
+  const save = useCallback(() => {
+    onUpdate(draft.trim());
     setEditing(false);
+    setMenuOpen(false);
+  }, [draft, onUpdate]);
+
+  const cancel = useCallback(() => {
     setDraft(text);
+    setEditing(false);
     setMenuOpen(false);
     onCancel();
+  }, [text, onCancel]);
+
+  const handleKeyDown = (e) => {
+    if ((e.ctrlKey || e.metaKey) && e.key === 'Enter') {
+      e.preventDefault();
+      save();
+    }
+    if (e.key === 'Escape') {
+      e.preventDefault();
+      cancel();
+    }
   };
 
-  // 저장
-  const handleSave = () => {
-    const v = draft.trim();
-    onUpdate(v);
-    setMenuOpen(false);
-    setEditing(false);
-  };
-
-  // 키보드: Esc 취소 / Ctrl|Cmd+Enter 저장
-  const handleKeyDown = useCallback(
-    (e) => {
-      if (e.key === 'Escape') {
-        e.preventDefault();
-        handleCancel();
-      }
-      if ((e.ctrlKey || e.metaKey) && e.key === 'Enter') {
-        e.preventDefault();
-        handleSave();
-      }
-    },
-    [draft],
-  );
+  const isAdmin = variant === 'admin';
+  const readOnly = isAdmin ? !editing : false; // user는 항상 읽기, admin은 편집 중일 때만 입력
 
   return (
-    <article ref={wrapRef} className={clsx(styles.card, className)}>
-      {/* 헤더 */}
+    <article ref={wrapRef} className={clsx(styles.card, editing && styles.editing, className)}>
       <header className={styles.header}>
         <div className={styles.meta}>
           <Image src={userIcon} alt="" width={24} height={24} className={styles.avatar} />
-          <div className={styles.title}>
+          <div className={styles.nameDate}>
             <strong className={styles.name}>{name}</strong>
             <span className={styles.date}>{date}</span>
           </div>
         </div>
 
-        {canEdit && (
-          <div className={styles.actions}>
-            <button
-              type="button"
-              className={styles.kebab}
-              aria-label="메뉴 열기"
-              onClick={() => setMenuOpen((v) => !v)}
-            >
-              {/* 점 3개 */}
-              <span className={styles.dot} />
-              <span className={styles.dot} />
-              <span className={styles.dot} />
-            </button>
-
-            {menuOpen && (
-              <div className={styles.menu}>
-                {!editing && (
-                  <button type="button" className={styles.menuItem} onClick={startEdit}>
-                    수정
+        {/* 우측 액션 영역 */}
+        <div className={styles.actions}>
+          {/* admin + 읽기 모드: 케밥(세로 점3개) → 드롭다운 */}
+          {isAdmin && !editing && (
+            <>
+              <button
+                type="button"
+                className={styles.kebab}
+                aria-label="메뉴 열기"
+                onClick={() => setMenuOpen((v) => !v)}
+              >
+                <span className={styles.dot} />
+                <span className={styles.dot} />
+                <span className={styles.dot} />
+              </button>
+              {menuOpen && (
+                <div className={styles.menu} role="menu">
+                  <button
+                    type="button"
+                    className={styles.menuItem}
+                    onClick={() => {
+                      setEditing(true);
+                      setMenuOpen(false);
+                    }}
+                  >
+                    수정하기
                   </button>
-                )}
-                {editing ? (
-                  <>
-                    <button type="button" className={styles.menuItem} onClick={handleCancel}>
-                      취소
-                    </button>
-                    <button
-                      type="button"
-                      className={clsx(styles.menuItem, styles.primary)}
-                      onClick={handleSave}
-                    >
-                      수정 완료
-                    </button>
-                  </>
-                ) : null}
-              </div>
-            )}
-          </div>
-        )}
+                  <button
+                    type="button"
+                    className={clsx(styles.menuItem, styles.danger)}
+                    onClick={() => {
+                      setMenuOpen(false);
+                      onDelete();
+                    }}
+                  >
+                    삭제하기
+                  </button>
+                </div>
+              )}
+            </>
+          )}
+
+          {/* admin + 편집 모드: 헤더 오른쪽에 [취소] [수정 완료] */}
+          {isAdmin && editing && (
+            <div className={styles.headerButtons}>
+              <button type="button" className={styles.ghostBtn} onClick={cancel}>
+                취소
+              </button>
+              <button type="button" className={styles.primaryBtn} onClick={save}>
+                수정 완료
+              </button>
+            </div>
+          )}
+        </div>
       </header>
 
       {/* 본문 */}
-      <div className={styles.body} onKeyDown={editing ? handleKeyDown : undefined}>
-        {editing ? (
-          // TextBox 톤에 맞춘 textarea (높이/패딩 동일)
-          <label className={clsx(tb.textBox, styles.editBox)}>
-            <textarea
-              className={tb.field}
-              value={draft}
-              onChange={(e) => setDraft(e.target.value)}
-              rows={3}
-              placeholder="내용을 입력하세요"
-            />
-          </label>
+      <div className={styles.body} onKeyDown={!readOnly ? handleKeyDown : undefined}>
+        {readOnly ? (
+          <p className={styles.text}>{draft || text}</p>
         ) : (
-          <p className={styles.text}>{text}</p>
+          <textarea
+            className={styles.editor}
+            value={draft}
+            onChange={(e) => setDraft(e.target.value)}
+            placeholder="피드백을 남겨주세요"
+            rows={3}
+          />
         )}
       </div>
     </article>

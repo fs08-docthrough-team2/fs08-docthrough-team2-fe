@@ -124,14 +124,16 @@ export default function ExamplePage() {
           </div>
         </section>
 
-        <CommentCard
-          name="홍길동"
-          date="24/01/17 15:38"
-          text={content}
-          onUpdate={(v) => setContent(v)}
-          onCancel={() => console.log('수정 취소')}
-          canEdit
-        />
+        <section style={{ gridColumn: '1 / -1', width: '100%' }}>
+          <CommentCard
+            name="홍길동"
+            date="24/01/17 15:38"
+            text={content}
+            onUpdate={(v) => setContent(v)}
+            onCancel={() => console.log('수정 취소')}
+            canEdit
+          />
+        </section>
       </div>
     </main>
   );
