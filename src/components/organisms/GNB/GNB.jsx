@@ -4,6 +4,7 @@ import Image from 'next/image';
 import styles from '@/styles/components/organisms/GNB/GNB.module.scss';
 import Button from '@/components/atoms/Button/Button';
 import DropdownProfile from '@/components/molecules/Dropdown/DropdownProfile';
+import NotificationPopup from '@/components/molecules/Popup/NotificationPopup';
 
 const USER_TYPES = {
   GUEST: 'guest',
@@ -12,14 +13,14 @@ const USER_TYPES = {
   ADMIN: 'admin',
 };
 
-const GNB = ({ userType = USER_TYPES.GUEST, onLogin }) => {
+const GNB = ({ userType = USER_TYPES.GUEST, onLogin, notifications = [] }) => {
   return (
     <header className={styles.gnbWrapper}>
       <div className={styles.gnbContainer}>
         <Link href="/" className={styles.logo}>
           <Image
             src="/image/img_logo.svg"
-            alt="Docthru 서비스 로고"
+            alt="Docthru 메인 로고"
             width={109}
             height={27}
             className={styles.logoImage}
@@ -30,11 +31,7 @@ const GNB = ({ userType = USER_TYPES.GUEST, onLogin }) => {
         <nav className={styles.navigation}>
           {/* 1. 비로그인 guest */}
           {userType === USER_TYPES.GUEST && (
-            <Button
-              variant="outline"
-              size="md"
-              onClick={onLogin} // 로그인 페이지로 연결
-            >
+            <Button variant="outline" size="md" onClick={onLogin}>
               로그인
             </Button>
           )}
@@ -43,13 +40,7 @@ const GNB = ({ userType = USER_TYPES.GUEST, onLogin }) => {
           {(userType === USER_TYPES.USER || userType === USER_TYPES.EXPERT) && (
             <>
               <div className={styles.iconWrapper}>
-                <Image
-                  src="/icon/ic_notification.svg"
-                  alt="알림"
-                  width={24}
-                  height={24}
-                  className={styles.notificationImage}
-                />
+                <NotificationPopup notifications={notifications} />
               </div>
               <DropdownProfile userType={userType} />
             </>
