@@ -1,0 +1,28 @@
+@use '@/styles/mixin' as m;
+@use '@/styles/variable' as v;
+
+.authEntry {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 8px;
+}
+
+.title {
+  color: v.$gray-600;
+  text-align: center;
+  font-size: 16px;
+  font-weight: 400;
+  line-height: normal;
+}
+
+.link {
+  @include m.reset-link;
+
+  color: v.$brand-black;
+  text-align: center;
+  font-size: 16px;
+  font-weight: 400;
+  line-height: normal;
+  text-decoration: underline;
+}
