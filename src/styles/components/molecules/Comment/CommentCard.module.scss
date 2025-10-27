@@ -1,0 +1,124 @@
+.card {
+  width: 100%;
+  border-radius: 12px;
+  background: #fff;
+  padding: 12px 16px;
+  box-shadow: 0 0 0 1px var(--gray-200, #e5e5e5) inset; /* TextBox 테두리 톤 */
+}
+
+.header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+}
+
+.meta {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.avatar {
+  border-radius: 999px;
+}
+
+.title {
+  display: flex;
+  align-items: baseline;
+  gap: 8px;
+}
+
+.name {
+  color: var(--black, #414141);
+  font-size: 14px;
+  font-weight: 600;
+}
+
+.date {
+  color: var(--gray81, #818181);
+  font-size: 12px;
+  font-weight: 500;
+}
+
+.actions {
+  position: relative;
+}
+
+.kebab {
+  border: 0;
+  background: none;
+  padding: 6px;
+  border-radius: 8px;
+  cursor: pointer;
+  line-height: 0;
+
+  &:hover {
+    background: rgba(0, 0, 0, 0.05);
+  }
+}
+
+.dot {
+  display: inline-block;
+  width: 3px;
+  height: 3px;
+  background: #8f8f8f;
+  border-radius: 999px;
+  margin-left: 2px;
+}
+
+.menu {
+  position: absolute;
+  top: 28px;
+  right: 0;
+  background: #fff;
+  border: 1px solid var(--gray-200, #e5e5e5);
+  border-radius: 10px;
+  padding: 6px;
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.08);
+  display: flex;
+  gap: 6px;
+  z-index: 10;
+}
+
+.menuItem {
+  border: 0;
+  background: #f5f5f5;
+  color: #333;
+  padding: 6px 10px;
+  border-radius: 8px;
+  font-size: 12px;
+  cursor: pointer;
+
+  &:hover {
+    background: #ececec;
+  }
+}
+
+.primary {
+  background: var(--brand, #99c08e);
+  color: #fff;
+
+  &:hover {
+    filter: brightness(0.98);
+  }
+}
+
+.body {
+  margin-top: 10px;
+}
+
+/* 읽기 모드 본문 */
+.text {
+  white-space: pre-wrap;
+  word-break: break-word;
+  color: #333;
+  font-size: 14px;
+  line-height: 1.6;
+}
+
+/* 편집 모드 상자: TextBox 높이/톤과 정합 */
+.editBox {
+  height: auto; /* 내용에 따라 늘어남 */
+  box-shadow: none; /* TextBox의 inset border만 활용 */
+}

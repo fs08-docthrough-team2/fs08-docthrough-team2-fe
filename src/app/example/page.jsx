@@ -9,6 +9,7 @@ import CategoryChip from '@/components/atoms/chips/CategoryChip';
 import StatusChip from '@/components/atoms/chips/StatusChip';
 import DateInput from '@/components/atoms/input/DateInput';
 import CommentInput from '@/components/atoms/input/CommentInput.jsx';
+import CommentCard from '@/components/molecules/comment/CommentCard';
 
 export default function ExamplePage() {
   const [email, setEmail] = useState('');
@@ -18,6 +19,7 @@ export default function ExamplePage() {
   const [keyword, setKeyword] = useState('');
   const [text, setText] = useState('');
   const [comment, setComment] = useState('');
+  const [content, setContent] = useState('');
 
   return (
     <main
@@ -121,6 +123,15 @@ export default function ExamplePage() {
             />
           </div>
         </section>
+
+        <CommentCard
+          name="홍길동"
+          date="24/01/17 15:38"
+          text={content}
+          onUpdate={(v) => setContent(v)}
+          onCancel={() => console.log('수정 취소')}
+          canEdit
+        />
       </div>
     </main>
   );

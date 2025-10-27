@@ -14,3 +14,24 @@
   flex: 1 1 auto;
   min-width: 0;
 }
+
+@media (max-width: 744px) {
+  .inner {
+    gap: 10px;
+  }
+
+  .inner :global(label[class*='textBox']) {
+    height: 84px; /* 살짝 낮춰 여백 확보(피그마가 고정이면 89로 유지) */
+  }
+}
+
+/* ===== Mobile: ≤375px ===== */
+@media (max-width: 375px) {
+  .inner {
+    gap: 8px;
+  }
+
+  .inner :global(label[class*='textBox']) {
+    height: 80px; /* 모바일에서 답답함 줄이기 */
+  }
+}
