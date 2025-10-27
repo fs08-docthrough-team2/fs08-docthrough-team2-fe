@@ -1,8 +1,11 @@
+'use client';
+
 import { useEffect, useRef, useState, useCallback } from 'react';
 import Image from 'next/image';
 import clsx from 'clsx';
 import userIcon from '/public/image/img_profile_user.svg';
 import styles from '@/styles/components/molecules/comment/CommentCard.module.scss';
+import DropdownOption from '@/components/molecules/Dropdown/DropdownOption';
 
 export default function CommentCard({
   variant = 'user', // 'admin' | 'user'
@@ -15,30 +18,20 @@ export default function CommentCard({
   onDelete = () => {},
 }) {
   const [editing, setEditing] = useState(false); // admin에서만 사용
-  const [menuOpen, setMenuOpen] = useState(false);
   const [draft, setDraft] = useState(text);
 
   useEffect(() => setDraft(text), [text]);
 
-  // 외부 클릭 시 드롭다운 닫기
   const wrapRef = useRef(null);
-  useEffect(() => {
-    const close = (e) =>
-      wrapRef.current && !wrapRef.current.contains(e.target) && setMenuOpen(false);
-    if (menuOpen) document.addEventListener('mousedown', close);
-    return () => document.removeEventListener('mousedown', close);
-  }, [menuOpen]);
 
   const save = useCallback(() => {
     onUpdate(draft.trim());
     setEditing(false);
-    setMenuOpen(false);
   }, [draft, onUpdate]);
 
   const cancel = useCallback(() => {
     setDraft(text);
     setEditing(false);
-    setMenuOpen(false);
     onCancel();
   }, [text, onCancel]);
 
@@ -54,7 +47,8 @@ export default function CommentCard({
   };
 
   const isAdmin = variant === 'admin';
-  const readOnly = isAdmin ? !editing : false; // user는 항상 읽기, admin은 편집 중일 때만 입력
+  // 유저는 리스트 카드에서 항상 읽기 전용, 어드민은 편집 중일 때만 입력 가능
+  const readOnly = isAdmin ? !editing : true;
 
   return (
     <article ref={wrapRef} className={clsx(styles.card, editing && styles.editing, className)}>
@@ -67,49 +61,19 @@ export default function CommentCard({
           </div>
         </div>
 
-        {/* 우측 액션 영역 */}
+        {/* 우측 액션 */}
         <div className={styles.actions}>
-          {/* admin + 읽기 모드: 케밥(세로 점3개) → 드롭다운 */}
+          {/* 어드민 + 읽기 모드: 케밥 드롭다운(팀원 컴포넌트 재사용) */}
           {isAdmin && !editing && (
-            <>
-              <button
-                type="button"
-                className={styles.kebab}
-                aria-label="메뉴 열기"
-                onClick={() => setMenuOpen((v) => !v)}
-              >
-                <span className={styles.dot} />
-                <span className={styles.dot} />
-                <span className={styles.dot} />
-              </button>
-              {menuOpen && (
-                <div className={styles.menu} role="menu">
-                  <button
-                    type="button"
-                    className={styles.menuItem}
-                    onClick={() => {
-                      setEditing(true);
-                      setMenuOpen(false);
-                    }}
-                  >
-                    수정하기
-                  </button>
-                  <button
-                    type="button"
-                    className={clsx(styles.menuItem, styles.danger)}
-                    onClick={() => {
-                      setMenuOpen(false);
-                      onDelete();
-                    }}
-                  >
-                    삭제하기
-                  </button>
-                </div>
-              )}
-            </>
+            <DropdownOption
+              onSelect={(label) => {
+                if (label === '수정하기') setEditing(true);
+                if (label === '삭제하기') onDelete?.();
+              }}
+            />
           )}
 
-          {/* admin + 편집 모드: 헤더 오른쪽에 [취소] [수정 완료] */}
+          {/* 어드민 + 편집 모드: [취소] [수정 완료] */}
           {isAdmin && editing && (
             <div className={styles.headerButtons}>
               <button type="button" className={styles.ghostBtn} onClick={cancel}>

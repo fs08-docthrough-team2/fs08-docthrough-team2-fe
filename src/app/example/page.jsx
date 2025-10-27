@@ -109,7 +109,7 @@ export default function ExamplePage() {
           </div>
         </section>
 
-        {/* ✅ 댓글 인풋: 그리드 '직계 자식' + 전체 폭 스팬 */}
+        {/*  댓글 인풋: 그리드 '직계 자식' + 전체 폭 스팬 */}
         <section style={{ gridColumn: '1 / -1', width: '100%' }}>
           <h2>댓글 인풋</h2>
           <div style={{ display: 'flex', flexDirection: 'column', gap: '10px', width: '100%' }}>
@@ -125,13 +125,17 @@ export default function ExamplePage() {
         </section>
 
         <section style={{ gridColumn: '1 / -1', width: '100%' }}>
+          <CommentCard variant="user" name="홍길동" date="25/10/27 15:38" text={content} />
+
+          {/* 어드민 버전: 케밥 → 수정하기/삭제하기, 편집 중엔 우측 [취소][수정 완료] */}
           <CommentCard
+            variant="admin"
             name="홍길동"
-            date="24/01/17 15:38"
+            date="25/10/27 15:38"
             text={content}
             onUpdate={(v) => setContent(v)}
-            onCancel={() => console.log('수정 취소')}
-            canEdit
+            onDelete={() => console.log('삭제하기')}
+            onCancel={() => console.log('취소하기')}
           />
         </section>
       </div>
