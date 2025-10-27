@@ -50,7 +50,7 @@ const Button = ({
 
   return (
     <div>
-      <button className={className} onClick={onClick}>
+      <button className={className} onClick={onClick} disabled={disabled}>
         <div className={styles.btnContent}>{children}</div>
         {iconImg}
       </button>

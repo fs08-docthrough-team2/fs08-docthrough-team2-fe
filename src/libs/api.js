@@ -10,6 +10,7 @@ const api = axios.create({
     'Content-Type': 'application/json',
   },
   withCredentials: true,
+  timeout: 10000,
 });
 
 api.interceptors.request.use((config) => {
@@ -31,14 +32,14 @@ api.interceptors.response.use(
     if (error.response?.status === 401 && !originalRequest._retry) {
       originalRequest._retry = true;
       try {
-        const { data } = await api.post('/auth/refresh');
+        const { data } = await api.post('/token/refresh');
         setAccessToken(data.accessToken);
         originalRequest.headers.Authorization = `Bearer ${data.accessToken}`;
         return api(originalRequest);
       } catch {
         clearAccessToken();
 
-        if (isBrowser) window.location.href = '/signin';
+        if (isBrowser) window.location.href = '/auth/login';
 
         return Promise.reject(error);
       }

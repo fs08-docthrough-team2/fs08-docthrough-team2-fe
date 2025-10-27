@@ -2,6 +2,7 @@ import { useId } from 'react';
 import styles from '@/styles/components/atoms/input/BaseInput.module.scss';
 
 export default function BaseInput({
+  name,
   label,
   placeholder = '',
   value,
@@ -40,6 +41,7 @@ export default function BaseInput({
 
         <input
           id={uid}
+          name={name}
           className={styles.input}
           type={type}
           placeholder={placeholder}

@@ -4,7 +4,7 @@ import Image from 'next/image';
 import ic_deadline from '/public/icon/ic_deadline.svg';
 import ic_person from '/public/icon/ic_person.svg';
 import Button from '@/components/atoms/Button/Button';
-import { formatKoreanDate } from '@/lib/day.js';
+import { formatKoreanDate } from '@/libs/day.js';
 
 const ChallengeContainer = ({
   dueDate = '2025-10-22T08:30:00.000Z',
