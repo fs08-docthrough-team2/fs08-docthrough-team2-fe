@@ -1,7 +1,7 @@
 'use client';
 
 import Image from 'next/image';
-import { useState, useMemo } from 'react';
+import { useState, useMemo, useEffect, useRef } from 'react';
 import DropdownList from '../../atoms/Dropdown/DropdownList';
 import optionTriggerIcon from '/public/icon/ic_option_trigger.svg';
 import styles from '@/styles/components/molecules/Dropdown/DropdownOption.module.scss';
@@ -13,6 +13,7 @@ const DROPDOWN_OPTIONS = [
 
 function DropdownOption({ onEdit = () => {}, onDelete = () => {} }) {
   const [isOpen, setIsOpen] = useState(false);
+  const dropdownRef = useRef(null);
 
   const optionLabels = useMemo(() => DROPDOWN_OPTIONS.map((option) => option.label), []);
 
@@ -33,8 +34,20 @@ function DropdownOption({ onEdit = () => {}, onDelete = () => {} }) {
     setIsOpen(false);
   };
 
+  // 외부 클릭 시 닫히도록 설정
+  useEffect(() => {
+    if (!isOpen) return;
+    const handleClickOutside = (event) => {
+      if (dropdownRef.current && !dropdownRef.current.contains(event.target)) {
+        setIsOpen(false);
+      }
+    };
+    document.addEventListener('mousedown', handleClickOutside);
+    return () => document.removeEventListener('mousedown', handleClickOutside);
+  }, [isOpen]);
+
   return (
-    <div className={styles.dropdown}>
+    <div className={styles.dropdown} ref={dropdownRef}>
       <button type="button" className={styles.optionTriggerButton} onClick={handleToggle}>
         <Image src={optionTriggerIcon} alt="option button" width={16} height={16} priority />
       </button>
