@@ -67,6 +67,7 @@ function DropdownProfile({ userType = 'user', options, userInfo, onSelect }) {
       <button type="button" className={styles.optionTriggerButton} onClick={handleToggle}>
         <Image
           src={profileImage.src}
+          alt={profileImage.alt}
           width={profileImage.width}
           height={profileImage.height}
           className={styles.profileImage}
