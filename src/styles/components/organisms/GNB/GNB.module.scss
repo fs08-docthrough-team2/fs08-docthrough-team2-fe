@@ -90,27 +90,27 @@
 }
 
 .navigation {
-    position: absolute;
+  position: absolute;
+  top: 10px;
+  right: clamp(24px, calc(24px + (100vw - 744px) * 0.28571), 360px);
+  display: flex;
+  align-items: center;
+  gap: clamp(24px, calc(24px + (100vw - 744px) * 0.01087), 36px);
+  min-height: 40px;
+
+  @include m.tablet {
     top: 10px;
-    right: clamp(24px, calc(24px + (100vw - 744px) * 0.28571), 360px);
-    display: flex;
-    align-items: center;
-    gap: clamp(24px, calc(24px + (100vw - 744px) * 0.01087), 36px);
-    min-height: 40px;
-
-    @include m.tablet {
-      top: 10px;
-      right: clamp(16px, calc(16px + (100vw - 375px) * 0.02168), 24px);
-      gap: clamp(16px, calc(16px + (100vw - 375px) * 0.02168), 24px);
-    }
-
-    @include m.mobile {
-      top: 13px;
-      right: 16px;
-      gap: 16px;
-      min-height: 40px;
-    }
+    right: clamp(16px, calc(16px + (100vw - 375px) * 0.02168), 24px);
+    gap: clamp(16px, calc(16px + (100vw - 375px) * 0.02168), 24px);
   }
+
+  @include m.mobile {
+    top: 13px;
+    right: 16px;
+    gap: 16px;
+    min-height: 40px;
+  }
+}
 
 .navLink {
   color: v.$gray-600;
