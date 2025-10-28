@@ -1,5 +1,6 @@
 import '@/styles/globals.scss';
 import Providers from '@/app/providers.jsx';
+import GNB from '@/components/organisms/GNB/GNB';
 
 export const metadata = {
   title: 'Docthru',
@@ -14,7 +15,10 @@ export default function RootLayout({ children }) {
         <link rel="icon" href="/favicon.ico" />
       </head>
       <body>
-        <Providers>{children}</Providers>
+        <Providers>
+          <GNB />
+          {children}
+        </Providers>
       </body>
     </html>
   );

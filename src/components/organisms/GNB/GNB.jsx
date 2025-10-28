@@ -1,4 +1,6 @@
-import React from 'react';
+'use client';
+
+import { useRouter } from 'next/navigation';
 import Link from 'next/link';
 import Image from 'next/image';
 import styles from '@/styles/components/organisms/GNB/GNB.module.scss';
@@ -13,7 +15,13 @@ const USER_TYPES = {
   ADMIN: 'admin',
 };
 
-const GNB = ({ userType = USER_TYPES.GUEST, onLogin, notifications = [] }) => {
+const GNB = ({ userType = USER_TYPES.GUEST, notifications = [] }) => {
+  const router = useRouter();
+
+  const handleLogin = () => {
+    router.push('/auth/login');
+  };
+
   return (
     <header className={styles.gnbWrapper}>
       <div className={styles.gnbContainer}>
@@ -29,14 +37,12 @@ const GNB = ({ userType = USER_TYPES.GUEST, onLogin, notifications = [] }) => {
         </Link>
 
         <nav className={styles.navigation}>
-          {/* 1. 비로그인 guest */}
           {userType === USER_TYPES.GUEST && (
-            <Button variant="outline" size="md" onClick={onLogin}>
+            <Button variant="outline" size="md" onClick={handleLogin}>
               로그인
             </Button>
           )}
 
-          {/* 2. 일반 사용자 로그인 */}
           {(userType === USER_TYPES.USER || userType === USER_TYPES.EXPERT) && (
             <>
               <div className={styles.iconWrapper}>
@@ -46,7 +52,6 @@ const GNB = ({ userType = USER_TYPES.GUEST, onLogin, notifications = [] }) => {
             </>
           )}
 
-          {/* 3. admin 로그인 */}
           {userType === USER_TYPES.ADMIN && <DropdownProfile userType={USER_TYPES.ADMIN} />}
         </nav>
       </div>
