@@ -13,7 +13,7 @@ function DropdownCategory() {
   const [isOpen, setIsOpen] = useState(false);
   const [selectedLabel, setSelectedLabel] = useState(DEFAULT_LABEL);
   const isDefaultLabel = selectedLabel === DEFAULT_LABEL;
- 
+
   const handleToggle = () => {
     setIsOpen((prev) => !prev);
   };

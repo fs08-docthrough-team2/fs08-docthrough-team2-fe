@@ -1,3 +1,5 @@
+'use client';
+
 import { useState } from 'react';
 import styles from '@/styles/components/atoms/input/SearchInput.module.scss';
 
