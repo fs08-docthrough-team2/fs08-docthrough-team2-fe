@@ -65,12 +65,7 @@ export default function CommentCard({
         <div className={styles.actions}>
           {/* 어드민 + 읽기 모드: 케밥 드롭다운(팀원 컴포넌트 재사용) */}
           {isAdmin && !editing && (
-            <DropdownOption
-              onSelect={(label) => {
-                if (label === '수정하기') setEditing(true);
-                if (label === '삭제하기') onDelete?.();
-              }}
-            />
+            <DropdownOption onEdit={() => setEditing(true)} onDelete={() => onDelete?.()} />
           )}
 
           {/* 어드민 + 편집 모드: [취소] [수정 완료] */}

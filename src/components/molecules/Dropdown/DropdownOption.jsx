@@ -1,58 +1,43 @@
 'use client';
-
 import Image from 'next/image';
-import { useState, useMemo, useRef } from 'react';
+import { useState, useMemo, useEffect, useRef } from 'react';
 import DropdownList from '../../atoms/Dropdown/DropdownList';
 import optionTriggerIcon from '/public/icon/ic_option_trigger.svg';
 import styles from '@/styles/components/molecules/Dropdown/DropdownOption.module.scss';
-
 const DROPDOWN_OPTIONS = [
   { key: 'edit', label: '수정하기' },
   { key: 'delete', label: '삭제하기' },
 ];
-
 function DropdownOption({ onEdit = () => {}, onDelete = () => {} }) {
   const [isOpen, setIsOpen] = useState(false);
-  const ref = useRef(null);
-
+  const dropdownRef = useRef(null);
   const optionLabels = useMemo(() => DROPDOWN_OPTIONS.map((option) => option.label), []);
-
-  const handlersByKey = useMemo(
-    () => ({
-      edit: onEdit,
-      delete: onDelete,
-    }),
-    [onEdit, onDelete],
-  );
-
+  const handlersByKey = useMemo(() => ({ edit: onEdit, delete: onDelete }), [onEdit, onDelete]);
   const handleToggle = () => setIsOpen((prev) => !prev);
-
   const handleSelect = (selectedLabel) => {
     const option = DROPDOWN_OPTIONS.find((item) => item.label === selectedLabel);
     const handler = option ? handlersByKey[option.key] : undefined;
     handler?.();
     setIsOpen(false);
-    onSelect?.(option);
   };
-
-  // 바깥 클릭 시 닫기 (UX 보완)
+  // 외부 클릭 시 닫히도록 설정
   useEffect(() => {
-    const close = (e) => ref.current && !ref.current.contains(e.target) && setIsOpen(false);
-    if (isOpen) document.addEventListener('mousedown', close);
-    return () => document.removeEventListener('mousedown', close);
+    if (!isOpen) return;
+    const handleClickOutside = (event) => {
+      if (dropdownRef.current && !dropdownRef.current.contains(event.target)) {
+        setIsOpen(false);
+      }
+    };
+    document.addEventListener('mousedown', handleClickOutside);
+    return () => document.removeEventListener('mousedown', handleClickOutside);
   }, [isOpen]);
-
   return (
-    <div className={`${styles.dropdown} ${className}`} ref={ref}>
-      <button
-        type="button"
-        className={styles.optionTriggerButton}
-        onClick={handleToggle}
-        aria-haspopup="menu"
-        aria-expanded={isOpen}
-      >
-        <Image src={optionTriggerIcon} alt="option button" width={16} height={16} priority />
-      </button>
+    <div className={styles.dropdown} ref={dropdownRef}>
+      {' '}
+      <button type="button" className={styles.optionTriggerButton} onClick={handleToggle}>
+        {' '}
+        <Image src={optionTriggerIcon} alt="option button" width={16} height={16} priority />{' '}
+      </button>{' '}
       <DropdownList
         options={optionLabels}
         isOpen={isOpen}
@@ -60,8 +45,9 @@ function DropdownOption({ onEdit = () => {}, onDelete = () => {} }) {
         listClassName={styles.optionList}
         listItemClassName={styles.optionListItem}
         optionClassName={styles.optionButton}
-        placement={placement}
-      />
+        placement="right"
+      />{' '}
     </div>
   );
 }
+export default DropdownOption;
