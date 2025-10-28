@@ -11,7 +11,7 @@ import {
 } from '@/libs/validator.js';
 import { useRouter } from 'next/navigation';
 import api from '@/libs/api.js';
-import { getAccessToken, setAccessToken } from '@/libs/token.js';
+import { setAccessToken } from '@/libs/token.js';
 
 import img_logo from '/public/image/img_logo.svg';
 import EmailInput from '@/components/atoms/Input/EmailInput.jsx';
@@ -45,13 +45,6 @@ const SignupPage = () => {
       setIsValidate(false);
     }
   }, [form.email, form.nickName, form.password, form.confirmPassword]);
-
-  useEffect(() => {
-    const token = getAccessToken();
-    if (token) {
-      router.replace('/');
-    }
-  }, [router]);
 
   const handleChange = (e) => {
     const { name, value } = e.target;

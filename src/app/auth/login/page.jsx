@@ -13,7 +13,7 @@ import { useEffect, useState } from 'react';
 import { isValidateEmail, isValidatePassword } from '@/libs/validator.js';
 import api from '@/libs/api.js';
 import { useRouter } from 'next/navigation';
-import { getAccessToken, setAccessToken } from '@/libs/token.js';
+import { setAccessToken } from '@/libs/token.js';
 
 const LoginPage = () => {
   const router = useRouter();
@@ -32,13 +32,6 @@ const LoginPage = () => {
       setIsValidate(false);
     }
   }, [form.email, form.password]);
-
-  useEffect(() => {
-    const token = getAccessToken();
-    if (token) {
-      router.replace('/');
-    }
-  }, [router]);
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -66,7 +59,6 @@ const LoginPage = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    console.log(form);
     handleLogin();
   };
 
