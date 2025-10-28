@@ -26,7 +26,7 @@ const SignupPage = () => {
 
   const [form, setForm] = useState({
     email: '',
-    nickname: '',
+    nickName: '',
     password: '',
     confirmPassword: '',
   });
@@ -36,7 +36,7 @@ const SignupPage = () => {
   useEffect(() => {
     if (
       isValidateEmail(form.email) &&
-      isValidateNickname(form.nickname) &&
+      isValidateNickname(form.nickName) &&
       isValidatePassword(form.password) &&
       isValidateConfirmPassword(form.password, form.confirmPassword)
     ) {
@@ -44,7 +44,7 @@ const SignupPage = () => {
     } else {
       setIsValidate(false);
     }
-  }, [form.email, form.nickname, form.password, form.confirmPassword]);
+  }, [form.email, form.nickName, form.password, form.confirmPassword]);
 
   useEffect(() => {
     const token = getAccessToken();
@@ -61,17 +61,17 @@ const SignupPage = () => {
   const handleSignup = async () => {
     try {
       setIsLoading(true);
-      const { email, nickname, password } = form;
+      const { email, nickName, password } = form;
 
-      const response = await api.post('/auth/signup', { email, nickname, password });
+      const response = await api.post('/auth/signup', { email, nickName, password });
       const token = response.data?.accessToken;
 
-      if (response.status === 200 && token) {
+      if (token) {
         setAccessToken(token);
         router.push('/');
       }
     } catch (error) {
-      console.error(error);
+      console.log(error.response.data);
     } finally {
       setIsLoading(false);
     }
@@ -89,10 +89,10 @@ const SignupPage = () => {
         <div className={styles.signupForm}>
           <EmailInput name="email" value={form.email} onChange={handleChange} />
           <BaseInput
-            name="nickname"
+            name="nickName"
             label="닉네임"
             placeholder="닉네임을 입력해주세요"
-            value={form.nickname}
+            value={form.nickName}
             onChange={handleChange}
           />
           <PasswordInput name="password" value={form.password} onChange={handleChange} />

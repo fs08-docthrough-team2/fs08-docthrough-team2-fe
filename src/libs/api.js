@@ -1,7 +1,7 @@
 import axios from 'axios';
 import { clearAccessToken, getAccessToken, isBrowser, setAccessToken } from './token.js';
 
-const BASE_URL = '';
+const BASE_URL = 'https://fs08-docthrough.onrender.com/api';
 
 const api = axios.create({
   baseURL: BASE_URL,
@@ -21,8 +21,6 @@ api.interceptors.request.use((config) => {
 
   return config;
 });
-
-/* API 응답 인터셉터 | 백엔드 완성 후 활성화 필요
 
 api.interceptors.response.use(
   (response) => response,
@@ -47,6 +45,5 @@ api.interceptors.response.use(
     return Promise.reject(error);
   },
 );
-*/
 
 export default api;

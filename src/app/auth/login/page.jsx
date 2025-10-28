@@ -53,12 +53,12 @@ const LoginPage = () => {
       const response = await api.post('/auth/login', { email, password });
       const token = response.data?.accessToken;
 
-      if (response.status === 200 && token) {
+      if (token) {
         setAccessToken(token);
         router.push('/');
       }
     } catch (error) {
-      console.error(error);
+      console.log(error.response.data);
     } finally {
       setIsLoading(false);
     }
