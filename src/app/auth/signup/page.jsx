@@ -64,7 +64,7 @@ const SignupPage = () => {
       const { email, nickName, password } = form;
 
       const response = await api.post('/auth/signup', { email, nickName, password });
-      const token = response.data?.accessToken;
+      const token = response.data?.user?.accessToken;
 
       if (token) {
         setAccessToken(token);
