@@ -7,6 +7,8 @@ import styles from '@/styles/components/organisms/GNB/GNB.module.scss';
 import Button from '@/components/atoms/Button/Button';
 import DropdownProfile from '@/components/molecules/Dropdown/DropdownProfile';
 import NotificationPopup from '@/components/molecules/Popup/NotificationPopup';
+import { useAuthStore } from '@/stores/useAuthStore';
+import { useLogout } from '@/hooks/useAuth';
 
 const USER_TYPES = {
   GUEST: 'guest',
@@ -22,7 +24,11 @@ const ADMIN_TABS = [
 
 const HIDDEN_ROUTES = new Set(['/auth/login', '/auth/signup']);
 
-const GNB = ({ userType = USER_TYPES.GUEST, notifications = [] }) => {
+const GNB = ({ notifications = [] }) => {
+  const user = useAuthStore((state) => state.user);
+  const userType = user ? user.role : 'GUEST';
+  const { logout } = useLogout();
+
   const router = useRouter();
   const pathname = usePathname();
   const normalizedPath = (pathname ?? '').replace(/\/+$/, '');
@@ -36,6 +42,12 @@ const GNB = ({ userType = USER_TYPES.GUEST, notifications = [] }) => {
 
   const handleLogin = () => {
     router.push('/auth/login');
+  };
+
+  const handleSelect = (option) => {
+    if (option === '로그아웃') {
+      logout();
+    }
   };
 
   return (
@@ -53,7 +65,7 @@ const GNB = ({ userType = USER_TYPES.GUEST, notifications = [] }) => {
             />
           </Link>
 
-          {userType === USER_TYPES.ADMIN && (
+          {userType === 'ADMIN' && (
             <div className={styles.adminTabGroup}>
               {ADMIN_TABS.map(({ href, label }) => {
                 const isActive = href === '/admin' ? isManagePage : isChallengePage;
@@ -73,22 +85,28 @@ const GNB = ({ userType = USER_TYPES.GUEST, notifications = [] }) => {
         </div>
 
         <nav className={styles.navigation}>
-          {userType === USER_TYPES.GUEST && (
+          {userType === 'GUEST' && (
             <Button variant="outline" size="md" onClick={handleLogin}>
               로그인
             </Button>
           )}
 
-          {(userType === USER_TYPES.USER || userType === USER_TYPES.EXPERT) && (
+          {(userType === 'USER' || userType === 'EXPERT') && (
             <>
               <div className={styles.iconWrapper}>
                 <NotificationPopup notifications={notifications} />
               </div>
-              <DropdownProfile userType={userType} />
+              <DropdownProfile
+                userType={userType}
+                userInfo={user?.nickName}
+                onSelect={handleSelect}
+              />
             </>
           )}
 
-          {userType === USER_TYPES.ADMIN && <DropdownProfile userType={USER_TYPES.ADMIN} />}
+          {userType === 'ADMIN' && (
+            <DropdownProfile userType="admin" userInfo={user?.nickName} onSelect={handleSelect} />
+          )}
         </nav>
       </div>
     </header>

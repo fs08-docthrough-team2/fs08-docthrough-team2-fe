@@ -2,8 +2,8 @@
 
 import { useAuthStore } from '@/stores/useAuthStore';
 import { useRouter } from 'next/navigation';
-import api from '@/libs/api';
-import { setAccessToken } from '@/libs/token';
+import api from '@/libs/api.js';
+import { setAccessToken, clearAccessToken } from '@/libs/token.js';
 
 export const useLogin = () => {
   const setUser = useAuthStore((state) => state.setUser);
@@ -58,4 +58,22 @@ export const useSignup = () => {
   };
 
   return { signup };
+};
+
+export const useLogout = () => {
+  const clearUser = useAuthStore((state) => state.clearUser);
+  const router = useRouter();
+
+  const logout = async () => {
+    try {
+      await api.post('/auth/logout');
+      clearAccessToken();
+      clearUser();
+      router.push('/');
+    } catch (error) {
+      console.log(error.response?.data);
+    }
+  };
+
+  return { logout };
 };
