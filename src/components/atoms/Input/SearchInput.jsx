@@ -17,6 +17,7 @@ export default function SearchInput({
       <input
         className={styles.siInput}
         type="search"
+        style={{ width: '100%' }}
         value={value}
         placeholder={placeholder}
         onChange={onChange}
