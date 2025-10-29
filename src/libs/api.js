@@ -61,10 +61,14 @@ api.interceptors.response.use(
         originalRequest.headers.Authorization = `Bearer ${newToken}`;
         return api(originalRequest);
       } catch (e) {
-        clearAccessToken();
-        useAuthStore.getState().clearUser();
-        goToLoginOnce();
-        return Promise.reject(e);
+        const refreshStatus = e.response?.status;
+
+        if (refreshStatus === 401 || refreshStatus === 403) {
+          clearAccessToken();
+          useAuthStore.getState().clearUser();
+          goToLoginOnce();
+          return Promise.reject(e);
+        }
       }
     }
 

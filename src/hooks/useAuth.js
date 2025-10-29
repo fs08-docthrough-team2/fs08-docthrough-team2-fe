@@ -30,3 +30,25 @@ export const useLogin = () => {
 
   return { login };
 };
+
+export const useSignup = () => {
+  const setUser = useAuthStore((state) => state.setUser);
+  const router = useRouter();
+
+  const signup = async ({ email, nickName, password }) => {
+    try {
+      const res = await api.post('/auth/signup', { email, nickName, password });
+      const token = res.data?.accessToken;
+
+      if (token) {
+        setAccessToken(token);
+      }
+
+      router.push('/');
+    } catch (error) {
+      console.log(error.response?.data);
+    }
+  };
+
+  return { signup };
+};

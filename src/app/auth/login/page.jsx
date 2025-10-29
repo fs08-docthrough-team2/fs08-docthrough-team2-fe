@@ -11,13 +11,10 @@ import AuthEntry from '@/components/atoms/AuthEntry/AuthEntry';
 import GoogleButton from '@/components/atoms/Button/GoogleButton';
 import { useEffect, useState } from 'react';
 import { isValidateEmail, isValidatePassword } from '@/libs/validator.js';
-import api from '@/libs/api.js';
-import { useRouter } from 'next/navigation';
-import { setAccessToken } from '@/libs/token.js';
-import { useLogin } from '@/hooks/useAuth';
+import { useLogin } from '@/hooks/useAuth.js';
+import Link from 'next/link';
 
 const LoginPage = () => {
-  const router = useRouter();
   const { login } = useLogin();
 
   const [form, setForm] = useState({
@@ -58,7 +55,9 @@ const LoginPage = () => {
   return (
     <div className={styles.loginPage}>
       <div className={styles.pageWrapper}>
-        <Image src={img_logo} alt="logo" width={320} height={72} />
+        <Link href="/" className={styles.logoLink}>
+          <Image src={img_logo} alt="logo" width={320} height={72} />
+        </Link>
         <form className={styles.loginForm}>
           <EmailInput name="email" value={form.email} onChange={handleChange} />
           <PasswordInput name="password" value={form.password} onChange={handleChange} />

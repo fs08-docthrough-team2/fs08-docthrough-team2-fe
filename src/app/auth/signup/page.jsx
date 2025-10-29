@@ -9,9 +9,6 @@ import {
   isValidatePassword,
   isValidateConfirmPassword,
 } from '@/libs/validator.js';
-import { useRouter } from 'next/navigation';
-import api from '@/libs/api.js';
-import { setAccessToken } from '@/libs/token.js';
 
 import img_logo from '/public/image/img_logo.svg';
 import EmailInput from '@/components/atoms/Input/EmailInput.jsx';
@@ -20,9 +17,11 @@ import Button from '@/components/atoms/Button/Button.jsx';
 import AuthEntry from '@/components/atoms/AuthEntry/AuthEntry.jsx';
 import GoogleButton from '@/components/atoms/Button/GoogleButton.jsx';
 import BaseInput from '@/components/atoms/Input/BaseInput.jsx';
+import Link from 'next/link';
+import { useSignup } from '@/hooks/useAuth.js';
 
 const SignupPage = () => {
-  const router = useRouter();
+  const { signup } = useSignup();
 
   const [form, setForm] = useState({
     email: '',
@@ -51,34 +50,28 @@ const SignupPage = () => {
     setForm({ ...form, [name]: value });
   };
 
-  const handleSignup = async () => {
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+
+    if (!isValidate || isLoading) return;
+
+    const { email, nickName, password } = form;
     try {
       setIsLoading(true);
-      const { email, nickName, password } = form;
-
-      const response = await api.post('/auth/signup', { email, nickName, password });
-      const token = response.data?.user?.accessToken;
-
-      if (token) {
-        setAccessToken(token);
-        router.push('/');
-      }
+      await signup({ email, nickName, password });
     } catch (error) {
-      console.log(error.response.data);
+      console.log(error.response?.data);
     } finally {
       setIsLoading(false);
     }
   };
 
-  const handleSubmit = async (e) => {
-    e.preventDefault();
-    handleSignup();
-  };
-
   return (
     <div className={styles.signupPage}>
-      <Image src={img_logo} alt="logo" width={320} height={72} />
-      <div className={styles.pageWrapper}>
+      <Link href="/" className={styles.logoLink}>
+        <Image src={img_logo} alt="logo" width={320} height={72} />
+      </Link>
+      <form className={styles.pageWrapper}>
         <div className={styles.signupForm}>
           <EmailInput name="email" value={form.email} onChange={handleChange} />
           <BaseInput
@@ -107,7 +100,7 @@ const SignupPage = () => {
           <GoogleButton disabled={isLoading} />
         </div>
         <AuthEntry type="login" />
-      </div>
+      </form>
     </div>
   );
 };
