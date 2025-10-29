@@ -65,12 +65,10 @@ function FilterPopup({ onApply, onReset, onClose }) {
   }, [selectedFilters.fields]);
 
   const closeDropdown = useCallback(() => {
-    setIsOpen((prev) => {
-      if (!prev) return prev;
-      onClose?.();
-      return false;
-    });
-  }, [onClose]);
+    if (!isOpen) return;
+    setIsOpen(false);
+    onClose?.();
+  }, [isOpen, onClose]);
 
   useEffect(() => {
     if (!isOpen) return;
