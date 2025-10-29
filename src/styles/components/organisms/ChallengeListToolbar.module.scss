@@ -1,6 +1,9 @@
+@use '@/styles/mixin' as m;
+@use '@/styles/variable' as v;
+
 .wrapper {
   width: 100%;
-  background-color: #fff;
+  background-color: v.$white;
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -24,14 +27,13 @@
 }
 
 .createButton {
+  @include m.reset-button;
   background-color: #262626;
   color: #fff;
-  border: none;
   border-radius: 19.5px;
   padding: 8px 16px;
   font-size: 16px;
   font-weight: 600;
-  cursor: pointer;
   transition: background-color 0.2s;
 
   &:hover {
@@ -42,15 +44,20 @@
 /* 필터 + 검색 */
 .controls {
   display: grid;
-  grid-template-columns: 112px 1fr;
+  grid-template-columns: 112px 1fr; /* 필터 112 + 검색 나머지 */
   align-items: center;
   gap: 10px;
   width: 960px;
   padding: 8px 16px;
   box-sizing: border-box;
+
+  /* 콘텐츠가 길어질 때 레이아웃 밀림 방지 */
+  > * {
+    min-width: 0;
+  }
 }
 
-/* 필터 슬롯: 고정 폭 112px 유지 */
+/* (선택) 필터 슬롯 고정폭 */
 .filterSlot {
   width: 112px;
 }
@@ -63,6 +70,88 @@
   padding: 0 12px;
   border: 1px solid #e5e5e5;
   border-radius: 20px;
-  background: #fff;
-  overflow: hidden;
+  background: v.$white;
+  overflow: hidden; /* 내부 둥근/보더 잔상 컷 */
+
+  /* 포커스시 외곽만 살짝 강조(선택) */
+  &:focus-within {
+    border-color: #d9d9d9;
+    box-shadow: 0 0 0 2px rgba(38, 38, 38, 0.06);
+  }
+}
+
+/* 내부 요소 투명화 → 세로줄/반달 제거 (최소 스코프) */
+.searchArea :where(input, button, svg, div) {
+  background: transparent !important;
+  border: 0 !important;
+  box-shadow: none;
+  border-radius: 0;
+}
+
+/* 인풋을 래퍼에 딱 맞게 확장 */
+.searchArea input {
+  flex: 1;
+  min-width: 0;
+  height: 100%;
+  outline: 0;
+  font-size: 15px;
+  color: #333;
+
+  &::placeholder {
+    color: #9b9b9b;
+  }
+}
+
+/* ============= Responsive ============= */
+/* iPad mini (744px) */
+@include m.tablet {
+  .header,
+  .controls {
+    width: 744px;
+    padding: 8px 16px;
+  }
+
+  .title {
+    font-size: 18px;
+  }
+}
+
+/* Mobile (375px) */
+@include m.mobile {
+  .wrapper {
+    padding: 12px 0;
+  }
+
+  .header,
+  .controls {
+    width: 100%;
+    padding: 8px 16px;
+    box-sizing: border-box;
+  }
+
+  /* 필터 auto + 검색 1fr */
+  .controls {
+    grid-template-columns: auto 1fr;
+    gap: 8px;
+  }
+
+  .filterSlot {
+    width: auto;
+  }
+
+  .searchArea {
+    height: 36px;
+    border-radius: 18px;
+    padding: 0 10px;
+  }
+
+  .createButton {
+    padding: 8px 12px;
+    font-size: 14px;
+    border-radius: 18px;
+  }
+
+  .title {
+    font-size: 20px;
+  }
 }
