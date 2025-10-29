@@ -7,7 +7,7 @@ import DropdownTrigger from '../../atoms/Dropdown/DropdownTrigger';
 import styles from '@/styles/components/molecules/Dropdown/DropdownSort.module.scss';
 
 const DROPDOWN_OPTIONS = [
-  '승인 요청',
+  '승인 대기',
   '신청 승인',
   '신청 거절',
   '신청 시간 빠른순',
@@ -15,7 +15,7 @@ const DROPDOWN_OPTIONS = [
   '마감 기한 빠른순',
   '마감 기한 느린순',
 ];
-const DEFAULT_LABEL = '정렬';
+const DEFAULT_LABEL = '승인 대기';
 
 function DropdownSort() {
   const [isOpen, setIsOpen] = useState(false);
