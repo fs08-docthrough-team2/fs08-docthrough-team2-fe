@@ -1,0 +1,198 @@
+@use '@/styles/variable' as v;
+  @use '@/styles/mixin' as m;
+
+  .page {
+    display: flex;
+    justify-content: center;
+    padding: 24px clamp(16px, 6vw, 515px) 80px;
+    background-color: v.$white;
+  }
+
+  .inner {
+    width: min(100%, 889px);
+    margin: 0 auto;
+    display: flex;
+    flex-direction: column;
+    gap: 32px;
+  }
+
+  .headerRow {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    gap: 32px;
+  }
+
+  .detailCard {
+    flex: 1 1 auto;
+    min-width: 0;
+  }
+
+  .sideCard {
+    flex: 0 0 auto;
+  }
+
+  .participantSection {
+    display: flex;
+    flex-direction: column;
+  }
+
+  .participantWrapper {
+    width: 100%;
+    max-width: 889px;
+    padding: 20px 24px;
+    border-radius: 16px;
+    border: 2px solid v.$gray-800;
+    background: #fff;
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+    box-sizing: border-box;
+  }
+
+  .participantHeader {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 16px;
+  }
+
+  .participantInfo {
+    display: flex;
+    align-items: center;
+
+    h2 {
+      width: 80px;
+      margin: 0;
+      color: v.$gray-800;
+      font-family: 'Pretendard', sans-serif;
+      font-size: 18px;
+      font-style: normal;
+      font-weight: 600;
+      line-height: normal;
+    }
+
+    span {
+      display: none;
+    }
+  }
+
+  .paginationControls {
+    display: inline-flex;
+    align-items: center;
+    gap: 12px;
+  }
+
+  .paginationStatus {
+    min-width: 52px;
+    text-align: center;
+    font-size: 14px;
+    font-weight: 500;
+    color: v.$gray-600;
+  }
+
+  .paginationButton {
+    @include m.reset-button;
+    display: inline-flex;
+    justify-content: center;
+    align-items: center;
+    width: 32px;
+    height: 32px;
+    border-radius: 6px;
+    border: 1px solid v.$gray-100;
+    background-color: v.$white;
+    transition:
+      border-color 0.2s ease,
+      box-shadow 0.2s ease;
+
+    &:not(:disabled):hover,
+    &:not(:disabled):focus-visible {
+      border-color: v.$gray-300;
+      box-shadow: 0 2px 6px rgba(15, 23, 42, 0.12);
+    }
+
+    &:disabled {
+      opacity: 0.5;
+      cursor: not-allowed;
+    }
+  }
+
+  .participantList {
+    display: flex;
+    flex-direction: column;
+    margin: 0;
+    padding: 0;
+    list-style: none;
+  }
+
+  .participantList > :global(li) {
+    padding: 12px 16px;
+    border-bottom: 1px solid v.$gray-100;
+  }
+
+  .participantList > :global(li:last-child) {
+    border-bottom: none;
+  }
+
+  .participantEmpty {
+    min-height: 165px;
+    padding: 0 16px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    gap: 4px;
+    text-align: center;
+    font-size: 15px;
+    font-weight: 500;
+    color: v.$gray-500;
+    white-space: pre-line;
+    border-bottom: none;
+  }
+
+  /* tablet 이하 */
+  @include m.tablet {
+    .page {
+      padding: 24px 32px 64px;
+    }
+
+    .headerRow {
+      flex-direction: column;
+      gap: 24px;
+    }
+
+    .sideCard {
+      width: 100%;
+      display: flex;
+      justify-content: center;
+    }
+
+    .participantWrapper {
+      max-width: min(100%, 889px);
+    }
+  }
+
+  /* 모바일 */
+  @include m.mobile {
+    .page {
+      padding: 20px 16px 48px;
+    }
+
+    .inner {
+      gap: 24px;
+    }
+
+    .participantWrapper {
+      padding: 20px 16px;
+    }
+
+    .participantHeader {
+      flex-direction: column;
+      align-items: flex-start;
+      gap: 12px;
+    }
+
+    .paginationControls {
+      width: 100%;
+      justify-content: flex-end;
+    }
+  }
