@@ -44,6 +44,13 @@ export const useSignup = () => {
         setAccessToken(token);
       }
 
+      const userRes = await api.get('/user/my');
+      const user = userRes.data;
+
+      if (user) {
+        setUser(user);
+      }
+
       router.push('/');
     } catch (error) {
       console.log(error.response?.data);
