@@ -1,3 +1,5 @@
+'use client';
+
 import { useState } from 'react';
 import styles from '@/styles/components/atoms/input/SearchInput.module.scss';
 
@@ -15,6 +17,7 @@ export default function SearchInput({
       <input
         className={styles.siInput}
         type="search"
+        style={{ width: '100%' }}
         value={value}
         placeholder={placeholder}
         onChange={onChange}

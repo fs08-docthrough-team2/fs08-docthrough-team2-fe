@@ -15,7 +15,7 @@ export default function List({
   name = 'John Doe',
   user_type = '유저',
   likes = 12574,
-  onPortfolioClick = () => {},
+  onWorkClick = () => {},
 }) {
   const rankLabel = rank != null ? String(rank).padStart(2, '0') : '00'; // 2자리로 표현(01, 02...)
   const likesLabel = Number.isFinite(likes) ? likes.toLocaleString() : '0';
@@ -56,7 +56,7 @@ export default function List({
           <span className={styles.likesValue}>{likesLabel}</span>
         </div>
 
-        <button type="button" className={styles.btn} onClick={onPortfolioClick}>
+        <button type="button" className={styles.btn} onClick={onWorkClick}>
           <span>작업물 보기</span>
           <span className={styles.btnIcon}>
             <Image src={arrow_right} alt="arrow" width={16} height={16} />

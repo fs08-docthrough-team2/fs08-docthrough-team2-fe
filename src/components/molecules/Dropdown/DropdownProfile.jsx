@@ -2,6 +2,7 @@
 
 import Image from 'next/image';
 import { useState } from 'react';
+import { useRouter } from 'next/navigation';
 import DropdownList from '../../atoms/Dropdown/DropdownList';
 import styles from '@/styles/components/molecules/Dropdown/DropdownProfile.module.scss';
 
@@ -39,7 +40,12 @@ const ROLE_LABEL_BY_TYPE = {
   expert: '전문가',
 };
 
+const OPTION_ROUTE_MAP = {
+  '나의 챌린지': '/my-challenge',
+};
+
 function DropdownProfile({ userType = 'user', options, userInfo, onSelect }) {
+  const router = useRouter();
   const [isOpen, setIsOpen] = useState(false);
 
   const baseConfig = PROFILE_CONFIG[userType] ?? PROFILE_CONFIG.user;
@@ -52,6 +58,12 @@ function DropdownProfile({ userType = 'user', options, userInfo, onSelect }) {
 
   const handleSelect = (option) => {
     setIsOpen(false);
+    const trimmed = option.trim();
+    const nextRoute = OPTION_ROUTE_MAP[trimmed];
+    if (nextRoute) {
+      router.push(nextRoute);
+      return;
+    }
     onSelect?.(option, userType);
   };
 
