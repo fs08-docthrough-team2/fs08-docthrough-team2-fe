@@ -2,10 +2,10 @@
 @use '@/styles/mixin' as m;
 
 .row {
-    display: flex;
-    align-items: center;
-    width: 100%;
-    border-bottom: 1px solid v.$gray-100;
+  display: flex;
+  align-items: center;
+  width: 100%;
+  border-bottom: 1px solid v.$gray-100;
 }
 
 .cell {
