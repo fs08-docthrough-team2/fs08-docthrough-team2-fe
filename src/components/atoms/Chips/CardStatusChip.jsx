@@ -5,20 +5,20 @@ import Image from 'next/image';
 import clsx from 'clsx';
 
 const statusMap = {
-  isCompleted: {
+  ISCOMPLETED: {
     label: '모집이 완료된 상태에요',
     icon: ic_person,
   },
-  isClosed: {
+  ISCLOSED: {
     label: '챌린지가 마감되었어요',
     icon: ic_deadline,
   },
 };
 
 /*
-status: isCompleted | isClosed
+status: ISCOMPLETED | ISCLOSED
 */
-const CardStatusChip = ({ status = 'isCompleted' }) => {
+const CardStatusChip = ({ status = 'ISCOMPLETED' }) => {
   const { label, icon } = statusMap[status];
   const chipClassName = clsx(styles.chip, styles[status]);
   const labelClassName = clsx(styles.label, styles[status]);

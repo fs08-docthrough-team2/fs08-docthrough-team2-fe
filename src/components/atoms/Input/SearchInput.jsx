@@ -1,7 +1,7 @@
 'use client';
 
 import { useState } from 'react';
-import styles from '@/styles/components/atoms/input/SearchInput.module.scss';
+import styles from '@/styles/components/atoms/Input/SearchInput.module.scss';
 
 export default function SearchInput({
   value,
