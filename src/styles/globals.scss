@@ -134,3 +134,10 @@ table {
   border-collapse: collapse;
   border-spacing: 0;
 }
+
+/* Global box-sizing */
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}

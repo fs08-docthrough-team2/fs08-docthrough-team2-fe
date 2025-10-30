@@ -14,7 +14,7 @@ const CARD_DATA = {
   challengeName: 'Next.js - App Router: Routing Fundamentals',
   type: 'Next.js',
   category: '공식문서',
-  status: 'isCompleted',
+  status: 'ISCOMPLETED',
   dueDate: '2025-10-22T08:30:00.000Z',
   total: 15,
   capacity: 15,
@@ -49,7 +49,9 @@ const ChallengeCard = ({
       <div className={styles.contentWrapper}>
         <div className={styles.titleWrapper}>
           <div className={styles.statusWrapper}>
-            <CardStatusChip status={status} />
+            {status === 'ISCOMPLETED' || status === 'ISCLOSED' ? (
+              <CardStatusChip status={status} />
+            ) : null}
             {isAdmin && <DropdownOption onEdit={onEdit} onDelete={onDelete} />}
           </div>
           <div className={styles.title}>{challengeName}</div>
