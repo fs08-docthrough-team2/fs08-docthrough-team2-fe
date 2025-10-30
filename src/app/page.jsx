@@ -17,7 +17,7 @@ export default function LandingPage() {
             <br />
             개발자의 새로운 영어 습관
           </h1>
-          <Button variant="outline" size="pill"  onClick={() => router.push('/signup')}>
+          <Button variant="outline" size="pill" onClick={() => router.push('/signup')}>
             번역 시작하기
           </Button>
         </div>
