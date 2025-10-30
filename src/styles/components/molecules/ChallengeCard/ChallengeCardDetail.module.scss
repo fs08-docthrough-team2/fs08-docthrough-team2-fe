@@ -62,3 +62,23 @@
     line-height: normal;
   }
 }
+
+.footer {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.dueDateWrapper,
+.totalWrapper {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+
+  .content {
+    color: v.$gray-600;
+    font-size: 13px;
+    font-weight: 400;
+    line-height: normal;
+  }
+}

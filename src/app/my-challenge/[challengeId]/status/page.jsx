@@ -1,7 +1,7 @@
-import ChallengeApprovalStatus from '@/components/atoms/ChallengeApprovalStatus/ChallengeApprovalStatus';
+import ChallengeCardDetail from '@/components/molecules/ChallengeCard/ChallengeCardDetail';
 
 const ChallengeApprovalDetailPage = () => {
-  return <ChallengeApprovalStatus />;
+  return <ChallengeCardDetail isMyChallenge={true} />;
 };
 
 export default ChallengeApprovalDetailPage;
