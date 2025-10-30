@@ -71,7 +71,7 @@ function ChallengeList({
   if (items.length === 0) {
     return (
       <ul>
-        <li className={styles.row}>{emptyMessage}</li>
+        <li className={clsx(styles.row, styles.emptyRow)}>{emptyMessage}</li>
       </ul>
     );
   }

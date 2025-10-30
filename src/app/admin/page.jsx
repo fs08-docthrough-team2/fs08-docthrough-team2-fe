@@ -144,7 +144,7 @@ const CATEGORY_TEXT = {
   WEB: 'Web',
 };
 
-export default function Adminpage() {
+export default function AdminPage() {
   const router = useRouter();
   const [search, setSearch] = useState('');
   const [currentPage, setCurrentPage] = useState(1);
