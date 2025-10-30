@@ -1,7 +1,8 @@
 import axios from 'axios';
-import { clearAccessToken, getAccessToken, isBrowser, setAccessToken } from './token.js';
+import { getAccessToken, isBrowser, clearAccessToken, setAccessToken } from './token.js';
+import { useAuthStore } from '@/stores/useAuthStore.js';
 
-const BASE_URL = '';
+const BASE_URL = 'https://fs08-docthrough.onrender.com/api';
 
 const api = axios.create({
   baseURL: BASE_URL,
@@ -13,6 +14,20 @@ const api = axios.create({
   timeout: 10000,
 });
 
+const isAuthPage = () => {
+  return isBrowser && ['/auth/login', '/auth/signup'].includes(window.location.pathname);
+};
+
+const goToLoginOnce = () => {
+  if (!isBrowser) return;
+  if (window.__goingToLogin) return;
+  window.__goingToLogin = true;
+
+  if (!isAuthPage()) {
+    window.location.href = '/auth/login';
+  }
+};
+
 api.interceptors.request.use((config) => {
   if (isBrowser) {
     const token = getAccessToken();
@@ -22,31 +37,43 @@ api.interceptors.request.use((config) => {
   return config;
 });
 
-/* API 응답 인터셉터 | 백엔드 완성 후 활성화 필요
-
 api.interceptors.response.use(
   (response) => response,
   async (error) => {
     const originalRequest = error.config;
+    const status = error.response?.status;
 
-    if (error.response?.status === 401 && !originalRequest._retry) {
+    if (originalRequest.url?.includes('/token/refresh')) {
+      return Promise.reject(error);
+    }
+
+    if (status === 401 && !originalRequest._retry) {
       originalRequest._retry = true;
       try {
         const { data } = await api.post('/token/refresh');
-        setAccessToken(data.accessToken);
-        originalRequest.headers.Authorization = `Bearer ${data.accessToken}`;
+        const newToken = data?.accessToken;
+        if (!newToken) {
+          throw new Error('Refresh token is not valid');
+        }
+        setAccessToken(newToken);
+
+        originalRequest.headers = originalRequest.headers || {};
+        originalRequest.headers.Authorization = `Bearer ${newToken}`;
         return api(originalRequest);
-      } catch {
-        clearAccessToken();
+      } catch (e) {
+        const refreshStatus = e.response?.status;
 
-        if (isBrowser) window.location.href = '/auth/login';
-
-        return Promise.reject(error);
+        if (refreshStatus === 401 || refreshStatus === 403) {
+          clearAccessToken();
+          useAuthStore.getState().clearUser();
+          goToLoginOnce();
+          return Promise.reject(e);
+        }
       }
     }
+
     return Promise.reject(error);
   },
 );
-*/
 
 export default api;

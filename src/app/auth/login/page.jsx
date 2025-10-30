@@ -11,12 +11,11 @@ import AuthEntry from '@/components/atoms/AuthEntry/AuthEntry';
 import GoogleButton from '@/components/atoms/Button/GoogleButton';
 import { useEffect, useState } from 'react';
 import { isValidateEmail, isValidatePassword } from '@/libs/validator.js';
-import api from '@/libs/api.js';
-import { useRouter } from 'next/navigation';
-import { getAccessToken, setAccessToken } from '@/libs/token.js';
+import { useLogin } from '@/hooks/useAuth.js';
+import Link from 'next/link';
 
 const LoginPage = () => {
-  const router = useRouter();
+  const { login } = useLogin();
 
   const [form, setForm] = useState({
     email: '',
@@ -33,47 +32,33 @@ const LoginPage = () => {
     }
   }, [form.email, form.password]);
 
-  useEffect(() => {
-    const token = getAccessToken();
-    if (token) {
-      router.replace('/');
-    }
-  }, [router]);
-
   const handleChange = (e) => {
     const { name, value } = e.target;
     setForm({ ...form, [name]: value });
   };
 
-  const handleLogin = async () => {
-    const { email, password } = form;
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    if (!isValidate || isLoading) return;
 
+    const { email, password } = form;
     try {
       setIsLoading(true);
-      const response = await api.post('/auth/login', { email, password });
-      const token = response.data?.accessToken;
-
-      if (response.status === 200 && token) {
-        setAccessToken(token);
-        router.push('/');
-      }
+      await login({ email, password });
     } catch (error) {
-      console.error(error);
+      console.log(error.response?.data);
     } finally {
       setIsLoading(false);
     }
   };
 
-  const handleSubmit = async (e) => {
-    e.preventDefault();
-    handleLogin();
-  };
-
   return (
     <div className={styles.loginPage}>
       <div className={styles.pageWrapper}>
-        <Image src={img_logo} alt="logo" width={320} height={72} />
-        <div className={styles.loginForm}>
+        <Link href="/" className={styles.logoLink}>
+          <Image src={img_logo} alt="logo" width={320} height={72} />
+        </Link>
+        <form className={styles.loginForm}>
           <EmailInput name="email" value={form.email} onChange={handleChange} />
           <PasswordInput name="password" value={form.password} onChange={handleChange} />
           <div className={styles.buttonWrapper}>
@@ -87,7 +72,7 @@ const LoginPage = () => {
             <GoogleButton disabled={isLoading} />
           </div>
           <AuthEntry type="signup" />
-        </div>
+        </form>
       </div>
     </div>
   );

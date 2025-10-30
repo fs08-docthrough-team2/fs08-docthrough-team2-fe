@@ -9,9 +9,6 @@ import {
   isValidatePassword,
   isValidateConfirmPassword,
 } from '@/libs/validator.js';
-import { useRouter } from 'next/navigation';
-import api from '@/libs/api.js';
-import { getAccessToken, setAccessToken } from '@/libs/token.js';
 
 import img_logo from '/public/image/img_logo.svg';
 import EmailInput from '@/components/atoms/Input/EmailInput.jsx';
@@ -20,13 +17,15 @@ import Button from '@/components/atoms/Button/Button.jsx';
 import AuthEntry from '@/components/atoms/AuthEntry/AuthEntry.jsx';
 import GoogleButton from '@/components/atoms/Button/GoogleButton.jsx';
 import BaseInput from '@/components/atoms/Input/BaseInput.jsx';
+import Link from 'next/link';
+import { useSignup } from '@/hooks/useAuth.js';
 
 const SignupPage = () => {
-  const router = useRouter();
+  const { signup } = useSignup();
 
   const [form, setForm] = useState({
     email: '',
-    nickname: '',
+    nickName: '',
     password: '',
     confirmPassword: '',
   });
@@ -36,7 +35,7 @@ const SignupPage = () => {
   useEffect(() => {
     if (
       isValidateEmail(form.email) &&
-      isValidateNickname(form.nickname) &&
+      isValidateNickname(form.nickName) &&
       isValidatePassword(form.password) &&
       isValidateConfirmPassword(form.password, form.confirmPassword)
     ) {
@@ -44,55 +43,42 @@ const SignupPage = () => {
     } else {
       setIsValidate(false);
     }
-  }, [form.email, form.nickname, form.password, form.confirmPassword]);
-
-  useEffect(() => {
-    const token = getAccessToken();
-    if (token) {
-      router.replace('/');
-    }
-  }, [router]);
+  }, [form.email, form.nickName, form.password, form.confirmPassword]);
 
   const handleChange = (e) => {
     const { name, value } = e.target;
     setForm({ ...form, [name]: value });
   };
 
-  const handleSignup = async () => {
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+
+    if (!isValidate || isLoading) return;
+
+    const { email, nickName, password } = form;
     try {
       setIsLoading(true);
-      const { email, nickname, password } = form;
-
-      const response = await api.post('/auth/signup', { email, nickname, password });
-      const token = response.data?.accessToken;
-
-      if (response.status === 200 && token) {
-        setAccessToken(token);
-        router.push('/');
-      }
+      await signup({ email, nickName, password });
     } catch (error) {
-      console.error(error);
+      console.log(error.response?.data);
     } finally {
       setIsLoading(false);
     }
   };
 
-  const handleSubmit = async (e) => {
-    e.preventDefault();
-    handleSignup();
-  };
-
   return (
     <div className={styles.signupPage}>
-      <Image src={img_logo} alt="logo" width={320} height={72} />
-      <div className={styles.pageWrapper}>
+      <Link href="/" className={styles.logoLink}>
+        <Image src={img_logo} alt="logo" width={320} height={72} />
+      </Link>
+      <form className={styles.pageWrapper}>
         <div className={styles.signupForm}>
           <EmailInput name="email" value={form.email} onChange={handleChange} />
           <BaseInput
-            name="nickname"
+            name="nickName"
             label="닉네임"
             placeholder="닉네임을 입력해주세요"
-            value={form.nickname}
+            value={form.nickName}
             onChange={handleChange}
           />
           <PasswordInput name="password" value={form.password} onChange={handleChange} />
@@ -114,7 +100,7 @@ const SignupPage = () => {
           <GoogleButton disabled={isLoading} />
         </div>
         <AuthEntry type="login" />
-      </div>
+      </form>
     </div>
   );
 };
