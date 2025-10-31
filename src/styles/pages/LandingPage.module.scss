@@ -8,7 +8,7 @@
 .hero {
   position: relative;
   width: 100%;
-  height: 260px;
+  height: 340px;
   background: #1f1f1f;
   overflow: hidden;
   display: flex;
@@ -25,20 +25,37 @@
   z-index: 1;
   text-align: center;
   color: #f5f5f5;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
 }
+
+.heroInner button {
+  border-radius: 12px !important;
+  padding: 2px 16px 3px 16px !important;
+  font-size: 16px !important;
+}
+.logoWrap {
+  margin-bottom: 7px;
+  transform: translateY(-6px);
+}
+
 .kicker {
   font-size: 14px;
   opacity: 0.9;
   margin-bottom: 8px;
 }
 .title {
-  margin: 0;
-  font-size: 28px;
-  font-weight: 900;
-  line-height: 1.25;
+  color: #fff;
+  font-family: 'Pretendard', sans-serif;
+  font-size: 24px;
+  font-weight: 600;
+  line-height: 36px;
+  letter-spacing: 0.39px;
+  margin-bottom: 26px;
 }
 
-/* CTA 버튼 그룹 - 버튼 두 개 나란히 */
 .buttonGroup {
   display: flex;
   justify-content: center;
@@ -48,56 +65,69 @@
   flex-wrap: wrap;
 }
 
+.buttonWrap {
+  display: flex;
+  justify-content: center;
+}
+
 .features {
   width: 100%;
-  max-width: 960px;
+  max-width: 1100px;
   margin: 0 auto;
   display: flex;
   flex-direction: column;
-  gap: 80px;
+  justify-content: space-between;
+  gap: 16px;
   padding: 100px 16px;
   box-sizing: border-box;
 }
 .feature {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: 60px;
+  display: grid;
+  grid-template-columns: 1fr 700px;
+  align-items: flex-start;
 }
 .text {
-  flex: 1;
+  padding-left: 32px;
   display: flex;
   flex-direction: column;
   gap: 12px;
+  margin-top: 21px;
+  max-width: 520px;
+  text-align: left;
 
   h3 {
     margin: 0;
-    font-size: 22px;
+    text-align: justify;
+    font-size: 24px;
     font-weight: 800;
     line-height: 1.4;
-    color: #414141;
+    color: #000;
   }
   p {
     margin: 0;
-    font-size: 15px;
-    color: #555;
+    text-align: justify;
+    font-size: 16px;
+    font-weight: 400;
+    color: #676767;
     line-height: 1.6;
+    letter-spacing: 0.39;
   }
 }
 .icon {
-  width: 20px;
-  height: 20px;
-  margin-bottom: 6px;
+  width: 24px;
+  height: 24px;
 }
 .image {
   flex: 1;
   display: flex;
   justify-content: center;
 
+  flex-shrink: 0;
+
   img {
-    width: 100%;
-    max-width: 480px;
-    height: auto;
+    width: 570px;
+    max-width: 100%;
+    height: 411px;
     display: block;
   }
 }
@@ -105,6 +135,7 @@
 .divider {
   width: 100%;
   border-bottom: 1px dashed #ddd;
+  margin: 18px 0;
 }
 
 .finalCTA {
@@ -112,56 +143,78 @@
   display: flex;
   flex-direction: column;
   align-items: center;
-  gap: 16px;
+  gap: 20px;
   padding: 120px 16px;
   background: #fff;
-  color: #414141;
+  color: #676767;
+  margin-top: -80px;
 
   h2 {
-    font-size: 22px;
-    font-weight: 700;
-    margin: 0;
+    color: #000;
+
+    text-align: center;
+    font-feature-settings:
+      'liga' off,
+      'clig' off;
+    font-family: Pretendard;
+    font-size: 18px;
+    font-style: normal;
+    font-weight: 600;
+    line-height: 32px;
+    letter-spacing: 0.39px;
   }
 }
 
-/* 반응형 */
 @media (max-width: 744px) {
-  .hero {
-    height: 220px;
-  }
-  .title {
-    font-size: 24px;
-  }
-  .features {
-    max-width: 744px;
-    gap: 64px;
-    padding: 72px 16px;
-  }
   .feature {
-    gap: 32px;
+    grid-template-columns: 1fr; /* 한 컬럼 스택 */
+    row-gap: 16px;
+  }
+  .text {
+    margin-top: 0;
+    max-width: 100%;
+  }
+  .image {
+    margin-left: 0;
+    justify-content: center;
   }
   .image img {
-    max-width: 420px;
+    width: 100%;
+    max-width: 560px;
+    height: auto;
   }
 }
 
+/* Mobile (≤480px) */
 @media (max-width: 480px) {
   .hero {
-    height: 190px;
+    height: 320px;
+  }
+  .logoWrap {
+    margin-bottom: 6px;
+    transform: translateY(-4px);
   }
   .title {
     font-size: 20px;
+    line-height: 28px;
+    margin-bottom: 16px;
   }
-  .features {
-    max-width: 100%;
-    gap: 48px;
-    padding: 56px 16px;
+  .heroInner button {
+    padding: 9px 18px !important;
+    font-size: 13px !important;
   }
+
   .feature {
-    flex-direction: column;
-    text-align: left;
+    row-gap: 14px;
+  }
+  .text h3 {
+    font-size: 20px;
+    line-height: 28px;
+  }
+  .text p {
+    font-size: 14px;
   }
   .image img {
-    max-width: 100%;
+    max-width: 420px;
   }
 }
