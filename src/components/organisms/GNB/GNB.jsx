@@ -20,14 +20,15 @@ const ADMIN_TABS = [
   { href: '/admin/challenge', label: '챌린지 목록' },
 ];
 
-const HIDDEN_ROUTES = new Set(['/auth/login', '/auth/signup']);
+const HIDDEN_ROUTES = new Set(['/auth/login', '/auth/signup', '/:challengeId/work/post']);
 
 const GNB = ({ userType = USER_TYPES.GUEST, notifications = [] }) => {
   const router = useRouter();
   const pathname = usePathname();
   const normalizedPath = (pathname ?? '').replace(/\/+$/, '');
-
-  if (HIDDEN_ROUTES.has(normalizedPath)) {
+  const isHiddenRoute =
+    HIDDEN_ROUTES.has(normalizedPath) || /^\/[^/]+\/work\/post$/.test(normalizedPath);
+  if (isHiddenRoute) {
     return null;
   }
 
