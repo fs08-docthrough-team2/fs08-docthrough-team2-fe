@@ -1,0 +1,140 @@
+@use '@/styles/variable' as v;
+@use '@/styles/mixin' as m;
+
+.list {
+  width: 100%;
+  overflow-x: auto;
+}
+
+.row {
+  display: flex;
+  align-items: center;
+  width: 100%;
+  border-bottom: 1px solid v.$gray-100;
+}
+
+.emptyRow {
+  padding: 24px;
+}
+
+.cell {
+  display: flex;
+  padding: 15px 16px;
+  align-items: center;
+  gap: 10px;
+  flex-shrink: 1;
+  align-self: stretch;
+  font-size: 14px;
+  color: v.$gray-800;
+  min-width: 0;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.cellNo {
+  justify-content: flex-start;
+  color: v.$gray-500;
+  font-weight: 400;
+  font-size: 13px;
+  width: 36px;
+}
+
+.cellField,
+.cellCategory {
+  justify-content: flex-start;
+  color: v.$gray-500;
+  font-weight: 400;
+  font-size: 13px;
+  width: 52px;
+}
+
+.cellTitle {
+  box-sizing: border-box;
+  justify-content: flex-start;
+  color: v.$gray-600;
+  font-weight: 500;
+  background: none;
+  border: none;
+  width: 358px;
+}
+
+.cellTitleInteractive {
+  justify-content: flex-start;
+  color: v.$gray-600;
+  font-weight: 500;
+  background: none;
+  border: none;
+  cursor: pointer;
+  width: 358px;
+
+  &:hover,
+  &:focus-visible {
+    color: v.$gray-500;
+    text-decoration: underline;
+  }
+}
+
+.cellCapacity {
+  justify-content: flex-start;
+  color: v.$gray-500;
+  font-weight: 400;
+  font-size: 13px;
+  width: 62px;
+}
+
+.cellApplied,
+.cellDeadline {
+  justify-content: flex-start;
+  color: v.$gray-500;
+  font-weight: 400;
+  font-size: 13px;
+  width: 62px;
+}
+
+.cellStatus {
+  justify-content: flex-start;
+  white-space: normal;
+  width: 88px;
+}
+
+@include m.tablet {
+  .cellNo,
+  .cellField,
+  .cellCategory,
+  .cellCapacity,
+  .cellStatus {
+    flex-shrink: 1;
+    min-width: 0;
+    white-space: nowrap;
+  }
+
+  .cellApplied,
+  .cellDeadline {
+    flex-shrink: 1;
+    min-width: 0;
+    white-space: normal;
+  }
+
+  .cellTitle,
+  .cellTitleInteractive {
+    width: 197px;
+    white-space: normal;
+    .cell {
+      flex-shrink: 1;
+      white-space: normal;
+    }
+  }
+}
+
+@include m.mobile {
+  .row {
+    flex-wrap: nowrap;
+    min-width: 844px;
+  }
+
+  .cell {
+    flex: 0 0 auto;
+    white-space: normal;
+  }
+}
