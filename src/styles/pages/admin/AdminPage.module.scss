@@ -27,8 +27,8 @@
   gap: 12px;
 
   :global(.siWrap) {
-    flex: 1;                 
-    min-width: 0;            
+    flex: 1;
+    min-width: 0;
     width: min(100%, 844px);
   }
 }
@@ -53,11 +53,11 @@
 
 .tableScrollArea {
   width: 100%;
-  overflow-x: visible; 
+  overflow-x: visible;
 }
 
 .tableInner {
-   min-width: 100%; 
+  min-width: 100%;
 }
 
 @include m.mobile {
@@ -66,7 +66,7 @@
   }
 
   .tableInner {
-    min-width: 844px; 
+    min-width: 844px;
   }
 }
 
