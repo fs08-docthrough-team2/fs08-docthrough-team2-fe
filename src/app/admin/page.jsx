@@ -3,8 +3,8 @@
 import { useMemo, useState } from 'react';
 import { useRouter } from 'next/navigation';
 import clsx from 'clsx';
-import DropdownSort from '@/components/molecules/Dropdown/DropdownSort';
 import SearchInput from '@/components/atoms/Input/SearchInput';
+import DropdownSort from '@/components/molecules/Dropdown/DropdownSort';
 import ChallengeList from '@/components/atoms/List/ChallengeList';
 import Pagination from '@/components/molecules/Pagination/Pagination';
 import styles from '@/styles/pages/admin/AdminPage.module.scss';
@@ -135,7 +135,11 @@ const MOCK_CHALLENGES = [
   },
 ];
 
-const FIELD_TEXT = { OFFICIAL: '공식문서', BLOG: '블로그' };
+const FIELD_TEXT = {
+  OFFICIAL: '공식문서',
+  BLOG: '블로그',
+};
+
 const CATEGORY_TEXT = {
   NEXTJS: 'Next.js',
   API: 'API',
@@ -176,9 +180,9 @@ export default function AdminPage() {
   };
 
   const handleChangePage = (page) => setCurrentPage(page);
-  const handleClickTitle = (challengeNo) => {
-    if (challengeNo == null) return;
-    router.push(`/admin/${challengeNo}/status`);
+  const handleClickTitle = (challengeId) => {
+    if (challengeId == null) return;
+    router.push(`/admin/${challengeId}/status`);
   };
 
   return (
@@ -193,82 +197,89 @@ export default function AdminPage() {
         />
         <DropdownSort className={styles.dropdownSort} />
       </div>
-
-      <div className={clsx(styles.listHeader, challengeListStyles.row)}>
-        <span
-          className={clsx(styles.headerCell, challengeListStyles.cell, challengeListStyles.cellNo)}
-        >
-          No.
-        </span>
-        <span
-          className={clsx(
-            styles.headerCell,
-            challengeListStyles.cell,
-            challengeListStyles.cellField,
-          )}
-        >
-          분야
-        </span>
-        <span
-          className={clsx(
-            styles.headerCell,
-            challengeListStyles.cell,
-            challengeListStyles.cellCategory,
-          )}
-        >
-          카테고리
-        </span>
-        <span
-          className={clsx(
-            styles.headerCell,
-            challengeListStyles.cell,
-            challengeListStyles.cellTitle,
-          )}
-        >
-          챌린지 제목
-        </span>
-        <span
-          className={clsx(
-            styles.headerCell,
-            challengeListStyles.cell,
-            challengeListStyles.cellCapacity,
-          )}
-        >
-          모집 정원
-        </span>
-        <span
-          className={clsx(
-            styles.headerCell,
-            challengeListStyles.cell,
-            challengeListStyles.cellApplied,
-          )}
-        >
-          신청일
-        </span>
-        <span
-          className={clsx(
-            styles.headerCell,
-            challengeListStyles.cell,
-            challengeListStyles.cellDeadline,
-          )}
-        >
-          마감 기한
-        </span>
-        <span
-          className={clsx(
-            styles.headerCell,
-            challengeListStyles.cell,
-            challengeListStyles.cellStatus,
-          )}
-        >
-          상태
-        </span>
+      <div className={styles.tableScrollArea}>
+        <div className={clsx(styles.listHeader, styles.tableInner, challengeListStyles.row)}>
+          <span
+            className={clsx(
+              styles.headerCell,
+              challengeListStyles.cell,
+              challengeListStyles.cellNo,
+            )}
+          >
+            No.
+          </span>
+          <span
+            className={clsx(
+              styles.headerCell,
+              challengeListStyles.cell,
+              challengeListStyles.cellField,
+            )}
+          >
+            분야
+          </span>
+          <span
+            className={clsx(
+              styles.headerCell,
+              challengeListStyles.cell,
+              challengeListStyles.cellCategory,
+            )}
+          >
+            카테고리
+          </span>
+          <span
+            className={clsx(
+              styles.headerCell,
+              challengeListStyles.cell,
+              challengeListStyles.cellTitle,
+            )}
+          >
+            챌린지 제목
+          </span>
+          <span
+            className={clsx(
+              styles.headerCell,
+              challengeListStyles.cell,
+              challengeListStyles.cellCapacity,
+            )}
+          >
+            모집 정원
+          </span>
+          <span
+            className={clsx(
+              styles.headerCell,
+              challengeListStyles.cell,
+              challengeListStyles.cellApplied,
+            )}
+          >
+            신청일
+          </span>
+          <span
+            className={clsx(
+              styles.headerCell,
+              challengeListStyles.cell,
+              challengeListStyles.cellDeadline,
+            )}
+          >
+            마감 기한
+          </span>
+          <span
+            className={clsx(
+              styles.headerCell,
+              challengeListStyles.cell,
+              challengeListStyles.cellStatus,
+            )}
+          >
+            상태
+          </span>
+        </div>
+        <div className={styles.tableInner}>
+          <ChallengeList
+            items={currentItems}
+            onClickTitle={handleClickTitle}
+            emptyMessage="현재 검토 중인 챌린지가 없습니다."
+          />
+        </div>
       </div>
-      <ChallengeList
-        items={currentItems}
-        onClickTitle={handleClickTitle}
-        emptyMessage="현재 검토 중인 챌린지가 없습니다."
-      />
 
       <div className={styles.paginationWrapper}>
         <Pagination

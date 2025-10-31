@@ -70,14 +70,14 @@ function ChallengeList({
 }) {
   if (items.length === 0) {
     return (
-      <ul>
+      <ul className={styles.list}>
         <li className={clsx(styles.row, styles.emptyRow)}>{emptyMessage}</li>
       </ul>
     );
   }
 
   return (
-    <ul>
+    <ul className={styles.list}>
       {items.map(({ no, type, field, title, participants, appliedDate, deadline, status }) => {
         const statusInfo = STATUS_META[status?.toLowerCase()] ?? {
           label: status ?? '-',

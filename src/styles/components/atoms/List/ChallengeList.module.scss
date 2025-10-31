@@ -1,6 +1,11 @@
 @use '@/styles/variable' as v;
 @use '@/styles/mixin' as m;
 
+.list {
+  width: 100%;
+  overflow-x: auto;
+}
+
 .row {
   display: flex;
   align-items: center;
@@ -17,11 +22,11 @@
   padding: 15px 16px;
   align-items: center;
   gap: 10px;
-  flex-shrink: 0;
+  flex-shrink: 1;
   align-self: stretch;
   font-size: 14px;
   color: v.$gray-800;
-  min-width: 0;
+  min-width: 0; 
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
@@ -35,14 +40,7 @@
   width: 36px;
 }
 
-.cellField {
-  justify-content: flex-start;
-  color: v.$gray-500;
-  font-weight: 400;
-  font-size: 13px;
-  width: 52px;
-}
-
+.cellField,
 .cellCategory {
   justify-content: flex-start;
   color: v.$gray-500;
@@ -52,12 +50,12 @@
 }
 
 .cellTitle {
+  box-sizing: border-box;
   justify-content: flex-start;
   color: v.$gray-600;
   font-weight: 500;
   background: none;
   border: none;
-  cursor: pointer;
   width: 358px;
 }
 
@@ -101,23 +99,42 @@
 }
 
 @include m.tablet {
-  .cell {
-    font-size: 13px;
-    padding: 12px 14px;
+  .cellNo,
+  .cellField,
+  .cellCategory,
+  .cellCapacity,
+  .cellStatus {
+    flex-shrink: 1;
+    min-width: 0;
+    white-space: nowrap;
+  }
+
+  .cellApplied,
+  .cellDeadline {
+    flex-shrink: 1;
+    min-width: 0;
+    white-space: normal;
+  }
+
+  .cellTitle,
+  .cellTitleInteractive {
+    width: 197px;
+    white-space: normal;
+    .cell {
+      flex-shrink: 1;
+      white-space: normal;
+    }
   }
 }
 
 @include m.mobile {
+  .row {
+    flex-wrap: nowrap; 
+    min-width: 844px; 
+  }
+
   .cell {
-    width: 100%;
-    padding: 12px 16px;
+    flex: 0 0 auto;  
     white-space: normal;
-  }
-  .cellNo {
-    order: -1;
-    justify-content: flex-start;
-  }
-  .cellStatus {
-    justify-content: flex-start;
   }
 }

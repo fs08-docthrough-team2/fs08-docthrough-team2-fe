@@ -22,18 +22,21 @@
     width: 120px;
   }
 
-  .dropdown :global(.trigger) {
-    width: 120px;
+  .triggerWrapper {
+     width: 120px;
   }
 }
 
 @include m.mobile {
   .dropdown {
-    width: 104px;
+    width: 83px;
   }
 
-  .dropdown :global(.trigger) {
-    width: 104px;
-    padding: 8px;
+  .triggerWrapper {
+    width: 83px;
+  }
+
+  .triggerWrapper :global(.trigger) {
+    width: 100%;
   }
 }

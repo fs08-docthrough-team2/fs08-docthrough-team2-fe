@@ -1,4 +1,5 @@
 @use '@/styles/variable' as v;
+@use '@/styles/mixin' as m;
 
 .adminPage {
   width: 100%;
@@ -23,9 +24,12 @@
   align-items: center;
   margin-bottom: 24px;
   width: 100%;
+  gap: 12px;
 
   :global(.siWrap) {
-    width: 844px;
+    flex: 1;                 
+    min-width: 0;            
+    width: min(100%, 844px);
   }
 }
 
@@ -42,10 +46,28 @@
   color: v.$white;
   font-weight: 600;
   background: transparent;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 
-.challengeListStyles {
-  width: 844px;
+.tableScrollArea {
+  width: 100%;
+  overflow-x: visible; 
+}
+
+.tableInner {
+   min-width: 100%; 
+}
+
+@include m.mobile {
+  .tableScrollArea {
+    overflow-x: auto;
+  }
+
+  .tableInner {
+    min-width: 844px; 
+  }
 }
 
 .paginationWrapper {
