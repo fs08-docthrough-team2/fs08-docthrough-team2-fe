@@ -2,15 +2,15 @@
 @use '@/styles/variable' as v;
 
 .page {
-  @include m.margin-auto(996px);
+  @include m.center-container(996px);
   padding: 24px 0 48px 0;
 
   @include m.tablet {
-    @include m.margin-auto(696px);
+    @include m.center-container(696px);
   }
 
   @include m.mobile {
-    @include m.margin-auto(343px);
+    @include m.center-container(343px);
   }
 }
 

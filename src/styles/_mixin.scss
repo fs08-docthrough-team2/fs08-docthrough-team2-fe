@@ -58,8 +58,10 @@
   }
 }
 
-@mixin margin-auto($width: 100%) {
-  width: $width;
-  margin-left: auto;
-  margin-right: auto;
+// 가운데 정렬 + 반응형 좌우 여백 + 최대폭
+@mixin center-container($max: 1200px, $min-pad: 16px, $max-pad: 28px) {
+  box-sizing: border-box;
+  max-width: $max;
+  margin-inline: auto; // = left/right auto
+  padding-inline: clamp(#{$min-pad}, 4vw, #{$max-pad}); // 화면 좁을수록 작게, 넓어질수록 적당히
 }
