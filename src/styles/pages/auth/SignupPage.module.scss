@@ -21,10 +21,10 @@
 }
 
 .pageWrapper {
-  @include m.margin-auto(518px);
+  @include m.center-container(518px);
 
   @include m.mobile {
-    @include m.margin-auto(375px);
+    @include m.center-container(375px);
   }
 
   display: flex;

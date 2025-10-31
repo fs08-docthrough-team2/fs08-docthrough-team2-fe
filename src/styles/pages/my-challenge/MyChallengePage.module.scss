@@ -2,8 +2,16 @@
 @use '@/styles/variable' as v;
 
 .page {
-  @include m.margin-auto(996px);
-  margin-top: 24px;
+  @include m.center-container(996px);
+  padding: 24px 0 48px 0;
+
+  @include m.tablet {
+    @include m.center-container(696px);
+  }
+
+  @include m.mobile {
+    @include m.center-container(343px);
+  }
 }
 
 .header {
@@ -11,6 +19,10 @@
   display: flex;
   flex-direction: column;
   gap: 24px;
+
+  @include m.mobile {
+    gap: 16px;
+  }
 }
 
 .headerContent {
@@ -37,4 +49,8 @@
   display: flex;
   flex-direction: column;
   gap: 24px;
+
+  @include m.mobile {
+    margin-top: 16px;
+  }
 }

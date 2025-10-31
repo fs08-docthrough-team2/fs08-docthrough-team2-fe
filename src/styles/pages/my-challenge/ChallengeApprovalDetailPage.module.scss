@@ -1,0 +1,44 @@
+@use '@/styles/mixin' as m;
+@use '@/styles/variable' as v;
+
+.page {
+  padding: 24px 0 68px 0;
+  @include m.center-container(890px);
+
+  @include m.tablet {
+    padding-bottom: 209px;
+    @include m.center-container(696px);
+  }
+
+  @include m.mobile {
+    padding-bottom: 171px;
+    @include m.center-container(375px);
+  }
+}
+
+.content {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.stroke {
+  margin: 16px 0;
+}
+
+.description {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+
+  .title {
+    color: v.$gray-800;
+    font-size: 18px;
+    font-weight: 600;
+    line-height: normal;
+
+    @include m.mobile {
+      font-size: 16px;
+    }
+  }
+}
