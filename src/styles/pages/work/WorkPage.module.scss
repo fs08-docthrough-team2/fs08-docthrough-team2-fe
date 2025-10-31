@@ -16,6 +16,12 @@
   }
 }
 
+.titleHeaderTop {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
 .titleHeader {
   display: flex;
   flex-direction: column;

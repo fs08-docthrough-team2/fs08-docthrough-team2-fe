@@ -12,7 +12,7 @@ import ic_plus from '/public/icon/ic_plus.svg';
 
 /*
 variant: tonal | outline | transparent | solid | filled
-size: xs | sm | md | lg | pill
+size: xs | sm | md | lg | pill | post
 icon: quit | arrowRight | click | document | plus
 */
 const Button = ({
