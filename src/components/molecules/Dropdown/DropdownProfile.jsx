@@ -50,7 +50,7 @@ function DropdownProfile({ userType = 'user', options, userInfo, onSelect }) {
 
   const baseConfig = PROFILE_CONFIG[userType] ?? PROFILE_CONFIG.user;
   const resolvedOptions = options ?? baseConfig.options;
-  const resolvedUserInfo = userInfo ?? baseConfig.userInfo;
+  const resolvedUserInfo = userInfo ? { name: userInfo } : baseConfig.userInfo;
   const profileImage = baseConfig.image;
   const roleLabel = ROLE_LABEL_BY_TYPE[userType] ?? ROLE_LABEL_BY_TYPE.user;
 

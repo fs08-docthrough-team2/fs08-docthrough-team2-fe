@@ -25,6 +25,12 @@
   }
 }
 
+.stroke {
+  max-width: 100%;
+  height: auto;
+  display: block;
+}
+
 .contentWrapper {
   display: flex;
   flex-direction: column;

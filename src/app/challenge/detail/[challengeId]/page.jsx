@@ -26,7 +26,6 @@ const mockChallenge = {
   capacity: 15,
 };
 
-// 임의의 참여 현황 생성 -> 추후 api로 받아오면 수정
 const mockParticipants = Array.from({ length: 15 }, (_, index) => ({
   id: index + 1,
   name: `참여자 ${index + 1}`,
