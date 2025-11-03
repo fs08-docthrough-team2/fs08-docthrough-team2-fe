@@ -1,4 +1,3 @@
-// src/app/challenge/detail/[challengeId]/page.jsx
 'use client';
 
 import Image from 'next/image';

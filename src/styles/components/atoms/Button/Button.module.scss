@@ -18,6 +18,8 @@
 
 .button {
   @include m.reset-button;
+  @include defaultBtn;
+  gap: 8px;
 }
 
 .solid {

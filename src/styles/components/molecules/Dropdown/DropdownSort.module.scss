@@ -6,16 +6,37 @@
   display: inline-flex;
   flex-direction: column;
   align-items: flex-start;
-  width: 100%;
-  max-width: 140px;
-  font-size: 0.95rem;
+  width: 140px;
   color: v.$gray-800;
+}
 
-  @include m.tablet {
-    max-width: 120px;
+.triggerWrapper {
+  width: 140px;
+  > button {
+    border-radius: 32px;
+  }
+}
+
+@include m.tablet {
+  .dropdown {
+    width: 120px;
   }
 
-  @include m.mobile {
-    max-width: 83px;
+  .triggerWrapper {
+    width: 120px;
+  }
+}
+
+@include m.mobile {
+  .dropdown {
+    width: 83px;
+  }
+
+  .triggerWrapper {
+    width: 83px;
+  }
+
+  .triggerWrapper :global(.trigger) {
+    width: 100%;
   }
 }

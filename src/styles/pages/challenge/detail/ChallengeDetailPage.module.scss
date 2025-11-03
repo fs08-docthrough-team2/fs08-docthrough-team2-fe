@@ -43,7 +43,7 @@
   padding: 20px 24px;
   border-radius: 16px;
   border: 2px solid v.$gray-800;
-  background: #fff;
+  background: v.$white;
   display: flex;
   flex-direction: column;
   gap: 16px;
@@ -65,11 +65,8 @@
     width: 80px;
     margin: 0;
     color: v.$gray-800;
-    font-family: 'Pretendard', sans-serif;
     font-size: 18px;
-    font-style: normal;
     font-weight: 600;
-    line-height: normal;
   }
 
   span {
@@ -149,7 +146,6 @@
   border-bottom: none;
 }
 
-/* tablet 이하 */
 @include m.tablet {
   .page {
     padding: 24px 32px 64px;
@@ -171,7 +167,6 @@
   }
 }
 
-/* 모바일 */
 @include m.mobile {
   .page {
     padding: 20px 16px 48px;
