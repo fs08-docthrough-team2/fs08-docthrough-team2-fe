@@ -16,9 +16,11 @@ const WorkPostPage = () => {
 
   return (
     <div className={styles.page}>
-      <div className={styles.title}>개발자로써 자신만의 브랜드를 구축하는 방법(dailydev)</div>
-      <Image src={stroke_gray} alt="stroke" width={890} height={0} />
-      <MarkdownEditor value={content} onChange={handleContentChange} />
+      <div className={styles.contentWrapper}>
+        <div className={styles.title}>개발자로써 자신만의 브랜드를 구축하는 방법(dailydev)</div>
+        <Image src={stroke_gray} alt="stroke" width={890} height={0} />
+        <MarkdownEditor value={content} onChange={handleContentChange} />
+      </div>
     </div>
   );
 };

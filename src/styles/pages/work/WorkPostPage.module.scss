@@ -8,6 +8,15 @@
   flex-direction: column;
   gap: 24px;
   height: calc(100vh - 48px);
+  position: relative;
+
+  .contentWrapper {
+    display: flex;
+    flex-direction: column;
+    gap: 24px;
+    flex: 1;
+    min-height: 0;
+  }
 
   .title {
     color: v.$gray-800;
