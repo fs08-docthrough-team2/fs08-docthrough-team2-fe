@@ -25,12 +25,11 @@
   margin-bottom: 24px;
   width: 100%;
   gap: 12px;
+}
 
-  :global(.siWrap) {
-    flex: 1;
-    min-width: 0;
-    width: min(100%, 844px);
-  }
+.searchInput {
+  height: 40px;
+  width: min(100%, 844px);
 }
 
 .listHeader {

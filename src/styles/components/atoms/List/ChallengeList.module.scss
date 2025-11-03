@@ -18,6 +18,7 @@
 }
 
 .cell {
+  box-sizing: content-box;
   display: flex;
   padding: 15px 16px;
   align-items: center;
@@ -50,7 +51,7 @@
 }
 
 .cellTitle {
-  box-sizing: border-box;
+  box-sizing: content-box;
   justify-content: flex-start;
   color: v.$gray-600;
   font-weight: 500;
