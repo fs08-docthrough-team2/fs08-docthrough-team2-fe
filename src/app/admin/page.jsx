@@ -189,12 +189,14 @@ export default function AdminPage() {
     <div className={styles.adminPage}>
       <h1 className={styles.pageTitle}>챌린지 신청 관리</h1>
       <div className={styles.filters}>
-        <SearchInput
-          value={search}
-          onChange={(e) => setSearch(e.target.value)}
-          onSearch={handleSearch}
-          placeholder="챌린지 제목을 검색해보세요"
-        />
+        <div className={styles.searchInput}>
+          <SearchInput
+            value={search}
+            onChange={(e) => setSearch(e.target.value)}
+            onSearch={handleSearch}
+            placeholder="챌린지 제목을 검색해보세요"
+          />
+        </div>
         <DropdownSort className={styles.dropdownSort} />
       </div>
       <div className={styles.tableScrollArea}>
