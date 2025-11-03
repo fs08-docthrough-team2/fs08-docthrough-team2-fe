@@ -15,6 +15,12 @@ export const formatKoreanDate = (dateString) => {
 };
 
 export const formatUTCDate = (dateString) => {
-  const UTC = dayjs(dateString, 'YY/MM/DD').toISOString();
-  return UTC;
+  if (!dateString || dateString.trim() === '') {
+    return '';
+  }
+  const date = dayjs(dateString, 'YY/MM/DD', true);
+  if (!date.isValid()) {
+    return '';
+  }
+  return date.toISOString();
 };

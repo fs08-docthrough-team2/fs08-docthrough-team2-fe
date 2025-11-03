@@ -38,18 +38,18 @@ export default function ChallengePostPage() {
   const [fieldLabel, setFieldLabel] = useState(null);
   const [typeLabel, setTypeLabel] = useState(null);
 
-  //   const requestBody = useMemo(
-  //     () => ({
-  //       title: form.title.trim(),
-  //       source: form.source.trim(),
-  //       field: FIELD_LABEL_TO_CODE[fieldLabel] ?? '',
-  //       type: DOCUMENT_LABEL_TO_CODE[typeLabel] ?? '',
-  //       deadline: formatUTCDate(form.deadline),
-  //       capacity: form.capacity !== '' ? String(Number(form.capacity)) : '',
-  //       content: form.content.trim(),
-  //     }),
-  //     [form, fieldLabel, typeLabel],
-  //   );
+  const requestBody = useMemo(
+    () => ({
+      title: form.title.trim(),
+      source: form.source.trim(),
+      field: FIELD_LABEL_TO_CODE[fieldLabel] ?? '',
+      type: DOCUMENT_LABEL_TO_CODE[typeLabel] ?? '',
+      deadline: formatUTCDate(form.deadline),
+      capacity: form.capacity !== '' ? String(Number(form.capacity)) : '',
+      content: form.content.trim(),
+    }),
+    [form, fieldLabel, typeLabel],
+  );
 
   const createChallengeMutation = useMutation({
     mutationFn: async (payload) => {
@@ -99,7 +99,9 @@ export default function ChallengePostPage() {
   };
 
   useEffect(() => {
-    console.log(formatUTCDate(form.deadline));
+    if (form.deadline) {
+      console.log(formatUTCDate(form.deadline));
+    }
   }, [form.deadline]);
 
   return (
