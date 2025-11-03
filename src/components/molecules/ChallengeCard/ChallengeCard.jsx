@@ -1,6 +1,6 @@
 import styles from '@/styles/components/molecules/ChallengeCard/ChallengeCard.module.scss';
 import Image from 'next/image';
-import stroke_lg from '/public/stroke_lg.svg';
+import stroke from '/public/stroke.svg';
 import ic_deadline from '/public/icon/ic_deadline.svg';
 import ic_person from '/public/icon/ic_person.svg';
 import Button from '@/components/atoms/Button/Button.jsx';
@@ -61,7 +61,7 @@ const ChallengeCard = ({
           <CategoryChip label={category} />
         </div>
       </div>
-      <Image className={styles.stroke} src={stroke_lg} alt="stroke" />
+      <Image className={styles.stroke} src={stroke} alt="stroke" />
       <div className={styles.footerWrapper}>
         <div className={styles.footerLeft}>
           <div className={styles.dueDateWrapper}>
