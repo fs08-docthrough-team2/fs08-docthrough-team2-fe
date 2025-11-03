@@ -33,7 +33,7 @@ export default function LandingPage() {
           </h1>
           {/* tonal | outline | transparent | solid | filled */}
           {/* CTA 버튼 */}
-          <Button variant="outline" size="pill" onClick={() => router.push('/signup')}>
+          <Button variant="outline" size="pill" onClick={() => router.push('/challenges')}>
             번역 시작하기
           </Button>
         </div>
@@ -105,7 +105,7 @@ export default function LandingPage() {
       {/* ── Final CTA ──────────────────── */}
       <section className={styles.finalCTA}>
         <h2>함께 번역하고 성장하세요!</h2>
-        <Button variant="solid" size="lg" onClick={() => router.push('/signup')}>
+        <Button variant="solid" size="lg" onClick={() => router.push('/challenges')}>
           번역 시작하기
         </Button>
       </section>
