@@ -14,23 +14,25 @@ export default function PasswordInput({
   placeholder = '비밀번호를 입력해주세요',
   value,
   onChange,
-  confirmValue, // 확인 입력값(비번 확인 칸에서 원본을 넘겨받을 때)
+  confirmValue,
   minLength = 8,
 }) {
   const [show, setShow] = useState(false);
 
-  // 🔴 에러: 비밀번호 불일치만 에러로 (빨간 글씨)
+  //  길이 확인
+  const tooShort = value && value.length > 0 && value.length < minLength;
+
+  //  비밀번호 불일치 확인
   const mismatch =
     typeof confirmValue === 'string' &&
     confirmValue.length > 0 &&
     value.length > 0 &&
     confirmValue !== value;
 
-  const error = mismatch ? '비밀번호가 일치하지 않습니다' : null;
-
-  // ⚫ 안내문: 8자 미만은 "검은 글씨"로 안내만
-  const needMore = value && value.length > 0 && value.length < minLength;
-  const helper = !error && needMore ? '8자 이상 입력해주세요' : null;
+  //  에러 메시지
+  let error = null;
+  if (mismatch) error = '비밀번호가 일치하지 않습니다';
+  else if (tooShort) error = '8자 이상 입력해주세요';
 
   const right = (
     <button
@@ -50,17 +52,33 @@ export default function PasswordInput({
   );
 
   return (
-    <BaseInput
-      name={name}
-      label={label}
-      placeholder={placeholder}
-      value={value}
-      onChange={onChange}
-      type={show ? 'text' : 'password'}
-      rightNode={right}
-      error={error} // 🔴 불일치만 빨간글씨
-      helper={helper} // ⚫ 8자 미만은 검은 안내문
-      inputProps={{ autoComplete: 'new-password' }}
-    />
+    <div className={styles.passwordInputWrap}>
+      <BaseInput
+        name={name}
+        label={label}
+        placeholder={placeholder}
+        value={value}
+        onChange={onChange}
+        type={show ? 'text' : 'password'}
+        rightNode={right}
+        inputProps={{
+          autoComplete: 'new-password',
+          style: show ? { color: '#171717' } : {},
+        }}
+      />
+      {/* 🔴 길이 에러 표시 */}
+      {error && (
+        <p
+          className={styles.errorText}
+          style={{
+            color: '#EB3E3E',
+            fontSize: '13px',
+            marginTop: '6px',
+          }}
+        >
+          {error}
+        </p>
+      )}
+    </div>
   );
 }

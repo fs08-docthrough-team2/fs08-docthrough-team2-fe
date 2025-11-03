@@ -81,7 +81,7 @@ export default function ChallengeListPage() {
     <main className={styles.page}>
       <header className={styles.header}>
         <ChallengeListToolbar
-          searchValue={query}
+          search={query}
           onSearchChange={(v) => {
             setPage(1);
             setQuery(v?.target ? v.target.value : v);

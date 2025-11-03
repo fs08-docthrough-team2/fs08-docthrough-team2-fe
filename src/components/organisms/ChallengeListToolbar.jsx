@@ -24,26 +24,27 @@ export default function ChallengeListToolbar({
   // --- 필터 드롭다운
   const [open, setOpen] = useState(false);
   const slotRef = useRef(null);
+  const openRef = useRef(false);
+  useEffect(() => {
+    openRef.current = open;
+  }, [open]);
 
-  // 마운트 시 1회만 등록, 내부에서 open 체크(StrictMode 안전)
   useEffect(() => {
     const onDoc = (e) => {
-      if (open && slotRef.current && !slotRef.current.contains(e.target)) {
+      if (openRef.current && slotRef.current && !slotRef.current.contains(e.target)) {
         setOpen(false);
       }
     };
     const onEsc = (e) => {
-      if (open && e.key === 'Escape') setOpen(false);
+      if (openRef.current && e.key === 'Escape') setOpen(false);
     };
-
     document.addEventListener('mousedown', onDoc);
     document.addEventListener('keydown', onEsc);
     return () => {
       document.removeEventListener('mousedown', onDoc);
       document.removeEventListener('keydown', onEsc);
     };
-    // open은 deps에 넣지 않음! (리스너는 1회만, 내부에서 open 검사)
-  }, [slotRef, open]); // eslint 경고를 피하려면 open 제거 가능: [slotRef]
+  }, []); // ← 의존성 비움 (1회만 등록)
 
   const computedTitle = title ?? '챌린지 목록';
   const showCreateButton = variant === 'user';
