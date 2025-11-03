@@ -4,20 +4,36 @@ import Image from 'next/image';
 import Link from 'next/link';
 import styles from '@/styles/pages/LandingPage.module.scss';
 import Button from '@/components/atoms/Button/Button.jsx';
+import { useRouter } from 'next/navigation';
+
 export default function LandingPage() {
+  const router = useRouter();
+
   return (
     <main>
       {/* ── Hero ───────────────────────── */}
       <section className={styles.hero}>
         <Image src="/image/Bg.svg" alt="" fill priority sizes="100vw" className={styles.heroBg} />
         <div className={styles.heroInner}>
-          <div className={styles.kicker}>• Docthru</div>
+          {/* 로고 이미지 */}
+          <div className={styles.logoWrap}>
+            <Image
+              src="/image/img_logo.svg"
+              alt="Docthru Logo"
+              width={126}
+              height={28.35}
+              priority
+            />
+          </div>
+
           <h1 className={styles.title}>
             함께 번역하며 성장하는
             <br />
             개발자의 새로운 영어 습관
           </h1>
-          <Button variant="outline" size="pill" onClick={() => router.push('/signup')}>
+          {/* tonal | outline | transparent | solid | filled */}
+          {/* CTA 버튼 */}
+          <Button variant="outline" size="pill" onClick={() => router.push('/challenges')}>
             번역 시작하기
           </Button>
         </div>
@@ -41,7 +57,7 @@ export default function LandingPage() {
             </p>
           </div>
           <div className={styles.image}>
-            <img src="/image/card1.svg" alt="번역 리스트 카드" />
+            <img src="/image/card1.png" alt="번역 리스트 카드" width={570} height={411} />
           </div>
         </div>
 
@@ -63,7 +79,7 @@ export default function LandingPage() {
             </p>
           </div>
           <div className={styles.image}>
-            <img src="/image/card2.svg" alt="기술/미션 UI" />
+            <img src="/image/card2.png" alt="기술/미션 UI" className={styles.card} />
           </div>
         </div>
 
@@ -73,15 +89,15 @@ export default function LandingPage() {
         <div className={styles.feature}>
           <div className={styles.text}>
             <img src="/icons/message.svg" alt="" className={styles.icon} />
-            <h3>피드백으로 함께 성장기</h3>
+            <h3>피드백으로 함께 성장하기</h3>
             <p>
               번역 작업물에 대해 피드백을 주고 받으며
               <br />
-              영어 실력은 물론,개발 실력까지 키워 보세요
+              영어 실력은 물론, 개발 실력까지 키워 보세요
             </p>
           </div>
           <div className={styles.image}>
-            <img src="/image/card3.svg" alt="피드백 UI" />
+            <img src="/image/card3.png" alt="피드백 UI" className={styles.card} />
           </div>
         </div>
       </section>
@@ -89,9 +105,9 @@ export default function LandingPage() {
       {/* ── Final CTA ──────────────────── */}
       <section className={styles.finalCTA}>
         <h2>함께 번역하고 성장하세요!</h2>
-        <Link href="/signup" className={styles.finalButtons}>
+        <Button variant="solid" size="lg" onClick={() => router.push('/challenges')}>
           번역 시작하기
-        </Link>
+        </Button>
       </section>
     </main>
   );
