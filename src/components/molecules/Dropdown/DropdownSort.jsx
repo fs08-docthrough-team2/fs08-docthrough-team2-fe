@@ -15,7 +15,7 @@ const DROPDOWN_OPTIONS = [
   '마감 기한 빠른순',
   '마감 기한 느린순',
 ];
-const DEFAULT_LABEL = '승인 대기';
+const DEFAULT_LABEL = '정렬';
 
 function DropdownSort() {
   const [isOpen, setIsOpen] = useState(false);
@@ -33,12 +33,14 @@ function DropdownSort() {
 
   return (
     <div className={styles.dropdown}>
-      <DropdownTrigger
-        label={selectedLabel}
-        isOpen={isOpen}
-        onToggle={handleToggle}
-        isSelected={!isDefaultLabel}
-      />
+      <div className={styles.triggerWrapper}>
+        <DropdownTrigger
+          label={selectedLabel}
+          isOpen={isOpen}
+          onToggle={handleToggle}
+          isSelected={!isDefaultLabel}
+        />
+      </div>
       <DropdownList options={DROPDOWN_OPTIONS} isOpen={isOpen} onSelect={handleSelect} />
     </div>
   );
