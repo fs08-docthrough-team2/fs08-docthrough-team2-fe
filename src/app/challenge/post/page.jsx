@@ -14,10 +14,10 @@ import Button from '@/components/atoms/Button/Button';
 import styles from '@/styles/pages/challenge/post/ChallengePostPage.module.scss';
 
 const FIELD_LABEL_TO_CODE = {
-  'Next.js': 'NEXT_JS',
+  'Next.js': 'NEXT',
   API: 'API',
   Career: 'CAREER',
-  'Modern JS': 'MODERN_JS',
+  'Modern JS': 'MODERN',
   Web: 'WEB',
 };
 
@@ -45,7 +45,7 @@ export default function ChallengePostPage() {
       field: FIELD_LABEL_TO_CODE[fieldLabel] ?? '',
       type: DOCUMENT_LABEL_TO_CODE[typeLabel] ?? '',
       deadline: formatUTCDate(form.deadline),
-      capacity: form.capacity !== '' ? String(Number(form.capacity)) : '',
+      capacity: form.capacity !== '' ? form.capacity : '',
       content: form.content.trim(),
     }),
     [form, fieldLabel, typeLabel],
