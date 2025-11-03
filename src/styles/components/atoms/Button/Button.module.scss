@@ -60,6 +60,30 @@
     padding: 2px 16px 3px 16px;
     border-radius: 10px;
   }
+
+  &.post {
+    display: flex;
+    width: 90px;
+    height: 40px;
+    padding: 2px 16px 3px 16px;
+    justify-content: center;
+    align-items: center;
+    gap: 4px;
+
+    @include m.mobile {
+      display: flex;
+      width: 90px;
+      height: 32px;
+      padding: 2px 16px 3px 16px;
+      justify-content: center;
+      align-items: center;
+      gap: 4px;
+      color: v.$white;
+      font-size: 14px;
+      font-weight: 600;
+      line-height: normal;
+    }
+  }
 }
 
 .disabled {
@@ -131,8 +155,22 @@
 
   &.pill {
     width: 132px;
-    height: 33px;
+    height: 40px;
     border-radius: 30.5px;
+  }
+
+  &.postMobile {
+    display: flex;
+    width: 80px;
+    height: 32px;
+    justify-content: center;
+    align-items: center;
+    gap: 4px;
+
+    color: v.$gray-800;
+    font-size: 14px;
+    font-weight: 600;
+    line-height: normal;
   }
 }
 

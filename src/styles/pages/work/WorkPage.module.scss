@@ -1,0 +1,104 @@
+@use '@/styles/variable' as v;
+@use '@/styles/mixin' as m;
+
+.page {
+  padding: 40px 0 163px 0;
+  @include m.center-container(890px);
+
+  @include m.tablet {
+    padding: 20px 0 167px 0;
+    @include m.center-container(696px);
+  }
+
+  @include m.mobile {
+    padding: 24px 0 101px 0;
+    @include m.center-container(343px);
+  }
+}
+
+.titleHeaderTop {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.titleHeader {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+
+  .title {
+    color: v.$gray-800;
+    font-size: 24px;
+    font-weight: 600;
+    line-height: normal;
+  }
+}
+
+.chipWrapper {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.userInfo {
+  margin-top: 28px;
+  margin-bottom: 36px;
+
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.userInfoLeft {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.userNameWrapper {
+  display: flex;
+  gap: 8px;
+  align-items: center;
+
+  .name {
+    color: v.$gray-800;
+    font-size: 12px;
+    font-weight: 500;
+    line-height: normal;
+  }
+}
+
+.likeWrapper {
+  display: flex;
+  gap: 4px;
+  align-items: center;
+
+  .likeCount {
+    color: v.$gray-500;
+    font-size: 14px;
+    font-weight: 500;
+    line-height: normal;
+  }
+}
+
+.userInfoDate {
+  color: v.$gray-500;
+  font-size: 14px;
+  font-weight: 500;
+  line-height: normal;
+}
+
+.commentWrapper {
+  margin-top: 193px;
+
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.commentList {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}

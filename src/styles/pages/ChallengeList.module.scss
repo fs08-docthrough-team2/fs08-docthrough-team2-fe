@@ -1,0 +1,54 @@
+.page {
+  background: #fafafa;
+  min-height: 100vh;
+  padding: 24px 0 64px;
+  display: grid;
+  grid-template-rows: auto 1fr auto;
+  justify-items: center;
+}
+
+.header {
+  width: min(1040px, 92vw);
+  display: grid;
+  row-gap: 12px;
+
+  h1 {
+    font-size: 16px;
+    font-weight: 700;
+    color: #414141;
+  }
+}
+
+.header,
+.list,
+.pagination {
+  width: 100%;
+  max-width: 1040px;
+  padding-left: 16px; /* ← 좌우 gutter 통일 */
+  padding-right: 16px;
+  margin: 0 auto; /* 중앙 정렬 */
+  box-sizing: border-box;
+}
+
+.list {
+  margin-top: 8px;
+  display: grid;
+  gap: 14px;
+}
+
+.pagination {
+  margin-top: 18px;
+  width: min(1040px, 92vw);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+/* 반응형 (iPad mini ~ 모바일) */
+@media (max-width: 744px) {
+  .header,
+  .list,
+  .pagination {
+    width: min(640px, 92vw);
+  }
+}
