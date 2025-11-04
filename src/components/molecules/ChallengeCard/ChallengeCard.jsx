@@ -9,6 +9,7 @@ import TypeChip from '@/components/atoms/Chips/TypeChip.jsx';
 import CategoryChip from '@/components/atoms/Chips/CategoryChip.jsx';
 import DropdownOption from '@/components/molecules/Dropdown/DropdownOption.jsx';
 import CardStatusChip from '@/components/atoms/Chips/CardStatusChip.jsx';
+import { useRouter } from 'next/navigation';
 
 const CARD_DATA = {
   challengeName: 'Next.js - App Router: Routing Fundamentals',
@@ -32,6 +33,7 @@ status: 챌린지 상태
 */
 const ChallengeCard = ({
   isAdmin = false,
+  challengeId = '',
   challengeName = CARD_DATA.challengeName,
   type = CARD_DATA.type,
   category = CARD_DATA.category,
@@ -42,7 +44,12 @@ const ChallengeCard = ({
   onEdit = () => {},
   onDelete = () => {},
 }) => {
+  const router = useRouter();
   const formattedDueDate = formatKoreanDate(dueDate);
+
+  const handleClick = () => {
+    router.push(`/challenge/detail/${challengeId}`);
+  };
 
   return (
     <div className={styles.card}>
@@ -75,7 +82,13 @@ const ChallengeCard = ({
             </div>
           </div>
         </div>
-        <Button variant="outline" size="pill" children="도전 계속하기" icon="challenge" />
+        <Button
+          variant="outline"
+          size="pill"
+          children="도전 계속하기"
+          icon="challenge"
+          onClick={handleClick}
+        />
       </div>
     </div>
   );

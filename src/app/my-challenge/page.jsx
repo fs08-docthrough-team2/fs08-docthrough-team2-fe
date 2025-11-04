@@ -1,7 +1,12 @@
 'use client';
 
 import { useRouter } from 'next/navigation';
-import { useGetIndividualParticipateChallengeList } from '@/hooks/queries/useChallenge';
+import { useState } from 'react';
+import { useDebounce } from '@/hooks/useDebounce';
+import {
+  useGetIndividualCompleteChallengeList,
+  useGetIndividualParticipateChallengeList,
+} from '@/hooks/queries/useChallenge';
 import Button from '@/components/atoms/Button/Button';
 import Tabs from '@/components/molecules/Tabs/Tabs';
 import SearchInput from '@/components/atoms/Input/SearchInput';
@@ -11,14 +16,27 @@ import styles from '@/styles/pages/my-challenge/MyChallengePage.module.scss';
 
 const MyChallengePage = () => {
   const router = useRouter();
+  const [searchValue, setSearchValue] = useState('');
+  const debouncedSearch = useDebounce(searchValue, 300);
 
-  const { data } = useGetIndividualParticipateChallengeList();
+  const { data: participateChallenge } = useGetIndividualParticipateChallengeList({
+    searchValue: debouncedSearch,
+  });
+  const participateChallengeData = participateChallenge?.data?.participates ?? [];
 
-  const challengeData = data?.data?.participates ?? [];
+  const { data: completeChallenge } = useGetIndividualCompleteChallengeList({
+    searchValue: debouncedSearch,
+  });
+  const completeChallengeData = completeChallenge?.data?.completes ?? [];
 
   const handleCreateChallenge = (e) => {
     e.preventDefault();
     router.push('/challenge/post');
+  };
+
+  const handleSearchChange = (e) => {
+    const value = e.target.value;
+    setSearchValue(value);
   };
 
   return (
@@ -37,19 +55,20 @@ const MyChallengePage = () => {
           </div>
           <Tabs />
         </div>
-        <SearchInput />
+        <SearchInput value={searchValue} onChange={handleSearchChange} />
       </div>
       <div className={styles.challengeListWrapper}>
-        {challengeData.map((challenge) => (
+        {participateChallengeData.map((challenge) => (
           <ChallengeCard
-            key={challenge.id}
+            key={challenge.challengeId}
+            challengeId={challenge.challengeId}
             challengeName={challenge.title}
-            type={challenge.type}
-            category={challenge.filed}
+            type={challenge.field}
+            category={challenge.type}
             status={challenge.status}
             dueDate={challenge.deadline}
-            total={challenge.capacity}
-            capacity={challenge.capacity}
+            total={challenge.maxParticipants}
+            capacity={challenge.currentParticipants}
           />
         ))}
       </div>
