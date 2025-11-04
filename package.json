@@ -25,6 +25,7 @@
     "react-datepicker": "^8.8.0",
     "react-dom": "^19.1.0",
     "react-tiny-oembed": "^1.1.0",
+    "sonner": "^2.0.7",
     "validator": "^13.15.15",
     "zustand": "^5.0.8"
   },
