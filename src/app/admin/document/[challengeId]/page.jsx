@@ -1,4 +1,4 @@
-import Work from '@/components/templates/Work/Work';
+import Work from '@/components/templates/Work';
 
 import styles from '@/styles/pages/admin/AdminWorkPage.module.scss';
 

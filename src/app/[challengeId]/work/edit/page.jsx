@@ -3,9 +3,9 @@
 import { useState } from 'react';
 import WorkPost from '@/components/templates/WorkPost';
 
-import styles from '@/styles/pages/work/WorkPostPage.module.scss';
+import styles from '@/styles/pages/work/WorkEditPage.module.scss';
 
-const WorkPostPage = () => {
+const WorkEditPage = () => {
   const [content, setContent] = useState('');
 
   const handleContentChange = (value) => {
@@ -19,4 +19,4 @@ const WorkPostPage = () => {
   );
 };
 
-export default WorkPostPage;
+export default WorkEditPage;

@@ -1,6 +1,6 @@
 'use client';
 
-import Work from '@/components/templates/Work/Work';
+import Work from '@/components/templates/Work';
 import styles from '@/styles/pages/work/WorkPage.module.scss';
 
 const WorkPage = () => {

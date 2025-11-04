@@ -169,31 +169,3 @@ html,
 body {
   overflow-x: hidden;
 }
-
-// react-split gutter 스타일
-.split-gutter,
-.split-gutter-horizontal,
-[class*='split-gutter'],
-[class*='gutter'] {
-  background-color: #ccc !important;
-  cursor: col-resize !important;
-  position: relative;
-  flex-shrink: 0;
-  z-index: 10;
-
-  &:hover {
-    background-color: #999 !important;
-  }
-
-  &::after {
-    content: '';
-    position: absolute;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
-    width: 3px;
-    height: 40px;
-    background-color: #666;
-    border-radius: 2px;
-  }
-}
