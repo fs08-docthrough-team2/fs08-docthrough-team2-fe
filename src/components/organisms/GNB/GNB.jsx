@@ -22,7 +22,12 @@ const ADMIN_TABS = [
   { href: '/admin/challenge', label: '챌린지 목록' },
 ];
 
-const HIDDEN_ROUTES = new Set(['/auth/login', '/auth/signup', '/:challengeId/work/post']);
+const HIDDEN_ROUTES = new Set([
+  '/auth/login',
+  '/auth/signup',
+  '/:challengeId/work/post',
+  '/:challengeId/work/edit',
+]);
 
 const GNB = ({ notifications = [] }) => {
   const user = useAuthStore((state) => state.user);
@@ -33,7 +38,9 @@ const GNB = ({ notifications = [] }) => {
   const pathname = usePathname();
   const normalizedPath = (pathname ?? '').replace(/\/+$/, '');
   const isHiddenRoute =
-    HIDDEN_ROUTES.has(normalizedPath) || /^\/[^/]+\/work\/post$/.test(normalizedPath);
+    HIDDEN_ROUTES.has(normalizedPath) ||
+    /^\/[^/]+\/work\/post$/.test(normalizedPath) ||
+    /^\/[^/]+\/work\/edit$/.test(normalizedPath);
   if (isHiddenRoute) {
     return null;
   }

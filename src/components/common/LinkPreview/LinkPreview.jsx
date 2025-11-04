@@ -1,7 +1,7 @@
 'use client';
 
 import { useEffect, useState } from 'react';
-import styles from '@/styles/components/atoms/LinkPreview/LinkPreview.module.scss';
+import styles from '@/styles/components/common/LinkPreview/LinkPreview.module.scss';
 
 const LinkPreview = ({ url }) => {
   const [metaData, setMetaData] = useState(null);
