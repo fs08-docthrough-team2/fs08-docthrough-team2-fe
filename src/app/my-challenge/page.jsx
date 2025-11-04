@@ -1,7 +1,7 @@
 'use client';
 
 import { useRouter } from 'next/navigation';
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { useDebounce } from '@/hooks/useDebounce';
 import {
   useGetIndividualCompleteChallengeList,
@@ -40,6 +40,16 @@ const MyChallengePage = () => {
     setSearchValue(value);
   };
 
+  const handleTabChange = (index) => {
+    setActiveTab(index);
+  };
+
+  useEffect(() => {
+    if (activeTab === 2) {
+      router.push('/my-challenge/apply');
+    }
+  }, [activeTab, router]);
+
   return (
     <div className={styles.page}>
       <div className={styles.header}>
@@ -54,7 +64,7 @@ const MyChallengePage = () => {
               onClick={handleCreateChallenge}
             />
           </div>
-          <Tabs activeIndex={activeTab} onTabChange={setActiveTab} />
+          <Tabs activeIndex={activeTab} onTabChange={handleTabChange} />
         </div>
         <SearchInput value={searchValue} onChange={handleSearchChange} />
       </div>
