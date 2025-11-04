@@ -1,6 +1,10 @@
 'use client';
 
-import { useMemo, useState } from 'react';
+import { useEffect, useMemo, useState } from 'react';
+import { useMutation } from '@tanstack/react-query';
+import { useRouter } from 'next/navigation';
+import api from '@/libs/api.js';
+import { formatUTCDate } from '@/libs/day';
 import BaseInput from '@/components/atoms/Input/BaseInput';
 import DateInput from '@/components/atoms/Input/DateInput';
 import TextBox from '@/components/atoms/Input/TextBox';
@@ -10,10 +14,10 @@ import Button from '@/components/atoms/Button/Button';
 import styles from '@/styles/pages/challenge/post/ChallengePostPage.module.scss';
 
 const FIELD_LABEL_TO_CODE = {
-  'Next.js': 'NEXT_JS',
+  'Next.js': 'NEXT',
   API: 'API',
   Career: 'CAREER',
-  'Modern JS': 'MODERN_JS',
+  'Modern JS': 'MODERN',
   Web: 'WEB',
 };
 
@@ -22,18 +26,8 @@ const DOCUMENT_LABEL_TO_CODE = {
   블로그: 'BLOG',
 };
 
-const formatDeadline = (raw) => {
-  if (!raw) return '';
-  const digits = raw.replace(/\D/g, '');
-  if (digits.length !== 6) return '';
-  const yy = digits.slice(0, 2);
-  const mm = digits.slice(2, 4);
-  const dd = digits.slice(4, 6);
-  const year = String(2000 + Number(yy)).padStart(4, '0');
-  return `${year}-${mm}-${dd}T23:59:59+09:00`;
-};
-
 export default function ChallengePostPage() {
+  const router = useRouter();
   const [form, setForm] = useState({
     title: '',
     source: '',
@@ -50,12 +44,31 @@ export default function ChallengePostPage() {
       source: form.source.trim(),
       field: FIELD_LABEL_TO_CODE[fieldLabel] ?? '',
       type: DOCUMENT_LABEL_TO_CODE[typeLabel] ?? '',
-      deadline: formatDeadline(form.deadline),
-      capacity: form.capacity !== '' ? String(Number(form.capacity)) : '',
+      deadline: formatUTCDate(form.deadline),
+      capacity: form.capacity !== '' ? form.capacity : '',
       content: form.content.trim(),
     }),
     [form, fieldLabel, typeLabel],
   );
+
+  const createChallengeMutation = useMutation({
+    mutationFn: async (payload) => {
+      const response = await api.post('/challenge/create', payload);
+      return response.data;
+    },
+    onSuccess: (data) => {
+      window.alert('챌린지 등록');
+      if (data?.id) {
+        router.push(`/challenge/detail/${data.id}`);
+      } else {
+        router.push('/challenges');
+      }
+    },
+    onError: (error) => {
+      const message = error.response?.data?.message ?? '챌린지 등록 실패';
+      window.alert(message);
+    },
+  });
 
   const handleChange = (key) => (event) =>
     setForm((prev) => ({ ...prev, [key]: event.target.value }));
@@ -65,11 +78,31 @@ export default function ChallengePostPage() {
     setForm((prev) => ({ ...prev, capacity: digits }));
   };
 
-  // 나중에 api로 넘기도록 수정 예정, 일단 console log로 확인
-  const handleSubmit = async (event) => {
+  const handleSubmit = (event) => {
     event.preventDefault();
-    console.log('requestBody', requestBody);
+
+    const isValid =
+      requestBody.title &&
+      requestBody.source &&
+      requestBody.field &&
+      requestBody.type &&
+      requestBody.deadline &&
+      requestBody.capacity &&
+      requestBody.content;
+
+    if (!isValid) {
+      window.alert('필수 항목을 모두 입력');
+      return;
+    }
+
+    createChallengeMutation.mutate(requestBody);
   };
+
+  useEffect(() => {
+    if (form.deadline) {
+      console.log(formatUTCDate(form.deadline));
+    }
+  }, [form.deadline]);
 
   return (
     <section className={styles.wrapper}>
@@ -130,8 +163,8 @@ export default function ChallengePostPage() {
           />
         </div>
         <div>
-          <Button variant="solid" size="lg">
-            신청하기
+          <Button variant="solid" size="lg" disabled={createChallengeMutation.isPending}>
+            {createChallengeMutation.isPending ? '등록 중…' : '신청하기'}
           </Button>
         </div>
       </form>
