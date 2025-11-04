@@ -1,14 +1,17 @@
 'use client';
 
 import clsx from 'clsx';
+import { formatYYMMDD } from '@/libs/day';
 import StatusChip from '@/components/atoms/Chips/StatusChip';
 import styles from '@/styles/components/atoms/List/ChallengeList.module.scss';
 
 const STATUS_META = {
-  pending: { label: '검토 대기', type: 'pending' },
-  rejected: { label: '승인 거절', type: 'rejected' },
-  approved: { label: '승인 완료', type: 'approved' },
-  deleted: { label: '챌린지 삭제', type: 'deleted' },
+  PENDING: { label: '승인 대기', type: 'pending' },
+  APPROVED: { label: '신청 승인', type: 'approved' },
+  INPROGRESS: { label: '진행 중', type: 'approved' },
+  REJECTED: { label: '신청 거절', type: 'rejected' },
+  CANCELLED: { label: '신청 취소', type: 'deleted' },
+  DEADLINE: { label: '마감', type: 'deleted' },
 };
 
 const FIELD_LABEL = {
@@ -51,18 +54,6 @@ function extractTotalParticipants(participants) {
   return total && total.length > 0 ? total : '-';
 }
 
-function formatISODate(value) {
-  if (!value) return '-';
-  const date = new Date(value);
-  if (Number.isNaN(date.getTime())) return '-';
-
-  const yy = String(date.getFullYear()).slice(-2);
-  const mm = String(date.getMonth() + 1).padStart(2, '0');
-  const dd = String(date.getDate()).padStart(2, '0');
-
-  return `${yy}/${mm}/${dd}`;
-}
-
 function ChallengeList({
   items = [],
   onClickTitle,
@@ -78,38 +69,41 @@ function ChallengeList({
 
   return (
     <ul className={styles.list}>
-      {items.map(({ no, type, field, title, participants, appliedDate, deadline, status }) => {
-        const statusInfo = STATUS_META[status?.toLowerCase()] ?? {
-          label: status ?? '-',
-          type: 'pending',
-        };
-        const fieldLabel = FIELD_LABEL[type] ?? type ?? '-';
-        const categoryLabel = CATEGORY_LABEL[field] ?? field ?? '-';
-        const appliedLabel = formatISODate(appliedDate);
-        const deadlineLabel = formatISODate(deadline);
-        const capacityLabel = extractTotalParticipants(participants);
+      {items.map(
+        ({ no, challengeId, type, field, title, participants, appliedDate, deadline, status }) => {
+          const statusKey = String(status ?? '').toUpperCase();
+          const statusInfo = STATUS_META[statusKey] ?? {
+            label: statusKey || '-',
+            type: 'pending',
+          };
+          const fieldLabel = FIELD_LABEL[type] ?? type ?? '-';
+          const categoryLabel = CATEGORY_LABEL[field] ?? field ?? '-';
+          const appliedLabel = formatYYMMDD(appliedDate) || '-';
+          const deadlineLabel = formatYYMMDD(deadline) || '-';
+          const capacityLabel = extractTotalParticipants(participants);
 
-        return (
-          <li key={no ?? title} className={styles.row}>
-            <span className={clsx(styles.cell, styles.cellNo)}>{no}</span>
-            <span className={clsx(styles.cell, styles.cellField)}>{fieldLabel}</span>
-            <span className={clsx(styles.cell, styles.cellCategory)}>{categoryLabel}</span>
-            <button
-              type="button"
-              className={clsx(styles.cell, styles.cellTitleInteractive)}
-              onClick={() => onClickTitle?.(no)}
-            >
-              {title}
-            </button>
-            <span className={clsx(styles.cell, styles.cellCapacity)}>{capacityLabel}</span>
-            <span className={clsx(styles.cell, styles.cellApplied)}>{appliedLabel}</span>
-            <span className={clsx(styles.cell, styles.cellDeadline)}>{deadlineLabel}</span>
-            <span className={clsx(styles.cell, styles.cellStatus)}>
-              <StatusChip label={statusInfo.label} type={statusInfo.type} />
-            </span>
-          </li>
-        );
-      })}
+          return (
+            <li key={no ?? title} className={styles.row}>
+              <span className={clsx(styles.cell, styles.cellNo)}>{no}</span>
+              <span className={clsx(styles.cell, styles.cellField)}>{fieldLabel}</span>
+              <span className={clsx(styles.cell, styles.cellCategory)}>{categoryLabel}</span>
+              <button
+                type="button"
+                className={clsx(styles.cell, styles.cellTitleInteractive)}
+                onClick={() => onClickTitle?.(challengeId)}
+              >
+                {title}
+              </button>
+              <span className={clsx(styles.cell, styles.cellCapacity)}>{capacityLabel}</span>
+              <span className={clsx(styles.cell, styles.cellApplied)}>{appliedLabel}</span>
+              <span className={clsx(styles.cell, styles.cellDeadline)}>{deadlineLabel}</span>
+              <span className={clsx(styles.cell, styles.cellStatus)}>
+                <StatusChip label={statusInfo.label} type={statusInfo.type} />
+              </span>
+            </li>
+          );
+        },
+      )}
     </ul>
   );
 }

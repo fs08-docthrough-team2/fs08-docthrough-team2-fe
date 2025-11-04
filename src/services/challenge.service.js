@@ -13,6 +13,14 @@ export const getChallengeDetail = async (challengeId) => {
   return data?.data ?? null;
 };
 
+// GET /challenge/inquiry/challenge-list
+export const getChallengeList = async ({ page, pageSize }) => {
+  const { data } = await api.get('/challenge/inquiry/challenge-list', {
+    params: { page, pageSize },
+  });
+  return data;
+};
+
 // PATCH /challenge/update/:challengeId
 export const updateChallenge = async ({ challengeId, payload }) => {
   const { data } = await api.patch(`/challenge/update/${challengeId}`, payload);

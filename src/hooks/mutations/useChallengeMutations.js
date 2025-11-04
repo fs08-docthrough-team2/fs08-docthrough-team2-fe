@@ -1,6 +1,7 @@
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import {
   createChallenge,
+  getChallengeList,
   getChallengeDetail,
   updateChallenge,
 } from '@/services/challenge.service.js';
@@ -14,6 +15,15 @@ export const useChallengeDetailQuery = (challengeId, options = {}) =>
     queryKey: challengeDetailKey(challengeId),
     enabled: Boolean(challengeId),
     queryFn: () => getChallengeDetail(challengeId),
+    ...options,
+  });
+
+// 챌린지 리스트 조회
+export const useChallengeListQuery = ({ page, pageSize = 10 }, options = {}) =>
+  useQuery({
+    queryKey: ['challenge-list', page, pageSize],
+    queryFn: () => getChallengeList({ page, pageSize }),
+    keepPreviousData: true,
     ...options,
   });
 

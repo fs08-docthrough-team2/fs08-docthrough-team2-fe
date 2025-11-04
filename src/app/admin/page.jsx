@@ -3,6 +3,7 @@
 import { useMemo, useState } from 'react';
 import { useRouter } from 'next/navigation';
 import clsx from 'clsx';
+import { useChallengeListQuery } from '@/hooks/mutations/useChallengeMutations';
 import SearchInput from '@/components/atoms/Input/SearchInput';
 import DropdownSort from '@/components/molecules/Dropdown/DropdownSort';
 import ChallengeList from '@/components/atoms/List/ChallengeList';
@@ -12,136 +13,13 @@ import challengeListStyles from '@/styles/components/atoms/List/ChallengeList.mo
 
 const ITEMS_PER_PAGE = 10;
 
-const MOCK_CHALLENGES = [
-  {
-    no: 1,
-    type: 'OFFICIAL',
-    field: 'NEXTJS',
-    title: 'Next.js App Router 심화',
-    participants: '6 / 12',
-    appliedDate: '2024-10-08T08:15:00.000Z',
-    deadline: '2024-10-31T23:59:59.000Z',
-    status: 'pending',
-  },
-  {
-    no: 2,
-    type: 'BLOG',
-    field: 'CAREER',
-    title: '시니어 개발자 커리어 로드맵',
-    participants: '2 / 10',
-    appliedDate: '2024-10-12T12:00:00.000Z',
-    deadline: '2024-11-01T23:59:59.000Z',
-    status: 'rejected',
-  },
-  {
-    no: 3,
-    type: 'OFFICIAL',
-    field: 'API',
-    title: 'RESTful API 핵심 이론',
-    participants: '5 / 15',
-    appliedDate: '2024-10-18T18:20:00.000Z',
-    deadline: '2024-11-12T23:59:59.000Z',
-    status: 'approved',
-  },
-  {
-    no: 4,
-    type: 'BLOG',
-    field: 'WEB',
-    title: '웹 접근성 체크리스트',
-    participants: '12 / 18',
-    appliedDate: '2024-10-20T09:00:00.000Z',
-    deadline: '2024-11-05T23:59:59.000Z',
-    status: 'deleted',
-  },
-  {
-    no: 5,
-    type: 'OFFICIAL',
-    field: 'MODERN',
-    title: 'Jest test framework',
-    participants: '3 / 10',
-    appliedDate: '2024-10-22T06:08:15.171Z',
-    deadline: '2024-11-17T23:59:59.000Z',
-    status: 'pending',
-  },
-  {
-    no: 6,
-    type: 'OFFICIAL',
-    field: 'API',
-    title: 'GraphQL Best Practice',
-    participants: '7 / 12',
-    appliedDate: '2024-09-30T09:40:00.000Z',
-    deadline: '2024-11-20T23:59:59.000Z',
-    status: 'approved',
-  },
-  {
-    no: 7,
-    type: 'BLOG',
-    field: 'MODERN',
-    title: 'ES2024 신기능 훑어보기',
-    participants: '4 / 9',
-    appliedDate: '2024-10-01T07:10:00.000Z',
-    deadline: '2024-11-10T23:59:59.000Z',
-    status: 'pending',
-  },
-  {
-    no: 8,
-    type: 'OFFICIAL',
-    field: 'NEXTJS',
-    title: 'Next.js 렌더링 전략 비교',
-    participants: '9 / 16',
-    appliedDate: '2024-10-03T15:30:00.000Z',
-    deadline: '2024-11-07T23:59:59.000Z',
-    status: 'approved',
-  },
-  {
-    no: 9,
-    type: 'BLOG',
-    field: 'CAREER',
-    title: '리더십을 위한 커뮤니케이션',
-    participants: '1 / 8',
-    appliedDate: '2024-10-05T12:00:00.000Z',
-    deadline: '2024-11-03T23:59:59.000Z',
-    status: 'rejected',
-  },
-  {
-    no: 10,
-    type: 'OFFICIAL',
-    field: 'WEB',
-    title: '웹 성능 최적화 가이드',
-    participants: '8 / 14',
-    appliedDate: '2024-10-06T09:00:00.000Z',
-    deadline: '2024-11-15T23:59:59.000Z',
-    status: 'approved',
-  },
-  {
-    no: 11,
-    type: 'BLOG',
-    field: 'API',
-    title: 'Postman 고급 활용법',
-    participants: '6 / 12',
-    appliedDate: '2024-10-08T19:20:00.000Z',
-    deadline: '2024-11-22T23:59:59.000Z',
-    status: 'pending',
-  },
-  {
-    no: 12,
-    type: 'OFFICIAL',
-    field: 'MODERN',
-    title: '타입스크립트 고급 패턴',
-    participants: '11 / 18',
-    appliedDate: '2024-10-10T10:45:00.000Z',
-    deadline: '2024-11-18T23:59:59.000Z',
-    status: 'deleted',
-  },
-];
-
 const FIELD_TEXT = {
   OFFICIAL: '공식문서',
   BLOG: '블로그',
 };
 
 const CATEGORY_TEXT = {
-  NEXTJS: 'Next.js',
+  NEXT: 'Next.js',
   API: 'API',
   CAREER: 'Career',
   MODERN: 'Modern JS',
@@ -153,26 +31,47 @@ export default function AdminPage() {
   const [search, setSearch] = useState('');
   const [currentPage, setCurrentPage] = useState(1);
 
+  const { data, isLoading, error } = useChallengeListQuery({
+    page: currentPage,
+    pageSize: ITEMS_PER_PAGE,
+  });
+
+  const challenges = data?.data ?? [];
+  const pagination = data?.pagination ?? { page: 1, totalPages: 1, totalCount: 0 };
+
   const filteredItems = useMemo(() => {
-    if (!search.trim()) return MOCK_CHALLENGES;
+    if (!search.trim()) return challenges;
     const keyword = search.trim().toLowerCase();
-    return MOCK_CHALLENGES.filter(({ title, type, field }) => {
-      const typeLabel = FIELD_TEXT[type] ?? type;
+    return challenges.filter(({ title, field, type }) => {
       const fieldLabel = CATEGORY_TEXT[field] ?? field;
+      const typeLabel = FIELD_TEXT[type] ?? type;
       return (
         title.toLowerCase().includes(keyword) ||
-        typeLabel.toLowerCase().includes(keyword) ||
-        fieldLabel.toLowerCase().includes(keyword)
+        fieldLabel.toLowerCase().includes(keyword) ||
+        typeLabel.toLowerCase().includes(keyword)
       );
     });
-  }, [search]);
+  }, [challenges, search]);
 
-  const totalPages = Math.max(1, Math.ceil(filteredItems.length / ITEMS_PER_PAGE));
-  const currentItems = useMemo(() => {
-    const safePage = Math.min(currentPage, totalPages);
-    const offset = (safePage - 1) * ITEMS_PER_PAGE;
-    return filteredItems.slice(offset, offset + ITEMS_PER_PAGE);
-  }, [filteredItems, currentPage, totalPages]);
+  const mappedItems = useMemo(() => {
+    if (!filteredItems.length) return [];
+
+    const baseIndex = (pagination.page - 1) * ITEMS_PER_PAGE;
+
+    return filteredItems.map((item, index) => ({
+      no: baseIndex + index + 1,
+      challengeId: item.challengeId,
+      type: item.type,
+      field: item.field,
+      title: item.title,
+      participants: `${item.currentParticipants} / ${item.maxParticipants}`,
+      appliedDate: item.appliedDate ?? item.createdAt ?? null,
+      deadline: item.deadline,
+      status: item.status,
+    }));
+  }, [filteredItems, pagination.page]);
+
+  const totalPages = pagination.totalPages ?? 1;
 
   const handleSearch = (value) => {
     setCurrentPage(1);
@@ -180,8 +79,9 @@ export default function AdminPage() {
   };
 
   const handleChangePage = (page) => setCurrentPage(page);
+
   const handleClickTitle = (challengeId) => {
-    if (challengeId == null) return;
+    if (!challengeId) return;
     router.push(`/admin/${challengeId}/status`);
   };
 
@@ -275,11 +175,17 @@ export default function AdminPage() {
           </span>
         </div>
         <div className={styles.tableInner}>
-          <ChallengeList
-            items={currentItems}
-            onClickTitle={handleClickTitle}
-            emptyMessage="현재 검토 중인 챌린지가 없습니다."
-          />
+          {isLoading ? (
+            <p className={styles.loading}>목록을 불러오는 중입니다…</p>
+          ) : error ? (
+            <p className={styles.loading}>챌린지 목록을 불러오지 못했습니다.</p>
+          ) : (
+            <ChallengeList
+              items={mappedItems}
+              onClickTitle={handleClickTitle}
+              emptyMessage="현재 등록된 챌린지가 없습니다."
+            />
+          )}
         </div>
       </div>
 
