@@ -110,8 +110,9 @@ export default function ChallengeListToolbar({
         {/* 검색 영역 */}
         <div className={styles.searchArea}>
           <SearchInput
-            value={searchValue}
-            onChange={handleSearch}
+            value={search}
+            onChange={(e) => setSearch(e.target.value)}
+            onSearch={handleSearch}
             placeholder="챌린지 이름을 검색해보세요"
           />
         </div>

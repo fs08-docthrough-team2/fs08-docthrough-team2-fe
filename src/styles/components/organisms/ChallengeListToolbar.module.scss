@@ -1,17 +1,18 @@
 @use '@/styles/mixin' as m;
 @use '@/styles/variable' as v;
 
+/* ===== 래퍼 ===== */
 .wrapper {
   width: 100%;
   background-color: #fafafa;
   display: flex;
   flex-direction: column;
-  align-items: center;
+  align-items: center; /* 컨테이너가 중앙에 올 경우 */
   border-radius: 8px;
   padding: 16px 0;
 }
 
-/* 상단 헤더 */
+/* ===== 상단 헤더 ===== */
 .header {
   display: flex;
   justify-content: space-between;
@@ -20,11 +21,12 @@
   min-width: 0;
 }
 
+/* 외부 여백은 컨테이너/페이지에서만 관리 */
 .header,
 .controls {
   width: 100%;
   padding: 0;
-  margin: 10px;
+  margin: 10px; /* 🔧 기존 10px 제거 */
 }
 
 .title {
@@ -51,22 +53,20 @@
   }
 }
 
-/* 필터 + 검색 */
+/* ===== 컨트롤 바(필터 + 검색) ===== */
 .controls {
   display: grid;
-  grid-template-columns: 110px 1fr; /* 필터 112 + 검색 나머지 */
+  grid-template-columns: auto minmax(0, 1fr); /* 🔑 필터 auto + 검색 1fr(수축 허용) */
   align-items: center;
   gap: 12px;
   width: 100%;
   box-sizing: border-box;
-
-  /* 콘텐츠가 길어질 때 레이아웃 밀림 방지 */
-  > * {
-    min-width: 0;
-  }
 }
+.controls > * {
+  min-width: 0;
+} /* 🔑 그리드 자식 수축 허용 */
 
-/* (선택) 필터 슬롯 고정폭 */
+/* (선택) 필터 슬롯 */
 .filterSlot {
   position: relative;
   width: 100%;
@@ -90,15 +90,15 @@
   cursor: pointer;
 }
 
-/* 팝업 위치 */
-.filterPopupWrap {
-  position: absolute;
-  top: 44px; /* 트리거 아래 */
-  left: 0; /* 필요하면 right:0 로 변경 */
-  z-index: 50;
-}
-/* 겉 한 겹만 보더/라운드/패딩 */
+/* ===== 검색 영역 (SearchInput 루트에 className으로 연결) ===== */
 .searchArea {
+  /* 그리드 1fr 셀을 꽉 채우기 위한 4대장 */
+  width: 100%;
+  min-width: 0;
+  max-width: none;
+  box-sizing: border-box;
+
+  /* 겉 스타일 */
   display: flex;
   align-items: center;
   height: 40px;
@@ -106,16 +106,28 @@
   border: 1px solid #e5e5e5;
   border-radius: 20px;
   background: v.$white;
-  overflow: hidden; /* 내부 둥근/보더 잔상 컷 */
+  overflow: hidden;
 
-  /* 포커스시 외곽만 살짝 강조(선택) */
   &:focus-within {
     border-color: #d9d9d9;
     box-shadow: 0 0 0 2px rgba(38, 38, 38, 0.06);
   }
+
+  :global(.siWrap) {
+    width: 100%;
+    min-width: 0;
+    max-width: none;
+    box-sizing: border-box;
+  }
+  :global(.siInput) {
+    width: 100%;
+    min-width: 0;
+    max-width: none;
+    flex: 1 1 auto;
+  }
 }
 
-/* 내부 요소 투명화 → 세로줄/반달 제거 (최소 스코프) */
+/* 내부 요소 투명화 (필요시 유지) */
 .searchArea :where(input, button, svg, div) {
   background: transparent !important;
   border: 0 !important;
@@ -123,29 +135,9 @@
   border-radius: 0;
 }
 
-/* 인풋을 래퍼에 딱 맞게 확장 */
-.searchArea input {
-  flex: 1;
-  min-width: 0;
-  height: 100%;
-  outline: 0;
-  font-size: 15px;
-  color: #333;
-
-  &::placeholder {
-    color: #9b9b9b;
-  }
-}
-
-/* ============= Responsive ============= */
+/* ===== 반응형 ===== */
 /* iPad mini (744px) */
 @include m.tablet {
-  .header,
-  .controls {
-    width: 744px;
-    padding: 8px 16px;
-  }
-
   .title {
     font-size: 18px;
   }
@@ -157,17 +149,16 @@
     padding: 12px 0;
   }
 
-  .header,
   .controls {
-    width: 100%;
-    padding: 8px 16px;
+    grid-template-columns: auto minmax(0, 1fr);
+    gap: 8px;
+    padding: 0 16px; /* 모바일 좌우 거터 */
     box-sizing: border-box;
   }
 
-  /* 필터 auto + 검색 1fr */
-  .controls {
-    grid-template-columns: auto 1fr;
-    gap: 8px;
+  .header {
+    padding: 0 16px; /* 모바일 좌우 거터 */
+    box-sizing: border-box;
   }
 
   .filterSlot {
