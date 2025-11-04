@@ -1,10 +1,10 @@
 'use client';
 
-import { useEffect, useMemo, useState } from 'react';
-import { useMutation } from '@tanstack/react-query';
+import { useMemo, useState } from 'react';
 import { useRouter } from 'next/navigation';
-import api from '@/libs/api.js';
+import { useCreateChallengeMutation } from '@/hooks/mutations/useChallenge';
 import { formatUTCDate } from '@/libs/day';
+import { showToast } from '@/components/common/Sonner';
 import BaseInput from '@/components/atoms/Input/BaseInput';
 import DateInput from '@/components/atoms/Input/DateInput';
 import TextBox from '@/components/atoms/Input/TextBox';
@@ -51,24 +51,7 @@ export default function ChallengePostPage() {
     [form, fieldLabel, typeLabel],
   );
 
-  const createChallengeMutation = useMutation({
-    mutationFn: async (payload) => {
-      const response = await api.post('/challenge/create', payload);
-      return response.data;
-    },
-    onSuccess: (data) => {
-      window.alert('챌린지 등록');
-      if (data?.id) {
-        router.push(`/challenge/detail/${data.id}`);
-      } else {
-        router.push('/challenges');
-      }
-    },
-    onError: (error) => {
-      const message = error.response?.data?.message ?? '챌린지 등록 실패';
-      window.alert(message);
-    },
-  });
+  const createChallengeMutation = useCreateChallengeMutation();
 
   const handleChange = (key) => (event) =>
     setForm((prev) => ({ ...prev, [key]: event.target.value }));
@@ -91,18 +74,34 @@ export default function ChallengePostPage() {
       requestBody.content;
 
     if (!isValid) {
-      window.alert('필수 항목을 모두 입력');
+      showToast({
+        kind: 'warning',
+        title: '필수 항목을 모두 입력하세요',
+      });
       return;
     }
 
-    createChallengeMutation.mutate(requestBody);
+    createChallengeMutation.mutate(requestBody, {
+      onSuccess: (data) => {
+        showToast({
+          kind: 'success',
+          title: '챌린지 등록 성공',
+        });
+        if (data?.id) {
+          router.push(`/challenge/detail/${data.id}`);
+        } else {
+          router.push('/challenges');
+        }
+      },
+      onError: (error) => {
+        const message = error.response?.data?.message ?? '챌린지 등록 실패';
+        showToast({
+          kind: 'error',
+          title: message,
+        });
+      },
+    });
   };
-
-  useEffect(() => {
-    if (form.deadline) {
-      console.log(formatUTCDate(form.deadline));
-    }
-  }, [form.deadline]);
 
   return (
     <section className={styles.wrapper}>
