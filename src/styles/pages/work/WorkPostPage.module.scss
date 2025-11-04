@@ -3,4 +3,66 @@
 
 .page {
   @include m.center-container(890px);
+
+  @include m.tablet {
+    @include m.center-container(696px);
+  }
+
+  @include m.mobile {
+    @include m.center-container(343px);
+  }
+}
+
+.draft {
+  position: fixed;
+  bottom: 48px;
+  left: 0;
+  right: 0;
+  z-index: 1000;
+
+  @include m.center-container(890px);
+  height: 48px;
+
+  border-radius: 8px;
+  border: 1px solid v.$gray-800;
+  background: v.$gray-50;
+
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+
+  padding: 12px 8px;
+
+  @include m.tablet {
+    @include m.center-container(696px);
+  }
+
+  @include m.mobile {
+    @include m.center-container(343px);
+    height: 34px;
+    padding: 8px;
+  }
+
+  .cancelButton {
+    @include m.reset-button;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .left {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+
+  .description {
+    color: v.$gray-800;
+    font-feature-settings:
+      'liga' off,
+      'clig' off;
+    font-size: 14px;
+    font-weight: 500;
+    line-height: normal;
+  }
 }
