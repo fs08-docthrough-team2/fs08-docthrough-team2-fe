@@ -2,7 +2,7 @@ import styles from '@/styles/pages/my-challenge/ChallengeApprovalDetailPage.modu
 
 import ChallengeApprovalStatus from '@/components/atoms/ChallengeApprovalStatus/ChallengeApprovalStatus';
 import ChallengeCardDetail from '@/components/molecules/ChallengeCard/ChallengeCardDetail';
-import LinkPreview from '@/components/atoms/LinkPreview/LinkPreview';
+import LinkPreview from '@/components/common/LinkPreview/LinkPreview';
 
 const ChallengeApprovalDetailPage = () => {
   const stroke = (

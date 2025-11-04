@@ -1,0 +1,57 @@
+@use '@/styles/variable' as v;
+@use '@/styles/mixin' as m;
+
+.contentWrapper {
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+  flex: 1;
+  min-height: 0;
+  overflow: auto;
+
+  .contentHeader {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+
+  .title {
+    color: v.$gray-800;
+    font-size: 20px;
+    font-weight: 600;
+    line-height: normal;
+  }
+
+  :global([data-color-mode='light']) {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    min-height: 0;
+
+    :global(.w-md-editor) {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      min-height: 0;
+
+      :global(.w-md-editor-content) {
+        flex: 1;
+        min-height: 0;
+      }
+    }
+  }
+}
+
+.listButton {
+  @include m.reset-button;
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+
+.listButtonText {
+  color: v.$gray-500;
+  font-size: 14px;
+  font-weight: 600;
+  line-height: normal;
+}

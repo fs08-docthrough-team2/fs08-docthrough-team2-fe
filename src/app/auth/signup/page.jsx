@@ -84,6 +84,8 @@ const SignupPage = () => {
           <PasswordInput name="password" value={form.password} onChange={handleChange} />
           <PasswordInput
             name="confirmPassword"
+            label="비밀번호 확인"
+            placeholder="비밀번호를 한 번 더 입력해 주세요"
             value={form.confirmPassword}
             onChange={handleChange}
             confirmValue={form.password}
