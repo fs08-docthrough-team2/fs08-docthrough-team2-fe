@@ -2,6 +2,7 @@ import { useState, useEffect, useRef } from 'react';
 import styles from '@/styles/components/organisms/ChallengeListToolbar.module.scss';
 import SearchInput from '@/components/atoms/input/SearchInput.jsx';
 import FilterPopup from '@/components/molecules/Popup/FilterPopup.jsx';
+import { useRouter } from 'next/navigation';
 
 export default function ChallengeListToolbar({
   variant = 'user', // 'user' | 'admin'
@@ -48,6 +49,7 @@ export default function ChallengeListToolbar({
 
   const computedTitle = title ?? '챌린지 목록';
   const showCreateButton = variant === 'user';
+  const router = useRouter();
 
   return (
     <section className={styles.wrapper}>
@@ -55,7 +57,11 @@ export default function ChallengeListToolbar({
       <div className={styles.header}>
         <h2 className={styles.title}>{computedTitle}</h2>
         {showCreateButton && (
-          <button type="button" className={styles.createButton} onClick={onCreateClick}>
+          <button
+            type="button"
+            className={styles.createButton}
+            onClick={() => router.push('/challenge/post')}
+          >
             신규 챌린지 신청 +
           </button>
         )}
