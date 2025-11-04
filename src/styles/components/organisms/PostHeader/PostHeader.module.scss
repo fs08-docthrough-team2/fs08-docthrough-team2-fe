@@ -8,12 +8,14 @@
   justify-content: space-between;
   align-items: center;
 
+  padding: 24px 0;
+
   @include m.tablet {
     @include m.center-container(696px);
   }
 
   @include m.mobile {
-    padding: 0 16px;
+    padding: 24px 16px;
   }
 }
 
