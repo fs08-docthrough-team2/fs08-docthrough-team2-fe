@@ -8,9 +8,9 @@ export const createFeedback = async ({ attendId, content }) => {
   return res.data;
 };
 
-export const getFeedbackList = async (attendId) => {
+export const getFeedbackListInfinite = async ({ attendId, pageParam, pageSize = 3 }) => {
   const res = await api.get(
-    `/challenge/feedback/translated-detail/feedback-list?attend_id=${attendId}`,
+    `/challenge/feedback/translated-detail/feedback-list?attend_id=${attendId}&page=${pageParam}&size=${pageSize}`,
   );
   return res.data;
 };

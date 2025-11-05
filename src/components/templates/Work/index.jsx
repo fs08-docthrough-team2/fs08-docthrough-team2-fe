@@ -7,11 +7,10 @@ import TypeChip from '@/components/atoms/Chips/TypeChip';
 import CategoryChip from '@/components/atoms/Chips/CategoryChip';
 import MarkdownViewer from '@/components/common/Markdown/MarkdownViewer';
 import CommentInput from '@/components/atoms/Input/CommentInput';
-import CommentCard from '@/components/molecules/Comment/CommentCard';
 import DropdownOption from '@/components/molecules/Dropdown/DropdownOption';
-import { formatKoreanDate, formatToKoreanTime } from '@/libs/day.js';
+import CommentCardList from '@/components/organisms/CommentCardList';
+import { formatKoreanDate } from '@/libs/day.js';
 import { useCreateFeedbackMutation } from '@/hooks/mutations/useFeedbackMutations';
-import { useGetFeedbackList } from '@/hooks/queries/useFeedbackQueries';
 
 import ic_profile from '/public/icon/ic_profile.svg';
 import ic_like from '/public/icon/ic_like.svg';
@@ -32,7 +31,7 @@ const Work = ({
   const queryClient = useQueryClient();
   const [commentValue, setCommentValue] = useState('');
   const createFeedbackMutation = useCreateFeedbackMutation();
-  const { data: feedbackList } = useGetFeedbackList(attendId);
+  // const { data: feedbackList } = useGetFeedbackList(attendId);
 
   const formattedCreatedAt = formatKoreanDate(createdAt);
 
@@ -89,17 +88,7 @@ const Work = ({
           onChange={handleCommentValueChange}
           onSubmit={handleCommentSubmit}
         />
-        <div className={styles.commentList}>
-          {feedbackList?.data?.items?.map((comment) => (
-            <CommentCard
-              key={comment?.feedback_id}
-              variant={userVariant}
-              name={comment?.user?.nick_name}
-              date={formatToKoreanTime(comment?.created_at)}
-              text={comment?.content}
-            />
-          ))}
-        </div>
+        <CommentCardList userVariant={userVariant} attendId={attendId} />
       </div>
     </>
   );
