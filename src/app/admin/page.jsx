@@ -3,6 +3,8 @@
 import { useMemo, useState } from 'react';
 import { useRouter } from 'next/navigation';
 import clsx from 'clsx';
+import { challengeSortOptions } from '@/constants/sortOptions.js';
+import { sortChallenges } from '@/utils/sortChallenges';
 import { useChallengeListQuery } from '@/hooks/mutations/useChallengeMutations';
 import SearchInput from '@/components/atoms/Input/SearchInput';
 import DropdownSort from '@/components/molecules/Dropdown/DropdownSort';
@@ -30,6 +32,7 @@ export default function AdminPage() {
   const router = useRouter();
   const [search, setSearch] = useState('');
   const [currentPage, setCurrentPage] = useState(1);
+  const [sortKey, setSortKey] = useState(null);
 
   const { data, isLoading, error } = useChallengeListQuery({
     page: currentPage,
@@ -53,12 +56,17 @@ export default function AdminPage() {
     });
   }, [challenges, search]);
 
+  const sortedItems = useMemo(
+    () => sortChallenges(filteredItems, sortKey),
+    [filteredItems, sortKey],
+  );
+
   const mappedItems = useMemo(() => {
-    if (!filteredItems.length) return [];
+    if (!sortedItems.length) return [];
 
     const baseIndex = (pagination.page - 1) * ITEMS_PER_PAGE;
 
-    return filteredItems.map((item, index) => ({
+    return sortedItems.map((item, index) => ({
       no: baseIndex + index + 1,
       challengeId: item.challengeId,
       type: item.type,
@@ -69,7 +77,7 @@ export default function AdminPage() {
       deadline: item.deadline,
       status: item.status,
     }));
-  }, [filteredItems, pagination.page]);
+  }, [sortedItems, pagination.page]);
 
   const totalPages = pagination.totalPages ?? 1;
 
@@ -97,7 +105,15 @@ export default function AdminPage() {
             placeholder="챌린지 제목을 검색해보세요"
           />
         </div>
-        <DropdownSort className={styles.dropdownSort} />
+        <DropdownSort
+          className={styles.dropdownSort}
+          options={challengeSortOptions}
+          value={sortKey}
+          onChange={(nextKey) => {
+            setSortKey(nextKey);
+            setCurrentPage(1);
+          }}
+        />
       </div>
       <div className={styles.tableScrollArea}>
         <div className={clsx(styles.listHeader, styles.tableInner, challengeListStyles.row)}>
