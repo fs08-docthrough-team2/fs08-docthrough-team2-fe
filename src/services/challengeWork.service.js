@@ -9,3 +9,18 @@ export const getChallengeWorkDetail = async (attendId) => {
   const res = await api.get(`/challenge/work/translated-detail/${attendId}`);
   return res.data;
 };
+
+export const getChallengeWorkDraftList = async () => {
+  const res = await api.get('/challenge/work/translated-list/save');
+  return res.data;
+};
+
+export const getChallengeWorkDraftDetail = async (attendId) => {
+  const res = await api.get(`/challenge/work/translated-detail/save/${attendId}`);
+  return res.data;
+};
+
+export const createChallengeWorkDraft = async ({ challengeId, workItem }) => {
+  const res = await api.post('/challenge/work/translated-detail/save', { challengeId, workItem });
+  return res.data;
+};
