@@ -12,6 +12,7 @@ import ChallengeList from '@/components/atoms/List/ChallengeList';
 import Pagination from '@/components/molecules/Pagination/Pagination';
 import styles from '@/styles/pages/admin/AdminPage.module.scss';
 import challengeListStyles from '@/styles/components/atoms/List/ChallengeList.module.scss';
+import LoadingSpinner from '@/components/organisms/Loading/LoadingSpinner';
 
 const ITEMS_PER_PAGE = 10;
 
@@ -192,7 +193,7 @@ export default function AdminPage() {
         </div>
         <div className={styles.tableInner}>
           {isLoading ? (
-            <p className={styles.loading}>목록을 불러오는 중입니다…</p>
+            <LoadingSpinner loading={true} />
           ) : error ? (
             <p className={styles.loading}>챌린지 목록을 불러오지 못했습니다.</p>
           ) : (
