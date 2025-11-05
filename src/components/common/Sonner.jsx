@@ -17,6 +17,9 @@ export function AppToaster({
   return <Toaster position={position} expand={expand} richColors={richColors} {...rest} />;
 }
 
+/*
+kind: success | info | warning | error
+*/
 export function showToast({ kind = 'info', title } = {}) {
   const handler = METHOD_MAP[kind] || toast;
   return handler(title);

@@ -16,3 +16,8 @@ export const createChallenge = async (payload) => {
   const response = await api.post('/challenge/create', payload);
   return response.data;
 };
+
+export const getChallengeDetail = async (challengeId) => {
+  const res = await api.get(`/challenge/inquiry/challenge-detail/${challengeId}`);
+  return res.data;
+};
