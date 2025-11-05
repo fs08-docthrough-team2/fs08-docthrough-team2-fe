@@ -15,6 +15,7 @@ import { useCreateFeedbackMutation } from '@/hooks/mutations/useFeedbackMutation
 import ic_profile from '/public/icon/ic_profile.svg';
 import ic_like from '/public/icon/ic_like.svg';
 import styles from '@/styles/components/templates/Work/Work.module.scss';
+import { useRouter, useParams } from 'next/navigation';
 
 const Work = ({
   isMyWork = false,
@@ -29,9 +30,10 @@ const Work = ({
   attendId = '',
 }) => {
   const queryClient = useQueryClient();
+  const router = useRouter();
+  const { challengeId, workId } = useParams();
   const [commentValue, setCommentValue] = useState('');
   const createFeedbackMutation = useCreateFeedbackMutation();
-  // const { data: feedbackList } = useGetFeedbackList(attendId);
 
   const formattedCreatedAt = formatKoreanDate(createdAt);
 
@@ -56,12 +58,20 @@ const Work = ({
     );
   };
 
+  const handleEdit = () => {
+    router.push(`/${challengeId}/work/edit/${workId}`);
+  };
+
+  const handleDelete = () => {
+    console.log('delete');
+  };
+
   return (
     <>
       <div className={styles.titleHeader}>
         <div className={styles.titleHeaderTop}>
           <div className={styles.title}>{title}</div>
-          {(isMyWork || isAdmin) && <DropdownOption />}
+          {(isMyWork || isAdmin) && <DropdownOption onEdit={handleEdit} onDelete={handleDelete} />}
         </div>
         <div className={styles.chipWrapper}>
           <TypeChip label={type} color="green" />

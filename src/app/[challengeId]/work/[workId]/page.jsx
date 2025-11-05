@@ -11,13 +11,14 @@ import styles from '@/styles/pages/work/WorkPage.module.scss';
 const WorkPage = () => {
   const { challengeId, workId } = useParams();
   const isAdmin = useIsAdmin();
-  const isMine = useIsMine();
+  // const isMine = useIsMine();
 
   const { data: challengeDetail } = useGetChallengeDetail(challengeId);
   const { data: challengeWorkDetail } = useGetChallengeWorkDetail(workId);
 
   // TODO: userId 넘겨주기
-  const isMyWork = isMine();
+  // const isMyWork = isMine();
+  const isMyWork = true;
 
   return (
     <div className={styles.page}>
