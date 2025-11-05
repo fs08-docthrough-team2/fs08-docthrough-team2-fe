@@ -2,8 +2,9 @@
 
 import { useAuthStore } from '@/stores/useAuthStore';
 import { useRouter } from 'next/navigation';
-import api from '@/libs/api.js';
+import { showToast } from '@/components/common/Sonner';
 import { setAccessToken, clearAccessToken } from '@/libs/token.js';
+import api from '@/libs/api.js';
 
 export const useLogin = () => {
   const setUser = useAuthStore((state) => state.setUser);
@@ -22,9 +23,16 @@ export const useLogin = () => {
         setUser(user);
       }
 
+      showToast({
+        kind: 'success',
+        title: '로그인 성공',
+      });
       router.push('/');
     } catch (error) {
-      console.log(error.response?.data);
+      showToast({
+        kind: 'error',
+        title: '로그인 실패',
+      });
     }
   };
 
@@ -51,9 +59,16 @@ export const useSignup = () => {
         setUser(user);
       }
 
+      showToast({
+        kind: 'success',
+        title: '회원가입 성공',
+      });
       router.push('/');
     } catch (error) {
-      console.log(error.response?.data);
+      showToast({
+        kind: 'error',
+        title: '회원가입 실패',
+      });
     }
   };
 
@@ -69,9 +84,16 @@ export const useLogout = () => {
       await api.post('/auth/logout');
       clearAccessToken();
       clearUser();
+      showToast({
+        kind: 'success',
+        title: '로그아웃 성공',
+      });
       router.push('/');
     } catch (error) {
-      console.log(error.response?.data);
+      showToast({
+        kind: 'error',
+        title: '로그아웃 실패',
+      });
     }
   };
 

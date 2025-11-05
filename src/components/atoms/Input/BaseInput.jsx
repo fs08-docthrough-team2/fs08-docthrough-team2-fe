@@ -1,3 +1,6 @@
+'use client';
+
+import clsx from 'clsx';
 import { useId } from 'react';
 import styles from '@/styles/components/atoms/input/BaseInput.module.scss';
 
@@ -29,13 +32,12 @@ export default function BaseInput({
       )}
 
       <div
-        className={[
-          styles.inputWrap,
-          error ? styles.hasError : '',
-          disabled ? styles.isDisabled : '',
-          leftNode ? styles.hasLeft : '',
-          rightNode ? styles.hasRight : '',
-        ].join(' ')}
+        className={clsx(styles.inputWrap, {
+          [styles.hasError]: !!error, // ✅ 에러 클래스는 .inputWrap에 직접
+          [styles.isDisabled]: disabled,
+          [styles.hasLeft]: !!leftNode,
+          [styles.hasRight]: !!rightNode,
+        })}
       >
         {leftNode && <div className={styles.leftNode}>{leftNode}</div>}
 
