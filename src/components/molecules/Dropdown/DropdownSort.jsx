@@ -1,47 +1,103 @@
 // 정렬을 보여주는 dropdown
 'use client';
 
-import { useState } from 'react';
+import { useMemo, useState } from 'react';
+import clsx from 'clsx';
+import { challengeSortOptions } from '@/constants/sortOptions.js';
 import DropdownList from '../../atoms/Dropdown/DropdownList';
 import DropdownTrigger from '../../atoms/Dropdown/DropdownTrigger';
 import styles from '@/styles/components/molecules/Dropdown/DropdownSort.module.scss';
 
-const DROPDOWN_OPTIONS = [
-  '승인 대기',
-  '신청 승인',
-  '신청 거절',
-  '신청 시간 빠른순',
-  '신청 시간 느린순',
-  '마감 기한 빠른순',
-  '마감 기한 느린순',
-];
-const DEFAULT_LABEL = '정렬';
-
-function DropdownSort() {
+function DropdownSort({
+  className,
+  options = challengeSortOptions,
+  value = null,
+  defaultLabel = '정렬',
+  onChange,
+}) {
   const [isOpen, setIsOpen] = useState(false);
-  const [selectedLabel, setSelectedLabel] = useState(DEFAULT_LABEL);
-  const isDefaultLabel = selectedLabel === DEFAULT_LABEL;
+
+  const normalizedOptions = useMemo(
+    () =>
+      options.map((option, index) => {
+        if (typeof option === 'string') {
+          return {
+            key: option,
+            value: option,
+            label: option,
+          };
+        }
+
+        const computedValue = option?.value ?? null;
+        const computedLabel =
+          option?.label ??
+          (computedValue !== null && computedValue !== undefined ? String(computedValue) : '');
+        const computedKey =
+          option?.key ??
+          (computedValue !== null && computedValue !== undefined
+            ? String(computedValue)
+            : (option?.label ?? `option-${index}`));
+
+        return {
+          ...option,
+          key: computedKey,
+          value: computedValue,
+          label: computedLabel,
+        };
+      }),
+    [options],
+  );
+
+  const selectedOption = useMemo(
+    () => normalizedOptions.find((option) => option.value === value) ?? null,
+    [normalizedOptions, value],
+  );
+
+  const isDefaultSelection =
+    selectedOption == null ||
+    selectedOption.value === null ||
+    typeof selectedOption.value === 'undefined';
+
+  const triggerLabel = isDefaultSelection
+    ? defaultLabel
+    : (selectedOption.label ?? (typeof value === 'string' ? value : defaultLabel));
 
   const handleToggle = () => {
     setIsOpen((prev) => !prev);
   };
 
-  const handleSelect = (option) => {
-    setSelectedLabel(option);
+  const handleSelect = (selected) => {
+    const nextOption =
+      normalizedOptions.find((option) => option.value === selected) ??
+      normalizedOptions.find((option) => option.label === selected) ??
+      null;
+
+    const nextValue = nextOption?.value ?? (typeof selected === 'string' ? selected : null);
+
+    if (typeof onChange === 'function') {
+      onChange(nextValue);
+    }
+
     setIsOpen(false);
   };
 
   return (
-    <div className={styles.dropdown}>
+    <div className={clsx(styles.dropdown, className)}>
       <div className={styles.triggerWrapper}>
         <DropdownTrigger
-          label={selectedLabel}
+          label={triggerLabel}
           isOpen={isOpen}
           onToggle={handleToggle}
-          isSelected={!isDefaultLabel}
+          isSelected={!isDefaultSelection}
         />
       </div>
-      <DropdownList options={DROPDOWN_OPTIONS} isOpen={isOpen} onSelect={handleSelect} />
+      <DropdownList
+        options={normalizedOptions}
+        isOpen={isOpen}
+        onSelect={handleSelect}
+        onClickOutside={() => setIsOpen(false)}
+        placement="right"
+      />
     </div>
   );
 }

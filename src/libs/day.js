@@ -10,6 +10,10 @@ dayjs.extend(customParseFormat);
 dayjs.tz.setDefault('Asia/Seoul');
 
 export const formatKoreanDate = (dateString) => {
+  if (!dateString || dateString.trim() === '') {
+    return '';
+  }
+
   const date = dayjs.tz(dateString).format('YYYY년 MM월 DD일');
   return date;
 };
@@ -23,4 +27,10 @@ export const formatUTCDate = (dateString) => {
     return '';
   }
   return date.toISOString();
+};
+
+export const formatYYMMDD = (dateString) => {
+  if (!dateString) return '';
+  const date = dayjs(dateString);
+  return date.isValid() ? date.format('YY/MM/DD') : '';
 };

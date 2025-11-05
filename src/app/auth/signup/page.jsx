@@ -1,7 +1,8 @@
 'use client';
 
-import styles from '@/styles/pages/auth/SignupPage.module.scss';
 import Image from 'next/image';
+import Link from 'next/link';
+import { useSignup } from '@/hooks/useAuth.js';
 import { useState, useEffect } from 'react';
 import {
   isValidateEmail,
@@ -9,16 +10,15 @@ import {
   isValidatePassword,
   isValidateConfirmPassword,
 } from '@/libs/validator.js';
-
-import img_logo from '/public/image/img_logo.svg';
 import EmailInput from '@/components/atoms/Input/EmailInput.jsx';
 import PasswordInput from '@/components/atoms/Input/PasswordInput.jsx';
 import Button from '@/components/atoms/Button/Button.jsx';
 import AuthEntry from '@/components/atoms/AuthEntry/AuthEntry.jsx';
 import GoogleButton from '@/components/atoms/Button/GoogleButton.jsx';
 import BaseInput from '@/components/atoms/Input/BaseInput.jsx';
-import Link from 'next/link';
-import { useSignup } from '@/hooks/useAuth.js';
+
+import img_logo from '/public/image/img_logo.svg';
+import styles from '@/styles/pages/auth/SignupPage.module.scss';
 
 const SignupPage = () => {
   const { signup } = useSignup();

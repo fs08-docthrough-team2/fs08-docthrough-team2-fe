@@ -1,18 +1,18 @@
 'use client';
 
-import styles from '@/styles/pages/auth/LoginPage.module.scss';
+import { useEffect, useState } from 'react';
+import Link from 'next/link';
 import Image from 'next/image';
-
-import img_logo from '/public/image/img_logo.svg';
+import { useLogin } from '@/hooks/useAuth.js';
+import { isValidateEmail, isValidatePassword } from '@/libs/validator.js';
 import EmailInput from '@/components/atoms/Input/EmailInput';
 import PasswordInput from '@/components/atoms/Input/PasswordInput';
 import Button from '@/components/atoms/Button/Button';
 import AuthEntry from '@/components/atoms/AuthEntry/AuthEntry';
 import GoogleButton from '@/components/atoms/Button/GoogleButton';
-import { useEffect, useState } from 'react';
-import { isValidateEmail, isValidatePassword } from '@/libs/validator.js';
-import { useLogin } from '@/hooks/useAuth.js';
-import Link from 'next/link';
+
+import img_logo from '/public/image/img_logo.svg';
+import styles from '@/styles/pages/auth/LoginPage.module.scss';
 
 const LoginPage = () => {
   const { login } = useLogin();

@@ -1,13 +1,54 @@
 import api from '@/libs/api.js';
 
-export const fetchChallenges = async (params = {}) => {
+export const getIndividualParticipateChallengeList = async ({ searchValue = '', signal }) => {
+  const params = searchValue.trim() ? { title: searchValue.trim() } : undefined;
+  const res = await api.get('/challenge/inquiry/individual-participate-list', { params, signal });
+  return res.data;
+};
+
+export const getIndividualCompleteChallengeList = async ({ searchValue = '', signal }) => {
+  const params = searchValue.trim() ? { title: searchValue.trim() } : undefined;
+  const res = await api.get('/challenge/inquiry/individual-complete-list', { params, signal });
+  return res.data;
+};
+
+// POST /challenge/create
+export const createChallenge = async (payload) => {
+  const { data } = await api.post('/challenge/create', payload);
+  return data;
+};
+
+// GET /challenge/inquiry/challenge-detail/:challengeId
+export const getChallengeDetail = async (challengeId) => {
+  const res = await api.get(`/challenge/inquiry/challenge-detail/${challengeId}`);
+  return res.data;
+};
+
+// GET /challenge/inquiry/challenge-list (User)
+export const getChallengeList = async ({ page, pageSize }) => {
   const { data } = await api.get('/challenge/inquiry/challenge-list', {
-    params,
-    // (선택) 이 엔드포인트가 공개라면 굳이 쿠키 보낼 필요 없음
-    withCredentials: false,
+    params: { page, pageSize },
   });
-  return {
-    items: data?.data ?? [],
-    pagination: data?.pagination ?? { page: 1, pageSize: 10, totalCount: 0, totalPages: 1 },
-  };
+  return data;
+};
+
+// GET /challenge/inquiry/challenge-list (Admin)
+export const getAdminChallengeList = async ({ page, pageSize, searchKeyword, status, sort }) => {
+  const params = new URLSearchParams({
+    page: String(page),
+    pageSize: String(pageSize),
+  });
+
+  if (searchKeyword) params.set('searchKeyword', searchKeyword);
+  if (status) params.set('status', status);
+  if (sort) params.set('sort', sort);
+
+  const { data } = await api.get(`/challenge/admin/inquiry/challenge-list?${params.toString()}`);
+  return data;
+};
+
+// PATCH /challenge/update/:challengeId
+export const updateChallenge = async ({ challengeId, payload }) => {
+  const { data } = await api.patch(`/challenge/update/${challengeId}`, payload);
+  return data;
 };

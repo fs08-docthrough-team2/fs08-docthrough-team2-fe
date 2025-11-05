@@ -48,6 +48,7 @@ function DropdownOption({ onEdit = () => {}, onDelete = () => {} }) {
         listItemClassName={styles.optionListItem}
         optionClassName={styles.optionButton}
         placement="right"
+        onClickOutside={() => setIsOpen(false)}
       />{' '}
     </div>
   );
