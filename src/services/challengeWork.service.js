@@ -24,3 +24,8 @@ export const createChallengeWorkDraft = async ({ challengeId, workItem }) => {
   const res = await api.post('/challenge/work/translated-detail/save', { challengeId, workItem });
   return res.data;
 };
+
+export const updateChallengeWork = async ({ attendId, workItem }) => {
+  const res = await api.patch(`/challenge/work/translated-detail/${attendId}`, { workItem });
+  return res.data;
+};
