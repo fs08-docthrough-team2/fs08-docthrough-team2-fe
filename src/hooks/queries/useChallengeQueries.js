@@ -7,6 +7,7 @@ import {
   getIndividualParticipateChallengeList,
   getIndividualCompleteChallengeList,
   getChallengeDetail,
+  getChallengeParticipants,
 } from '@/services/challenge.service.js';
 
 const challengeDetailKey = (challengeId) => ['challenge-detail', challengeId];
@@ -69,5 +70,21 @@ export const useAdminChallengeListQuery = (
     ],
     queryFn: () => getAdminChallengeList({ page, pageSize, searchKeyword, status, sort }),
     keepPreviousData: true,
+    ...options,
+  });
+
+// 챌린지 참여자 조회
+export const useChallengeParticipantsQuery = ({ challengeId, page, pageSize }, options = {}) =>
+  useQuery({
+    queryKey: ['challenge-participants', challengeId, page, pageSize],
+    enabled: Boolean(challengeId),
+    keepPreviousData: true,
+    queryFn: ({ signal }) =>
+      getChallengeParticipants({
+        challengeId,
+        page,
+        pageSize,
+        signal,
+      }),
     ...options,
   });

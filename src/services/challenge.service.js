@@ -65,3 +65,17 @@ export const approveAdminChallenge = async (challengeId) => {
   const { data } = await api.patch(`/challenge/admin/new-challenge/approve/${challengeId}`);
   return data;
 };
+
+// GET /challenge/inquiry/participate-list/:challengeId
+export const getChallengeParticipants = async ({ challengeId, page = 1, pageSize = 5, signal }) => {
+  const params = new URLSearchParams({
+    page: String(page),
+    pageSize: String(pageSize),
+  });
+
+  const res = await api.get(
+    `/challenge/inquiry/participate-list/${challengeId}?${params.toString()}`,
+    { signal },
+  );
+  return res.data;
+};

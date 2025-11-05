@@ -10,8 +10,28 @@ const ChallengeContainer = ({
   dueDate = '2025-10-22T08:30:00.000Z',
   total = 15,
   capacity = 15,
+  onSourceClick,
+  onApplyClick,
+  sourceUrl,
 }) => {
   const formattedDueDate = formatKoreanDate(dueDate);
+
+  const handleSourceClick = () => {
+    if (typeof onSourceClick === 'function') {
+      onSourceClick();
+      return;
+    }
+
+    if (sourceUrl) {
+      window.open(sourceUrl, '_blank', 'noopener,noreferrer');
+    }
+  };
+
+  const handleApplyClick = () => {
+    if (typeof onApplyClick === 'function') {
+      onApplyClick();
+    }
+  };
 
   return (
     <div className={styles.container}>
@@ -28,8 +48,8 @@ const ChallengeContainer = ({
         </div>
       </div>
       <div className={styles.buttonWrapper}>
-        <Button variant="filled" size="md" children="원문 보기" />
-        <Button variant="solid" size="md" children="작업 도전하기" />
+        <Button variant="filled" size="md" children="원문 보기" onClick={handleSourceClick} />
+        <Button variant="solid" size="md" children="작업 도전하기" onClick={handleApplyClick} />
       </div>
     </div>
   );
