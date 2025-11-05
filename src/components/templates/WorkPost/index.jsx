@@ -10,11 +10,18 @@ import stroke_gray from '/public/stroke.svg';
 const WorkPost = ({
   content = '',
   onContentChange = () => {},
+  onQuitClick = () => {},
+  onDraftSaveClick = () => {},
+  onSubmitClick = () => {},
   title = '개발자로써 자신만의 브랜드를 구축하는 방법(dailydev)',
 }) => {
   return (
     <>
-      <PostHeader />
+      <PostHeader
+        onQuitClick={onQuitClick}
+        onDraftSaveClick={onDraftSaveClick}
+        onSubmitClick={onSubmitClick}
+      />
       <div className={styles.contentWrapper}>
         <div className={styles.contentHeader}>
           <div className={styles.title}>{title}</div>
