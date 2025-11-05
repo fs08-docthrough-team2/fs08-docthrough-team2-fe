@@ -34,3 +34,8 @@ export const formatYYMMDD = (dateString) => {
   const date = dayjs(dateString);
   return date.isValid() ? date.format('YY/MM/DD') : '';
 };
+
+export const formatToKoreanTime = (date) => {
+  if (!date) return '';
+  return dayjs.utc(date).tz('Asia/Seoul').format('YY/MM/DD HH:mm');
+};

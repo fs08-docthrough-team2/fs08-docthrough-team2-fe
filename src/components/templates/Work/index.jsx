@@ -1,3 +1,7 @@
+'use client';
+
+import { useState } from 'react';
+import { useQueryClient } from '@tanstack/react-query';
 import Image from 'next/image';
 import TypeChip from '@/components/atoms/Chips/TypeChip';
 import CategoryChip from '@/components/atoms/Chips/CategoryChip';
@@ -5,7 +9,9 @@ import MarkdownViewer from '@/components/common/Markdown/MarkdownViewer';
 import CommentInput from '@/components/atoms/Input/CommentInput';
 import CommentCard from '@/components/molecules/Comment/CommentCard';
 import DropdownOption from '@/components/molecules/Dropdown/DropdownOption';
-import { formatKoreanDate } from '@/libs/day.js';
+import { formatKoreanDate, formatToKoreanTime } from '@/libs/day.js';
+import { useCreateFeedbackMutation } from '@/hooks/mutations/useFeedbackMutations';
+import { useGetFeedbackList } from '@/hooks/queries/useFeedbackQueries';
 
 import ic_profile from '/public/icon/ic_profile.svg';
 import ic_like from '/public/icon/ic_like.svg';
@@ -21,8 +27,35 @@ const Work = ({
   createdAt = '',
   likeCount = 0,
   workItem = '',
+  attendId = '',
 }) => {
+  const queryClient = useQueryClient();
+  const [commentValue, setCommentValue] = useState('');
+  const createFeedbackMutation = useCreateFeedbackMutation();
+  const { data: feedbackList } = useGetFeedbackList(attendId);
+
   const formattedCreatedAt = formatKoreanDate(createdAt);
+
+  const userVariant = isAdmin ? 'admin' : 'user';
+
+  const handleCommentValueChange = (e) => {
+    setCommentValue(e.target.value);
+  };
+
+  const handleCommentSubmit = (value) => {
+    createFeedbackMutation.mutate(
+      {
+        attendId,
+        content: value,
+      },
+      {
+        onSuccess: () => {
+          queryClient.invalidateQueries({ queryKey: ['feedback-list', attendId] });
+          setCommentValue('');
+        },
+      },
+    );
+  };
 
   return (
     <>
@@ -51,11 +84,21 @@ const Work = ({
       </div>
       <MarkdownViewer value={workItem} />
       <div className={styles.commentWrapper}>
-        <CommentInput />
+        <CommentInput
+          value={commentValue}
+          onChange={handleCommentValueChange}
+          onSubmit={handleCommentSubmit}
+        />
         <div className={styles.commentList}>
-          <CommentCard variant={isAdmin ? 'admin' : 'user'} />
-          <CommentCard />
-          <CommentCard />
+          {feedbackList?.data?.items?.map((comment) => (
+            <CommentCard
+              key={comment?.feedback_id}
+              variant={userVariant}
+              name={comment?.user?.nick_name}
+              date={formatToKoreanTime(comment?.created_at)}
+              text={comment?.content}
+            />
+          ))}
         </div>
       </div>
     </>
