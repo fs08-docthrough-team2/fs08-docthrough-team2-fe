@@ -1,6 +1,7 @@
 'use client';
 
 import { useState } from 'react';
+import clsx from 'clsx';
 import BaseInput from './BaseInput';
 import styles from '@/styles/components/atoms/input/BaseInput.module.scss';
 import Image from 'next/image';
@@ -12,27 +13,27 @@ export default function PasswordInput({
   name = 'password',
   label = '비밀번호',
   placeholder = '비밀번호를 입력해주세요',
-  value,
+  value = '',
   onChange,
   confirmValue,
   minLength = 8,
 }) {
   const [show, setShow] = useState(false);
 
-  //  길이 확인
-  const tooShort = value && value.length > 0 && value.length < minLength;
+  // 길이 확인
+  const tooShort = value.length > 0 && value.length < minLength;
 
-  //  비밀번호 불일치 확인
+  // 비밀번호 불일치 확인
   const mismatch =
     typeof confirmValue === 'string' &&
     confirmValue.length > 0 &&
     value.length > 0 &&
     confirmValue !== value;
 
-  //  에러 메시지
+  // 에러 메시지
   let error = null;
   if (mismatch) error = '비밀번호가 일치하지 않습니다';
-  else if (tooShort) error = '8자 이상 입력해주세요';
+  else if (tooShort) error = `${minLength}자 이상 입력해주세요`;
 
   const right = (
     <button
@@ -61,24 +62,13 @@ export default function PasswordInput({
         onChange={onChange}
         type={show ? 'text' : 'password'}
         rightNode={right}
+        error={error}
         inputProps={{
           autoComplete: 'new-password',
-          style: show ? { color: '#171717' } : {},
+          // 👇 보이기 상태일 때 입력 글자색을 #171717로
+          style: show ? { color: '#171717' } : undefined,
         }}
       />
-      {/* 🔴 길이 에러 표시 */}
-      {error && (
-        <p
-          className={styles.errorText}
-          style={{
-            color: '#EB3E3E',
-            fontSize: '13px',
-            marginTop: '6px',
-          }}
-        >
-          {error}
-        </p>
-      )}
     </div>
   );
 }
