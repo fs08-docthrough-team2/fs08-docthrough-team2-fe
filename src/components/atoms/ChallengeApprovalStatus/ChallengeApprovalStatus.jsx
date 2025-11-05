@@ -13,6 +13,9 @@ const statusMap = {
     title: '신청이 거절되었습니다.',
     description: '신청 거절 사유',
   },
+  approved: {
+    title: '신청이 승인된 챌린지입니다.',
+  },
 };
 
 /*

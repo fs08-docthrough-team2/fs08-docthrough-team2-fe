@@ -59,3 +59,9 @@ export const updateChallenge = async ({ challengeId, payload }) => {
   const { data } = await api.patch(`/challenge/update/${challengeId}`, payload);
   return data;
 };
+
+// PATCH /challenge/admin/new-challenge/approve/:challengeId
+export const approveAdminChallenge = async (challengeId) => {
+  const { data } = await api.patch(`/challenge/admin/new-challenge/approve/${challengeId}`);
+  return data;
+};

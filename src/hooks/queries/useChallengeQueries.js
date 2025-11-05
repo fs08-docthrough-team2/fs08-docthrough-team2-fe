@@ -9,6 +9,8 @@ import {
   getChallengeDetail,
 } from '@/services/challenge.service.js';
 
+const challengeDetailKey = (challengeId) => ['challenge-detail', challengeId];
+
 export const useGetIndividualParticipateChallengeList = ({ searchValue = '' }) => {
   return useQuery({
     queryKey: ['individual-participate-challenge-list', searchValue],
@@ -30,7 +32,7 @@ export const useGetChallengeDetail = (challengeId) => {
   });
 };
 
-// 챌린지 상세 조회
+// 챌린지 상세 조회 (유저)
 export const useChallengeDetailQuery = (challengeId, options = {}) =>
   useQuery({
     queryKey: challengeDetailKey(challengeId),
