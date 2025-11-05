@@ -3,89 +3,74 @@
 import { useMemo, useState } from 'react';
 import { useRouter } from 'next/navigation';
 import clsx from 'clsx';
-import { challengeSortOptions } from '@/constants/sortOptions.js';
-import { sortChallenges } from '@/utils/sortChallenges';
-import { useChallengeListQuery } from '@/hooks/mutations/useChallengeMutations';
+import { filterSortOptions } from '@/constants/sortOptions.js';
+import { useChallengeListQuery } from '@/hooks/queries/useChallengeQueries.js';
 import Button from '@/components/atoms/Button/Button';
 import SearchInput from '@/components/atoms/Input/SearchInput';
 import ChallengeList from '@/components/atoms/List/ChallengeList';
 import DropdownSort from '@/components/molecules/Dropdown/DropdownSort';
 import Tabs from '@/components/molecules/Tabs/Tabs';
 import Pagination from '@/components/molecules/Pagination/Pagination';
+import LoadingSpinner from '@/components/organisms/Loading/LoadingSpinner';
 import styles from '@/styles/pages/my-challenge/MyChallengeApplyPage.module.scss';
 import challengeListStyles from '@/styles/components/atoms/List/ChallengeList.module.scss';
 
 const ITEMS_PER_PAGE = 10;
 
-const FIELD_TEXT = {
-  OFFICIAL: '공식문서',
-  BLOG: '블로그',
-};
-
-const CATEGORY_TEXT = {
-  NEXT: 'Next.js',
-  API: 'API',
-  CAREER: 'Career',
-  MODERN: 'Modern JS',
-  WEB: 'Web',
-};
-
 export default function MyChallengeApplyPage() {
   const router = useRouter();
-  const [search, setSearch] = useState('');
+  const [searchKeyword, setSearchKeyword] = useState('');
+  const [filterSortValue, setFilterSortValue] = useState(null);
   const [currentPage, setCurrentPage] = useState(1);
-  const [sortKey, setSortKey] = useState(null);
+
+  const [activeTab, setActiveTab] = useState(2);
+  const handleTabChange = (index) => {
+    if (index === 2) return;
+    if (index === 0) router.push('/my-challenge');
+    if (index === 1) router.push('/my-challenge?tab=complete');
+  };
+
+  const { statusParam, sortParam } = useMemo(() => {
+    if (!filterSortValue) return { statusParam: undefined, sortParam: undefined };
+    const [kind, payload] = filterSortValue.split(':');
+    if (kind === 'status') return { statusParam: payload, sortParam: undefined };
+    if (kind === 'sort') return { statusParam: undefined, sortParam: payload };
+    return { statusParam: undefined, sortParam: undefined };
+  }, [filterSortValue]);
 
   const { data, isLoading, error } = useChallengeListQuery({
     page: currentPage,
     pageSize: ITEMS_PER_PAGE,
+    searchKeyword: searchKeyword || undefined,
+    status: statusParam,
+    sort: sortParam,
   });
 
   const challenges = data?.data ?? [];
-  const pagination = data?.pagination ?? { page: 1, totalPages: 1, totalCount: 0 };
+  const pagination = data?.pagination;
+  const serverPage = pagination?.page ?? currentPage;
+  const totalPages = pagination?.totalPages ?? 1;
 
-  const filteredItems = useMemo(() => {
-    if (!search.trim()) return challenges;
-    const keyword = search.trim().toLowerCase();
-    return challenges.filter(({ title, field, type }) => {
-      const fieldLabel = CATEGORY_TEXT[field] ?? field;
-      const typeLabel = FIELD_TEXT[type] ?? type;
-      return (
-        title.toLowerCase().includes(keyword) ||
-        fieldLabel.toLowerCase().includes(keyword) ||
-        typeLabel.toLowerCase().includes(keyword)
-      );
-    });
-  }, [challenges, search]);
-
-  const sortedItems = useMemo(
-    () => sortChallenges(filteredItems, sortKey),
-    [filteredItems, sortKey],
+  const mappedItems = useMemo(
+    () =>
+      challenges.map((item, index) => ({
+        no: item.challenge_no ?? (serverPage - 1) * ITEMS_PER_PAGE + index + 1,
+        challengeId: item.challengeId ?? item.challenge_id ?? null,
+        type: item.type,
+        field: item.field,
+        title: item.title,
+        participants: item.currentParticipants,
+        maxParticipants: item.maxParticipants,
+        appliedDate: item.appliedDate ?? item.createdAt ?? null,
+        deadline: item.deadline,
+        status: item.status,
+      })),
+    [challenges, serverPage],
   );
-
-  const mappedItems = useMemo(() => {
-    if (!sortedItems.length) return [];
-
-    const baseIndex = (pagination.page - 1) * ITEMS_PER_PAGE;
-
-    return sortedItems.map((item, index) => ({
-      no: baseIndex + index + 1,
-      challengeId: item.challengeId,
-      type: item.type,
-      field: item.field,
-      title: item.title,
-      participants: `${item.currentParticipants} / ${item.maxParticipants}`,
-      appliedDate: item.appliedDate ?? item.createdAt ?? null,
-      deadline: item.deadline,
-      status: item.status,
-    }));
-  }, [sortedItems, pagination.page]);
-
-  const totalPages = pagination.totalPages ?? 1;
 
   const handleSearch = (value) => {
     setCurrentPage(1);
-    setSearch(value);
+    setSearchKeyword(value);
   };
 
   const handleChangePage = (page) => setCurrentPage(page);
@@ -99,24 +84,33 @@ export default function MyChallengeApplyPage() {
     <div className={styles.myChallengeApplyPage}>
       <div className={styles.headerTitleWrapper}>
         <div className={styles.pageTitle}>나의 챌린지</div>
-        <Button variant="solid" size="pill" children="신규 챌린지 신청" icon="newChallenge" />
+        <Button
+          variant="solid"
+          size="pill"
+          icon="newChallenge"
+          onClick={() => router.push('/challenge/post')}
+        >
+          신규 챌린지 신청
+        </Button>
       </div>
-      <Tabs />
+      <div className={styles.tabWrapper}>
+        <Tabs activeIndex={activeTab} onTabChange={handleTabChange} />
+      </div>
       <div className={styles.filters}>
         <div className={styles.searchInput}>
           <SearchInput
-            value={search}
-            onChange={(e) => setSearch(e.target.value)}
+            value={searchKeyword}
+            onChange={(e) => setSearchKeyword(e.target.value)}
             onSearch={handleSearch}
-            placeholder="챌린지 제목을 검색해보세요"
+            placeholder="챌린지 제목을 검색해 보세요"
           />
         </div>
         <DropdownSort
           className={styles.dropdownSort}
-          options={challengeSortOptions}
-          value={sortKey}
-          onChange={(nextKey) => {
-            setSortKey(nextKey);
+          options={filterSortOptions}
+          value={filterSortValue}
+          onChange={(nextValue) => {
+            setFilterSortValue(nextValue);
             setCurrentPage(1);
           }}
         />
@@ -166,7 +160,7 @@ export default function MyChallengeApplyPage() {
               challengeListStyles.cellCapacity,
             )}
           >
-            모집 정원
+            모집 인원
           </span>
           <span
             className={clsx(
@@ -198,7 +192,7 @@ export default function MyChallengeApplyPage() {
         </div>
         <div className={styles.tableInner}>
           {isLoading ? (
-            <p className={styles.loading}>목록을 불러오는 중입니다…</p>
+            <LoadingSpinner loading />
           ) : error ? (
             <p className={styles.loading}>챌린지 목록을 불러오지 못했습니다.</p>
           ) : (

@@ -25,10 +25,17 @@ export const getChallengeDetail = async (challengeId) => {
 };
 
 // GET /challenge/inquiry/challenge-list (User)
-export const getChallengeList = async ({ page, pageSize }) => {
-  const { data } = await api.get('/challenge/inquiry/challenge-list', {
-    params: { page, pageSize },
+export const getChallengeList = async ({ page, pageSize, searchKeyword, status, sort }) => {
+  const params = new URLSearchParams({
+    page: String(page),
+    pageSize: String(pageSize),
   });
+
+  if (searchKeyword) params.set('searchKeyword', searchKeyword);
+  if (status) params.set('status', status);
+  if (sort) params.set('sort', sort);
+
+  const { data } = await api.get(`/challenge/inquiry/challenge-list?${params.toString()}`);
   return data;
 };
 
