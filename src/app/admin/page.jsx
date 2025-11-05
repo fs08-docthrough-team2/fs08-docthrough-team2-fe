@@ -3,88 +3,66 @@
 import { useMemo, useState } from 'react';
 import { useRouter } from 'next/navigation';
 import clsx from 'clsx';
-import { challengeSortOptions } from '@/constants/sortOptions.js';
-import { sortChallenges } from '@/utils/sortChallenges';
-import { useChallengeListQuery } from '@/hooks/mutations/useChallengeMutations';
+import { adminFilterSortOptions } from '@/constants/sortOptions.js';
+import { useAdminChallengeListQuery } from '@/hooks/mutations/useChallengeMutations';
 import SearchInput from '@/components/atoms/Input/SearchInput';
 import DropdownSort from '@/components/molecules/Dropdown/DropdownSort';
 import ChallengeList from '@/components/atoms/List/ChallengeList';
 import Pagination from '@/components/molecules/Pagination/Pagination';
+import LoadingSpinner from '@/components/organisms/Loading/LoadingSpinner';
 import styles from '@/styles/pages/admin/AdminPage.module.scss';
 import challengeListStyles from '@/styles/components/atoms/List/ChallengeList.module.scss';
-import LoadingSpinner from '@/components/organisms/Loading/LoadingSpinner';
 
 const ITEMS_PER_PAGE = 10;
 
-const FIELD_TEXT = {
-  OFFICIAL: '공식문서',
-  BLOG: '블로그',
-};
-
-const CATEGORY_TEXT = {
-  NEXT: 'Next.js',
-  API: 'API',
-  CAREER: 'Career',
-  MODERN: 'Modern JS',
-  WEB: 'Web',
-};
-
 export default function AdminPage() {
   const router = useRouter();
-  const [search, setSearch] = useState('');
+  const [searchKeyword, setSearchKeyword] = useState('');
+  const [filterSortValue, setFilterSortValue] = useState(null);
   const [currentPage, setCurrentPage] = useState(1);
-  const [sortKey, setSortKey] = useState(null);
 
-  const { data, isLoading, error } = useChallengeListQuery({
+  // 선택한 옵션 value = "status:신청대기" 또는 "sort:마감기한빠름순"
+  const { statusParam, sortParam } = useMemo(() => {
+    if (!filterSortValue) return { statusParam: undefined, sortParam: undefined };
+    const [kind, payload] = filterSortValue.split(':');
+    if (kind === 'status') return { statusParam: payload, sortParam: undefined };
+    if (kind === 'sort') return { statusParam: undefined, sortParam: payload };
+    return { statusParam: undefined, sortParam: undefined };
+  }, [filterSortValue]);
+
+  const { data, isLoading, error } = useAdminChallengeListQuery({
     page: currentPage,
     pageSize: ITEMS_PER_PAGE,
+    searchKeyword: searchKeyword || undefined,
+    status: statusParam,
+    sort: sortParam,
   });
 
   const challenges = data?.data ?? [];
-  const pagination = data?.pagination ?? { page: 1, totalPages: 1, totalCount: 0 };
+  const pagination = data?.pagination;
+  const currentServerPage = pagination?.page ?? currentPage;
+  const totalPages = pagination?.totalPages ?? 1;
 
-  const filteredItems = useMemo(() => {
-    if (!search.trim()) return challenges;
-    const keyword = search.trim().toLowerCase();
-    return challenges.filter(({ title, field, type }) => {
-      const fieldLabel = CATEGORY_TEXT[field] ?? field;
-      const typeLabel = FIELD_TEXT[type] ?? type;
-      return (
-        title.toLowerCase().includes(keyword) ||
-        fieldLabel.toLowerCase().includes(keyword) ||
-        typeLabel.toLowerCase().includes(keyword)
-      );
-    });
-  }, [challenges, search]);
-
-  const sortedItems = useMemo(
-    () => sortChallenges(filteredItems, sortKey),
-    [filteredItems, sortKey],
+  const mappedItems = useMemo(
+    () =>
+      challenges.map((item, index) => ({
+        no: item.challenge_no ?? (currentServerPage - 1) * ITEMS_PER_PAGE + index + 1,
+        challengeId: item.challenge_id ?? item.challengeId ?? null,
+        type: item.type,
+        field: item.field,
+        title: item.title,
+        participants: item.participants,
+        maxParticipants: item.maxParticipants,
+        appliedDate: item.appliedDate,
+        deadline: item.deadline,
+        status: item.status,
+      })),
+    [challenges, currentServerPage],
   );
-
-  const mappedItems = useMemo(() => {
-    if (!sortedItems.length) return [];
-
-    const baseIndex = (pagination.page - 1) * ITEMS_PER_PAGE;
-
-    return sortedItems.map((item, index) => ({
-      no: baseIndex + index + 1,
-      challengeId: item.challengeId,
-      type: item.type,
-      field: item.field,
-      title: item.title,
-      participants: `${item.currentParticipants} / ${item.maxParticipants}`,
-      appliedDate: item.appliedDate ?? item.createdAt ?? null,
-      deadline: item.deadline,
-      status: item.status,
-    }));
-  }, [sortedItems, pagination.page]);
-
-  const totalPages = pagination.totalPages ?? 1;
 
   const handleSearch = (value) => {
     setCurrentPage(1);
-    setSearch(value);
+    setSearchKeyword(value);
   };
 
   const handleChangePage = (page) => setCurrentPage(page);
@@ -97,25 +75,27 @@ export default function AdminPage() {
   return (
     <div className={styles.adminPage}>
       <h1 className={styles.pageTitle}>챌린지 신청 관리</h1>
+
       <div className={styles.filters}>
         <div className={styles.searchInput}>
           <SearchInput
-            value={search}
-            onChange={(e) => setSearch(e.target.value)}
+            value={searchKeyword}
+            onChange={(e) => setSearchKeyword(e.target.value)}
             onSearch={handleSearch}
-            placeholder="챌린지 제목을 검색해보세요"
+            placeholder="챌린지 제목을 검색해 보세요"
           />
         </div>
         <DropdownSort
           className={styles.dropdownSort}
-          options={challengeSortOptions}
-          value={sortKey}
-          onChange={(nextKey) => {
-            setSortKey(nextKey);
+          options={adminFilterSortOptions}
+          value={filterSortValue}
+          onChange={(nextValue) => {
+            setFilterSortValue(nextValue);
             setCurrentPage(1);
           }}
         />
       </div>
+
       <div className={styles.tableScrollArea}>
         <div className={clsx(styles.listHeader, styles.tableInner, challengeListStyles.row)}>
           <span
@@ -161,7 +141,7 @@ export default function AdminPage() {
               challengeListStyles.cellCapacity,
             )}
           >
-            모집 정원
+            모집 인원
           </span>
           <span
             className={clsx(
@@ -191,9 +171,10 @@ export default function AdminPage() {
             상태
           </span>
         </div>
+
         <div className={styles.tableInner}>
           {isLoading ? (
-            <LoadingSpinner loading={true} />
+            <LoadingSpinner loading />
           ) : error ? (
             <p className={styles.loading}>챌린지 목록을 불러오지 못했습니다.</p>
           ) : (

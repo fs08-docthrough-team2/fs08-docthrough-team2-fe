@@ -96,6 +96,7 @@ function DropdownSort({
         isOpen={isOpen}
         onSelect={handleSelect}
         onClickOutside={() => setIsOpen(false)}
+        placement="right"
       />
     </div>
   );

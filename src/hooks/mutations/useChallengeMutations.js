@@ -3,6 +3,7 @@ import {
   createChallenge,
   getChallengeList,
   getChallengeDetail,
+  getAdminChallengeList,
   updateChallenge,
 } from '@/services/challenge.service.js';
 
@@ -18,11 +19,30 @@ export const useChallengeDetailQuery = (challengeId, options = {}) =>
     ...options,
   });
 
-// 챌린지 리스트 조회
+// 챌린지 리스트 조회 (유저)
 export const useChallengeListQuery = ({ page, pageSize = 10 }, options = {}) =>
   useQuery({
     queryKey: ['challenge-list', page, pageSize],
     queryFn: () => getChallengeList({ page, pageSize }),
+    keepPreviousData: true,
+    ...options,
+  });
+
+// 챌린지 리스트 조회 (어드민)
+export const useAdminChallengeListQuery = (
+  { page, pageSize = 10, searchKeyword, status, sort },
+  options = {},
+) =>
+  useQuery({
+    queryKey: [
+      'admin-challenge-list',
+      page,
+      pageSize,
+      searchKeyword ?? '',
+      status ?? '',
+      sort ?? '',
+    ],
+    queryFn: () => getAdminChallengeList({ page, pageSize, searchKeyword, status, sort }),
     keepPreviousData: true,
     ...options,
   });

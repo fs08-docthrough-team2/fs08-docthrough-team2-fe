@@ -70,7 +70,18 @@ function ChallengeList({
   return (
     <ul className={styles.list}>
       {items.map(
-        ({ no, challengeId, type, field, title, participants, appliedDate, deadline, status }) => {
+        ({
+          no,
+          challengeId,
+          type,
+          field,
+          title,
+          participants,
+          maxParticipants,
+          appliedDate,
+          deadline,
+          status,
+        }) => {
           const statusKey = String(status ?? '').toUpperCase();
           const statusInfo = STATUS_META[statusKey] ?? {
             label: statusKey || '-',
@@ -80,7 +91,7 @@ function ChallengeList({
           const categoryLabel = CATEGORY_LABEL[field] ?? field ?? '-';
           const appliedLabel = formatYYMMDD(appliedDate) || '-';
           const deadlineLabel = formatYYMMDD(deadline) || '-';
-          const capacityLabel = extractTotalParticipants(participants);
+          const capacityLabel = maxParticipants || '-';
 
           return (
             <li key={no ?? title} className={styles.row}>
