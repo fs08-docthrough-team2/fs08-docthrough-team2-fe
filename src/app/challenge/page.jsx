@@ -1,121 +1,130 @@
 'use client';
 
 import { useMemo, useState } from 'react';
+import { useChallenges } from '@/hooks/queries/useChallenge';
 import ChallengeListToolbar from '@/components/organisms/ChallengeListToolbar';
 import Pagination from '@/components/molecules/Pagination/Pagination.jsx';
 import ChallengeCard from '@/components/molecules/ChallengeCard/ChallengeCard.jsx';
 import styles from '@/styles/pages/ChallengeList.module.scss';
 import FilterPopup from '@/components/molecules/Popup/FilterPopup';
 
+function toKoDateText(iso) {
+  if (!iso) return '';
+  try {
+    const d = new Date(iso);
+    return (
+      d.toLocaleDateString('ko-KR', { year: 'numeric', month: 'long', day: 'numeric' }) + ' 마감'
+    );
+  } catch {
+    return '';
+  }
+}
+
 export default function ChallengeListPage() {
-  const allItems = useMemo(
-    () => [
-      {
-        id: 1,
-        title: '개발자로써 자신의 브랜드를 구축하는 방법(dailydev)',
-        tags: ['Career', '블로그'],
-        dateText: '2024년 2월 28일 마감',
-        progressText: '2/5 참여중',
-        badge: '',
-      },
-      {
-        id: 2,
-        title: 'TanStack Query - Optimistic Updates',
-        tags: ['Modern JS', '강의/세션'],
-        dateText: '2024년 2월 28일 마감',
-        progressText: '2/5 참여중',
-        badge: '',
-      },
-      {
-        id: 3,
-        title: 'Web 개발자의 필수 요건',
-        tags: ['Web', '강의/세션'],
-        dateText: '2024년 2월 28일 마감',
-        progressText: '2/5 참여중',
-        badge: '',
-      },
-      {
-        id: 4,
-        title: 'Next.js - App Router: Routing Fundamentals',
-        tags: ['Next.js', '강의/세션'],
-        dateText: '2024년 3월 3일 마감',
-        progressText: '5/5 참여 완료',
-        badge: '🔥 진행이 활발한 상태예요',
-      },
-      {
-        id: 5,
-        title: 'Fetch API, 너는 에러를 제대로 핸들링 하고 있는가?(dailydev)',
-        tags: ['API', '정보글'],
-        dateText: '2024년 2월 28일 마감',
-        progressText: '5/5 참여 완료',
-        badge: '🌙 평일저녁 마감지향',
-      },
-    ],
-    [],
+  // ── 컨트롤 상태
+  const [title, setTitle] = useState(''); // 검색어
+  const [field, setField] = useState(''); // 분야
+  const [type, setType] = useState(''); // 문서 타입
+  const [status, setStatus] = useState(''); // 상태
+  const [sort, setSort] = useState('asc'); // 마감일 asc|desc
+  const [page, setPage] = useState(1);
+  const pageSize = 10;
+  // ── 서버 호출 (훅: 항상 위에서 호출)
+  const params = useMemo(
+    () => ({ title, field, type, status, page, pageSize, sort }),
+    [title, field, type, status, page, pageSize, sort],
   );
 
-  // ── 상태 (검색/필터/페이지)
-  const [query, setQuery] = useState('');
-  const [page, setPage] = useState(1);
-  const pageSize = 5;
+  const { data, isLoading, isError, error, isFetching, status: qStatus } = useChallenges(params);
 
-  // ── 검색 필터링 (필요 시 카테고리/태그 필터도 여기에 추가)
-  const filtered = useMemo(() => {
-    if (!query) return allItems;
-    const q = query.toLowerCase();
-    return allItems.filter(
-      (it) =>
-        it.title.toLowerCase().includes(q) || it.tags.some((t) => t.toLowerCase().includes(q)),
-    );
-  }, [allItems, query]);
+  const items = data?.items ?? [];
+  const pagination = data?.pagination ?? { page: 1, totalPages: 1 };
 
-  // ── 페이지네이션
-  const total = filtered.length;
-  const totalPages = Math.max(1, Math.ceil(total / pageSize));
-  const start = (page - 1) * pageSize;
-  const current = filtered.slice(start, start + pageSize);
+  const cards = useMemo(
+    () =>
+      items.map((ch) => ({
+        key: ch.challengeId ?? ch.no ?? ch.id,
+        title: ch.title ?? '제목 없음',
+        tags: [ch.field, ch.type].filter(Boolean),
+        dateText: toKoDateText(ch.deadline),
+        progressText:
+          typeof ch.currentParticipants === 'number' && typeof ch.maxParticipants === 'number'
+            ? `${ch.currentParticipants}/${ch.maxParticipants} 참여중`
+            : '',
+        badge: ch.status ?? '',
+      })),
+    [items],
+  );
 
-  // ── Toolbar 프롭스: 네가 만든 ChallengeListToolbar API에 맞춰 연결
-  //   - 예: { onFilterClick, searchValue, onSearchChange, onCreateClick } 등
-  //   - 만약 Toolbar가 자체 상태를 갖고 있으면 최소한 searchValue/onChange만 넘겨줘도 OK
   return (
     <main className={styles.page}>
       <header className={styles.header}>
         <ChallengeListToolbar
-          search={query}
+          search={title}
           onSearchChange={(v) => {
+            const next = v?.target ? v.target.value : v;
             setPage(1);
-            setQuery(v?.target ? v.target.value : v);
+            setTitle(next);
           }}
-          onCreateClick={() => {
-            window.location.href = '/challenges/post';
-          }}
-          filterSlot={<FilterPopup onApply={(f) => {}} onReset={(f) => {}} onClose={() => {}} />}
+          onCreateClick={() => (window.location.href = '/challenge/post')}
+          filterSlot={
+            <FilterPopup
+              onApply={(f) => {
+                setField(f?.field || '');
+                setType(f?.type || '');
+                setStatus(f?.status || '');
+                setSort(f?.sort || 'asc');
+                setPage(1);
+              }}
+              onReset={() => {
+                setField('');
+                setType('');
+                setStatus('');
+                setSort('asc');
+                setPage(1);
+              }}
+              onClose={() => {}}
+            />
+          }
         />
       </header>
 
-      <section className={styles.list}>
-        {current.map((item) => (
-          <ChallengeCard
-            key={item.id}
-            title={item.title}
-            tags={item.tags}
-            dateText={item.dateText}
-            progressText={item.progressText}
-            badge={item.badge}
-            // 필요하면 onClick, href 등 추가
-          />
-        ))}
-      </section>
+      {/* 상태를 화면에 확실히 드러내기 */}
+      {isLoading && <section className={styles.list}>불러오는 중…</section>}
+      {isError && <section className={styles.list}>에러: {error?.message || '요청 실패'}</section>}
 
-      <nav className={styles.pagination}>
-        <Pagination
-          page={page}
-          totalPages={totalPages}
-          onChange={(next) => setPage(next)}
-          // 필요 시 size/variant 아이콘 등 네 컴포넌트 프롭스 맞게 전달
-        />
-      </nav>
+      {!isLoading && !isError && (
+        <>
+          <section className={styles.list}>
+            {cards.length === 0 ? (
+              <div className={styles.empty}>조건에 맞는 챌린지가 없어요.</div>
+            ) : (
+              cards.map((c) => (
+                <ChallengeCard
+                  key={c.key}
+                  title={c.title}
+                  tags={c.tags}
+                  dateText={c.dateText}
+                  progressText={c.progressText}
+                  badge={c.badge}
+                />
+              ))
+            )}
+          </section>
+
+          <nav className={styles.pagination}>
+            <Pagination
+              page={pagination.page}
+              totalPages={pagination.totalPages}
+              onChange={(next) => setPage(next)}
+            />
+            {/* 디버깅 보조용 (원하면 숨겨도 됨) */}
+            <div style={{ fontSize: 12, opacity: 0.6, marginTop: 8 }}>
+              {`status: ${qStatus}, fetching: ${String(isFetching)}`}
+            </div>
+          </nav>
+        </>
+      )}
     </main>
   );
 }
