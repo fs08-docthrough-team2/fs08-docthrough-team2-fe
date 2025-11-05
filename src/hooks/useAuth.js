@@ -13,8 +13,8 @@ export const useLogin = () => {
   const login = async ({ email, password }) => {
     try {
       const res = await api.post('/auth/login', { email, password });
-      const token = res.data?.accessToken;
-      const user = res.data?.user;
+      const token = res.data?.data?.accessToken;
+      const user = res.data?.data?.user;
 
       if (token) {
         setAccessToken(token);
@@ -46,14 +46,14 @@ export const useSignup = () => {
   const signup = async ({ email, nickName, password }) => {
     try {
       const res = await api.post('/auth/signup', { email, nickName, password });
-      const token = res.data?.accessToken;
+      const token = res.data?.data?.accessToken;
 
       if (token) {
         setAccessToken(token);
       }
 
       const userRes = await api.get('/user/my');
-      const user = userRes.data;
+      const user = userRes.data?.data;
 
       if (user) {
         setUser(user);
