@@ -116,6 +116,7 @@ function DropdownProfile({ userType = 'user', options, userInfo, onSelect }) {
             getOptionClassName={getOptionClassName}
             showDivider={false}
             variant="inline"
+            onClickOutside={() => setIsOpen(false)}
           />
         </div>
       )}

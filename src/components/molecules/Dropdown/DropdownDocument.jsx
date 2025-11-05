@@ -36,7 +36,12 @@ function DropdownDocument({ onSelect, defaultLabel = DEFAULT_LABEL }) {
         onToggle={handleToggle}
         isSelected={!isDefaultLabel}
       />
-      <DropdownList options={DROPDOWN_OPTIONS} isOpen={isOpen} onSelect={handleSelect} />
+      <DropdownList
+        options={DROPDOWN_OPTIONS}
+        isOpen={isOpen}
+        onSelect={handleSelect}
+        onClickOutside={() => setIsOpen(false)}
+      />
     </div>
   );
 }

@@ -12,7 +12,9 @@
   border: 1px solid v.$gray-200;
   border-radius: 4px;
   box-shadow: 0 10px 25px rgba(15, 23, 42, 0.12);
-  min-width: 100%;
+  min-width: 139px;
+  width: max-content;
+  max-width: none;
 }
 
 .listStretch {

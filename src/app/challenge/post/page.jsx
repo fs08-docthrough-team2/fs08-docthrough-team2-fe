@@ -2,7 +2,7 @@
 
 import { useMemo, useState } from 'react';
 import { useRouter } from 'next/navigation';
-import { useCreateChallengeMutation } from '@/hooks/mutations/useChallenge';
+import { useCreateChallengeMutation } from '@/hooks/mutations/useChallengeMutations';
 import { formatUTCDate } from '@/libs/day';
 import { showToast } from '@/components/common/Sonner';
 import BaseInput from '@/components/atoms/Input/BaseInput';
@@ -87,11 +87,7 @@ export default function ChallengePostPage() {
           kind: 'success',
           title: '챌린지 등록 성공',
         });
-        if (data?.id) {
-          router.push(`/challenge/detail/${data.id}`);
-        } else {
-          router.push('/challenges');
-        }
+        router.push('/my-challenge');
       },
       onError: (error) => {
         const message = error.response?.data?.message ?? '챌린지 등록 실패';

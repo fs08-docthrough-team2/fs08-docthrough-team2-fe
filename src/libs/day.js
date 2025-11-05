@@ -28,3 +28,9 @@ export const formatUTCDate = (dateString) => {
   }
   return date.toISOString();
 };
+
+export const formatYYMMDD = (dateString) => {
+  if (!dateString) return '';
+  const date = dayjs(dateString);
+  return date.isValid() ? date.format('YY/MM/DD') : '';
+};

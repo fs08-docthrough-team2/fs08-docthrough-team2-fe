@@ -1,0 +1,27 @@
+$overlay-background: rgba(0, 0, 0, 0.6);
+$text-color: #ffffff;
+
+.overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 2000;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background: $overlay-background;
+}
+
+.content {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 16px;
+  color: $text-color;
+  text-align: center;
+}
+
+.message {
+  margin: 0;
+  font-size: 1rem;
+  line-height: 1.4;
+}
