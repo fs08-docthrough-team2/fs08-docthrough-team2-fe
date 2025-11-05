@@ -12,7 +12,7 @@ import challengeListStyles from '@/styles/components/atoms/List/ChallengeList.mo
 
 const ITEMS_PER_PAGE = 10;
 
-const MOCK_CHALLENGES = [
+const MOCK_CHALLENGE = [
   {
     no: 1,
     type: 'OFFICIAL',
@@ -154,9 +154,9 @@ export default function AdminPage() {
   const [currentPage, setCurrentPage] = useState(1);
 
   const filteredItems = useMemo(() => {
-    if (!search.trim()) return MOCK_CHALLENGES;
+    if (!search.trim()) return MOCK_CHALLENGE;
     const keyword = search.trim().toLowerCase();
-    return MOCK_CHALLENGES.filter(({ title, type, field }) => {
+    return MOCK_CHALLENGE.filter(({ title, type, field }) => {
       const typeLabel = FIELD_TEXT[type] ?? type;
       const fieldLabel = CATEGORY_TEXT[field] ?? field;
       return (

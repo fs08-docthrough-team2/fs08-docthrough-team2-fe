@@ -5,6 +5,7 @@ import ChallengeListToolbar from '@/components/organisms/ChallengeListToolbar';
 import Pagination from '@/components/molecules/Pagination/Pagination.jsx';
 import ChallengeCard from '@/components/molecules/ChallengeCard/ChallengeCard.jsx';
 import styles from '@/styles/pages/ChallengeList.module.scss';
+import FilterPopup from '@/components/molecules/Popup/FilterPopup';
 
 export default function ChallengeListPage() {
   const allItems = useMemo(
@@ -87,9 +88,9 @@ export default function ChallengeListPage() {
             setQuery(v?.target ? v.target.value : v);
           }}
           onCreateClick={() => {
-            // 신규 챌린지 신청 이동 (라우트 맞게 교체)
             window.location.href = '/challenges/post';
           }}
+          filterSlot={<FilterPopup onApply={(f) => {}} onReset={(f) => {}} onClose={() => {}} />}
         />
       </header>
 
