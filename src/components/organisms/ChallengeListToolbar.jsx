@@ -7,11 +7,12 @@ import { useRouter } from 'next/navigation';
 export default function ChallengeListToolbar({
   variant = 'user', // 'user' | 'admin'
   title, // 없으면 "챌린지 목록"
-  search, // 컨트롤드 검색 값(선택)
-  onSearchChange, // 검색 변경 핸들러(선택)
-  onCreateClick, // "신규 챌린지 신청 +" 클릭 (user 전용)
-  onFilterChange, // 필터 적용/리셋 시 상위로 전달(선택)
-  filterSlot, // 외부에서 커스텀 필터 영역 주입(선택)
+  search, // 컨트롤드 값(선택)
+  onSearchChange, // 변경 핸들러(선택)
+  onCreateClick, // 유저 전용 버튼 클릭 (선택)
+  onFilterChange, // 필터 변경 알림(선택)
+  filterSlot, // 커스텀 필터 영역(선택)
+  showCreateButton = true, // 유저에서만 의미 있음
 }) {
   // --- 검색 상태 (controlled 우선)
   const [localSearch, setLocalSearch] = useState(search ?? '');
@@ -29,12 +30,9 @@ export default function ChallengeListToolbar({
   useEffect(() => {
     openRef.current = open;
   }, [open]);
-
   useEffect(() => {
     const onDoc = (e) => {
-      if (openRef.current && slotRef.current && !slotRef.current.contains(e.target)) {
-        setOpen(false);
-      }
+      if (openRef.current && slotRef.current && !slotRef.current.contains(e.target)) setOpen(false);
     };
     const onEsc = (e) => {
       if (openRef.current && e.key === 'Escape') setOpen(false);
@@ -45,10 +43,10 @@ export default function ChallengeListToolbar({
       document.removeEventListener('mousedown', onDoc);
       document.removeEventListener('keydown', onEsc);
     };
-  }, []); // ← 의존성 비움 (1회만 등록)
+  }, []);
 
   const computedTitle = title ?? '챌린지 목록';
-  const showCreateButton = variant === 'user';
+  const shouldShowCreate = variant === 'user' && !!onCreateClick; // ✅ admin이면 자동 숨김
   const router = useRouter();
 
   return (
@@ -56,12 +54,8 @@ export default function ChallengeListToolbar({
       {/* 상단: 제목 + (유저만) 버튼 */}
       <div className={styles.header}>
         <h2 className={styles.title}>{computedTitle}</h2>
-        {showCreateButton && (
-          <button
-            type="button"
-            className={styles.createButton}
-            onClick={() => router.push('/challenge/post')}
-          >
+        {shouldShowCreate && (
+          <button type="button" className={styles.createButton} onClick={onCreateClick}>
             신규 챌린지 신청 +
           </button>
         )}
@@ -89,8 +83,8 @@ export default function ChallengeListToolbar({
               {open && (
                 <div className={styles.filterPopupWrap}>
                   <FilterPopup
-                    showTrigger={false} // ✅ 내부 트리거 숨김
-                    externalOpen={open} // ✅ 툴바가 열림 상태를 제어
+                    showTrigger={false}
+                    externalOpen={open}
                     onRequestClose={() => setOpen(false)}
                     onApply={(filters) => {
                       onFilterChange?.(filters);
@@ -110,8 +104,8 @@ export default function ChallengeListToolbar({
         {/* 검색 영역 */}
         <div className={styles.searchArea}>
           <SearchInput
-            value={search}
-            onChange={(e) => setSearch(e.target.value)}
+            value={searchValue} // ✅ controlled 값
+            onChange={handleSearch} // ✅ 내부/외부 모두 처리
             onSearch={handleSearch}
             placeholder="챌린지 이름을 검색해보세요"
           />

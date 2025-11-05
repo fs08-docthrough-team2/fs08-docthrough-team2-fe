@@ -1,6 +1,6 @@
 'use client';
 
-import { useMemo, useState } from 'react';
+import { useMemo, useState, useRef, useEffect } from 'react';
 import ChallengeListToolbar from '@/components/organisms/ChallengeListToolbar';
 import Pagination from '@/components/molecules/Pagination/Pagination.jsx';
 import ChallengeCard from '@/components/molecules/ChallengeCard/ChallengeCard.jsx';
@@ -87,9 +87,6 @@ export default function ChallengeListPage() {
             setPage(1);
             setQuery(v?.target ? v.target.value : v);
           }}
-          onCreateClick={() => {
-            window.location.href = '/challenge/post';
-          }}
           filterSlot={<FilterPopup onApply={(f) => {}} onReset={(f) => {}} onClose={() => {}} />}
         />
       </header>
@@ -97,6 +94,7 @@ export default function ChallengeListPage() {
       <section className={styles.list}>
         {current.map((item) => (
           <ChallengeCard
+            isAdmin
             key={item.id}
             title={item.title}
             tags={item.tags}
