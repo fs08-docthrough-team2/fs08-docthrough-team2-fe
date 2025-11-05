@@ -144,6 +144,10 @@ const WorkPostPage = () => {
     );
   };
 
+  const handleQuit = () => {
+    router.push(`/challenge/detail/${challengeId}`);
+  };
+
   return (
     <div className={styles.page}>
       <WorkPost
@@ -151,6 +155,7 @@ const WorkPostPage = () => {
         onContentChange={handleContentChange}
         onSubmitClick={handleSubmit}
         onDraftSaveClick={handleDraftSave}
+        onQuitClick={handleQuit}
         title={challengeDetail?.data?.title}
       />
       {isHasDraft && isDraftOpen && (
