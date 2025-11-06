@@ -60,6 +60,20 @@ export const updateChallenge = async ({ challengeId, payload }) => {
   return data;
 };
 
+// 호환용 래퍼: 훅(useChallenges)이 기대하는 형태로 변환해서 반환
+export const fetchChallenges = async (params = {}) => {
+  const res = await getChallengeList(params);
+  return {
+    items: res?.data ?? [],
+    pagination: res?.pagination ?? {
+      page: 1,
+      pageSize: params.pageSize ?? 10,
+      totalCount: 0,
+      totalPages: 1,
+    },
+  };
+};
+
 // PATCH /challenge/admin/new-challenge/approve/:challengeId
 export const approveAdminChallenge = async (challengeId) => {
   const { data } = await api.patch(`/challenge/admin/new-challenge/approve/${challengeId}`);
