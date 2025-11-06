@@ -33,7 +33,6 @@ export const getChallengeList = async ({ page, pageSize, searchKeyword, status, 
 
   if (searchKeyword) params.set('searchKeyword', searchKeyword);
   if (status) params.set('status', status);
-  if (sort) params.set('sort', sort);
 
   const { data } = await api.get(`/challenge/inquiry/challenge-list?${params.toString()}`);
   return data;
