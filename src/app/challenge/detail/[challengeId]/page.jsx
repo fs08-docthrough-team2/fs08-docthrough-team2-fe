@@ -36,24 +36,23 @@ const ChallengeDetailPage = () => {
   } = useChallengeParticipantsQuery({ challengeId, page, pageSize: ITEMS_PER_PAGE });
 
   const challenge = challengeDetailRes?.data;
-  const participantData = participantsRes?.data;
-  const participants = participantData?.items ?? [];
-  const pagination = participantData?.pagination ?? {
-    page: 1,
+  const participantsResponse = participantsRes ?? null;
+  const participants = participantsResponse?.data?.participates ?? [];
+  const pagination = participantsResponse?.pagination ?? {
+    page,
     pageSize: ITEMS_PER_PAGE,
-    totalPages: 1,
   };
 
   const totalPages = useMemo(() => {
     if (pagination.totalPages) return pagination.totalPages;
-    if (pagination.totalCount != null) {
-      return Math.max(1, Math.ceil(pagination.totalCount / pagination.pageSize));
-    }
-    return participants.length === ITEMS_PER_PAGE ? page + 1 : page;
+    const pageSize = pagination.pageSize ?? ITEMS_PER_PAGE;
+    return participants.length === pageSize ? page + 1 : page;
   }, [pagination, participants.length, page]);
 
   const canPrev = page > 1;
-  const canNext = page < totalPages;
+  const canNext = canPrev
+    ? page < totalPages
+    : participants.length === (pagination.pageSize ?? ITEMS_PER_PAGE);
 
   if (!challengeId) {
     return <div className={styles.page}>잘못된 접근입니다.</div>;
@@ -64,6 +63,17 @@ const ChallengeDetailPage = () => {
   if (isChallengeError || !challenge) {
     return <div className={styles.page}>챌린지 정보를 가져오지 못했습니다.</div>;
   }
+
+  // 더 이상 참여할 수 없는 상태인지 확인
+  const closedStatusSet = new Set(['DEADLINE', 'ISCLOSED', 'ISCOMPLETED', 'CANCELLED']);
+  const isClosedByStatus = closedStatusSet.has(challenge.status);
+  const isClosedByDeadline =
+    challenge.deadline && new Date(challenge.deadline).getTime() < Date.now();
+  const isFull =
+    Number.isFinite(challenge.currentParticipants) &&
+    Number.isFinite(challenge.maxParticipants) &&
+    challenge.currentParticipants >= challenge.maxParticipants;
+  const isClosed = isClosedByStatus || isClosedByDeadline || isFull;
 
   const handlePrev = () => canPrev && setPage((prev) => prev - 1);
   const handleNext = () => canNext && setPage((prev) => prev + 1);
@@ -77,6 +87,9 @@ const ChallengeDetailPage = () => {
       return '마지막 제출 미상';
     }
   };
+
+  console.log('participate-list response', participantsResponse);
+  console.log('rendering participants', participants);
 
   return (
     <div className={styles.page}>
@@ -109,6 +122,7 @@ const ChallengeDetailPage = () => {
                 }
               }}
               onApplyClick={() => router.push(`/${challengeId}/work/post`)}
+              isApplyDisabled={isClosed}
             />
           </aside>
         </section>
