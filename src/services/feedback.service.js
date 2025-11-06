@@ -14,3 +14,18 @@ export const getFeedbackListInfinite = async ({ attendId, pageParam, pageSize = 
   );
   return res.data;
 };
+
+export const updateFeedback = async ({ feedbackId, content }) => {
+  const res = await api.patch(`/challenge/feedback/translated-detail/feedback-detail`, {
+    feedbackId,
+    content,
+  });
+  return res.data;
+};
+
+export const deleteFeedback = async ({ feedbackId }) => {
+  const res = await api.delete(`/challenge/feedback/translated-detail/feedback-detail`, {
+    feedbackId,
+  });
+  return res.data;
+};

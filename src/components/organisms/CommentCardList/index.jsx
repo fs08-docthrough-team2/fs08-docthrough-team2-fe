@@ -1,48 +1,29 @@
 'use client';
 
-import styles from '@/styles/components/organisms/CommentCardList/CommentCardList.module.scss';
-import { useGetFeedbackListInfinite } from '@/hooks/queries/useFeedbackQueries';
 import CommentCard from '@/components/molecules/Comment/CommentCard';
 import { formatToKoreanTime } from '@/libs/day.js';
-import { useEffect } from 'react';
 
-const CommentCardList = ({ userVariant = 'user', attendId = '' }) => {
-  const {
-    data: feedbackList,
-    fetchNextPage,
-    hasNextPage,
-    isFetchingNextPage,
-  } = useGetFeedbackListInfinite(attendId);
+import styles from '@/styles/components/organisms/CommentCardList/CommentCardList.module.scss';
 
-  useEffect(() => {
-    const handleScroll = () => {
-      const { scrollTop, clientHeight, scrollHeight } = document.documentElement;
-      const scrollBottom = scrollTop + clientHeight;
-      const isNearBottom = scrollHeight - scrollBottom <= clientHeight * 0.5;
-
-      if (isNearBottom && hasNextPage && !isFetchingNextPage) {
-        fetchNextPage();
-      }
-    };
-
-    window.addEventListener('scroll', handleScroll);
-
-    return () => {
-      window.removeEventListener('scroll', handleScroll);
-    };
-  }, [hasNextPage, isFetchingNextPage, fetchNextPage]);
-
-  const comments = feedbackList?.pages?.flatMap((page) => page?.data?.items || []) ?? [];
-
+const CommentCardList = ({
+  userVariant = 'user',
+  comments = [],
+  onUpdate = () => {},
+  onDelete = () => {},
+  onCancel = () => {},
+}) => {
   return (
     <div className={styles.commentList}>
       {comments?.map((comment) => (
         <CommentCard
           key={comment?.feedbackId}
+          feedbackId={comment?.feedbackId}
           variant={userVariant}
           name={comment?.user?.nickName}
           date={formatToKoreanTime(comment?.createdAt)}
           text={comment?.content}
+          onUpdate={(feedbackId, content) => onUpdate(feedbackId, content)}
+          onDelete={(feedbackId) => onDelete(feedbackId)}
         />
       ))}
     </div>

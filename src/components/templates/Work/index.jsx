@@ -1,6 +1,6 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { useQueryClient } from '@tanstack/react-query';
 import Image from 'next/image';
 import TypeChip from '@/components/atoms/Chips/TypeChip';
@@ -10,7 +10,12 @@ import CommentInput from '@/components/atoms/Input/CommentInput';
 import DropdownOption from '@/components/molecules/Dropdown/DropdownOption';
 import CommentCardList from '@/components/organisms/CommentCardList';
 import { formatKoreanDate } from '@/libs/day.js';
-import { useCreateFeedbackMutation } from '@/hooks/mutations/useFeedbackMutations';
+import {
+  useCreateFeedbackMutation,
+  useUpdateFeedbackMutation,
+  useDeleteFeedbackMutation,
+} from '@/hooks/mutations/useFeedbackMutations';
+import { useGetFeedbackListInfinite } from '@/hooks/queries/useFeedbackQueries';
 
 import ic_profile from '/public/icon/ic_profile.svg';
 import ic_like from '/public/icon/ic_like.svg';
@@ -40,11 +45,40 @@ const Work = ({
   const [isLiked, setIsLiked] = useState(likeByMe);
 
   const createFeedbackMutation = useCreateFeedbackMutation();
+  const updateFeedbackMutation = useUpdateFeedbackMutation();
+  const deleteFeedbackMutation = useDeleteFeedbackMutation();
   const likeToggleMutation = useLikeToggleMutation();
+
+  const {
+    data: feedbackList,
+    fetchNextPage,
+    hasNextPage,
+    isFetchingNextPage,
+  } = useGetFeedbackListInfinite(attendId);
 
   const formattedCreatedAt = formatKoreanDate(createdAt);
 
   const userVariant = isAdmin ? 'admin' : 'user';
+
+  const comments = feedbackList?.pages?.flatMap((page) => page?.data?.items || []) ?? [];
+
+  useEffect(() => {
+    const handleScroll = () => {
+      const { scrollTop, clientHeight, scrollHeight } = document.documentElement;
+      const scrollBottom = scrollTop + clientHeight;
+      const isNearBottom = scrollHeight - scrollBottom <= clientHeight * 0.5;
+
+      if (isNearBottom && hasNextPage && !isFetchingNextPage) {
+        fetchNextPage();
+      }
+    };
+
+    window.addEventListener('scroll', handleScroll);
+
+    return () => {
+      window.removeEventListener('scroll', handleScroll);
+    };
+  }, [hasNextPage, isFetchingNextPage, fetchNextPage]);
 
   const handleCommentValueChange = (e) => {
     setCommentValue(e.target.value);
@@ -93,6 +127,59 @@ const Work = ({
     console.log('delete');
   };
 
+  const handleCommentUpdate = (feedbackId, content) => {
+    console.log('comment update', feedbackId, content);
+    updateFeedbackMutation.mutate(
+      {
+        feedbackId,
+        content,
+      },
+      {
+        onSuccess: () => {
+          queryClient.invalidateQueries({ queryKey: ['feedback-list-infinite', attendId] });
+          showToast({
+            kind: 'success',
+            title: '댓글 수정 성공',
+          });
+        },
+        onError: () => {
+          showToast({
+            kind: 'error',
+            title: '댓글 수정 실패',
+          });
+        },
+      },
+    );
+  };
+
+  const handleCommentDelete = (feedbackId) => {
+    console.log('handleCommentDelete', feedbackId);
+    deleteFeedbackMutation.mutate(
+      {
+        feedbackId,
+      },
+      {
+        onSuccess: () => {
+          queryClient.invalidateQueries({ queryKey: ['feedback-list-infinite', attendId] });
+          showToast({
+            kind: 'success',
+            title: '댓글 삭제 성공',
+          });
+        },
+        onError: () => {
+          showToast({
+            kind: 'error',
+            title: '댓글 삭제 실패',
+          });
+        },
+      },
+    );
+  };
+
+  const handleCommentCancel = () => {
+    console.log('comment cancel');
+  };
+
   return (
     <>
       <div className={styles.titleHeader}>
@@ -127,7 +214,12 @@ const Work = ({
           onChange={handleCommentValueChange}
           onSubmit={handleCommentSubmit}
         />
-        <CommentCardList userVariant={userVariant} attendId={attendId} />
+        <CommentCardList
+          userVariant={userVariant}
+          comments={comments}
+          onUpdate={handleCommentUpdate}
+          onDelete={handleCommentDelete}
+        />
       </div>
     </>
   );
