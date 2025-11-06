@@ -21,7 +21,20 @@
   font-weight: 600;
   line-height: normal;
 
-  &.deleted {
+  &.approved,
+  &.inprogress {
+    background: #dff0ff;
+    color: #1b7fc6;
+  }
+
+  &.canceled {
+    background: #9b9b9b;
+    color: v.$gray-700;
+  }
+
+  &.deleted,
+  &.deadline,
+  &.cancelled {
     background: v.$gray-500;
     color: v.$gray-50;
   }
