@@ -2,7 +2,7 @@ import api from '@/libs/api';
 
 export const createFeedback = async ({ attendId, content }) => {
   const res = await api.post('/challenge/feedback/translated-detail/feedback-detail', {
-    attend_id: attendId,
+    attendId,
     content,
   });
   return res.data;

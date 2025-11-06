@@ -23,7 +23,6 @@ const WorkPage = () => {
     if (isWorkDetailLoaded && challengeWorkDetail?.data?.item?.userId) {
       const isMyWorkValue = isMine(challengeWorkDetail.data.item.userId);
       setIsMyWork(isMyWorkValue);
-      console.log(isWorkDetailLoaded, challengeWorkDetail?.data?.item?.userId, isMyWorkValue);
     }
   }, [isWorkDetailLoaded, challengeWorkDetail]);
 
@@ -40,6 +39,7 @@ const WorkPage = () => {
         likeCount={challengeWorkDetail?.data?.item?.likeCount}
         workItem={challengeWorkDetail?.data?.item?.workItem}
         attendId={workId}
+        likeByMe={challengeWorkDetail?.data?.item?.likeByMe}
       />
     </div>
   );
