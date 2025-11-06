@@ -38,7 +38,7 @@ const STATUS_MAP = { 진행중: 'INPROGRESS', 마감: 'DEADLINE' };
 
 function mapValue(value, map) {
   if (!value) return undefined;
-  return map[value] ?? value; // 한글이면 변환, 이미 ENUM이면 그대로, 빈 문자열이면 undefined
+  return map[value] ?? value;
 }
 
 // GET /challenge/inquiry/challenge-list (User)
