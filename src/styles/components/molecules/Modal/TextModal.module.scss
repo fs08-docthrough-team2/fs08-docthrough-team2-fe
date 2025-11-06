@@ -4,7 +4,7 @@
 .modal {
   width: 496px;
   height: 423px;
-  max-width: 90vw;      
+  max-width: 90vw;
 
   @include m.tablet {
     max-width: 80vw;
@@ -45,7 +45,7 @@
 
   &:hover {
     opacity: 0.9;
-}
+  }
 
   &:active {
     transform: scale(0.96);
@@ -99,15 +99,17 @@
 .footer {
   padding: 0 24px;
   @include m.mobile {
-    padding: 0;            
+    padding: 0;
   }
 
-  :global(.solid.lg) { 
+  :global(.solid.lg) {
     width: 100%;
     height: 48px;
     box-shadow: 0 4px 12px rgba(0, 0, 0, 0.12);
     transform: translateY(-1px);
-    transition: transform 0.15s ease, box-shadow 0.15s ease;
+    transition:
+      transform 0.15s ease,
+      box-shadow 0.15s ease;
 
     .btnContent {
       color: v.$white;
