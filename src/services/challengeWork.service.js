@@ -34,3 +34,8 @@ export const LikeToggle = async ({ attendId }) => {
   const res = await api.post(`/challenge/work/translated-detail/like/${attendId}`);
   return res.data;
 };
+
+export const deleteChallengeWork = async ({ attendId }) => {
+  const res = await api.delete(`/challenge/work/translated-detail/${attendId}`);
+  return res.data;
+};

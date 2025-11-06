@@ -24,6 +24,8 @@ import styles from '@/styles/components/templates/Work/Work.module.scss';
 import { useRouter, useParams } from 'next/navigation';
 import { useLikeToggleMutation } from '@/hooks/mutations/useChallengeWorkMutations';
 import { showToast } from '@/components/common/Sonner';
+import TwoButtonModal from '@/components/molecules/Modal/TwoButtonModal';
+import { useDeleteChallengeWorkMutation } from '@/hooks/mutations/useChallengeWorkMutations';
 
 const Work = ({
   isMyWork = false,
@@ -43,11 +45,14 @@ const Work = ({
   const { challengeId, workId } = useParams();
   const [commentValue, setCommentValue] = useState('');
   const [isLiked, setIsLiked] = useState(likeByMe);
+  const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
+  const [isDeleteConfirmModalOpen, setIsDeleteConfirmModalOpen] = useState(false);
 
   const createFeedbackMutation = useCreateFeedbackMutation();
   const updateFeedbackMutation = useUpdateFeedbackMutation();
   const deleteFeedbackMutation = useDeleteFeedbackMutation();
   const likeToggleMutation = useLikeToggleMutation();
+  const deleteChallengeWorkMutation = useDeleteChallengeWorkMutation();
 
   const {
     data: feedbackList,
@@ -119,7 +124,7 @@ const Work = ({
     );
   };
 
-  const handleEdit = () => {
+  const handleWorkEdit = () => {
     if (isAdmin) {
       router.push(`/admin/${challengeId}/work/edit/${workId}`);
     } else {
@@ -127,8 +132,36 @@ const Work = ({
     }
   };
 
-  const handleDelete = () => {
-    console.log('delete');
+  const handleWorkDelete = () => {
+    console.log('handleWorkDelete');
+    if (!isAdmin) {
+      setIsDeleteConfirmModalOpen(true);
+    }
+  };
+
+  const handleWorkDeleteConfirm = () => {
+    console.log('handleWorkDeleteConfirm');
+    setIsDeleteConfirmModalOpen(false);
+    deleteChallengeWorkMutation.mutate(
+      {
+        attendId: workId,
+      },
+      {
+        onSuccess: () => {
+          showToast({
+            kind: 'success',
+            title: '작업물 삭제 성공',
+          });
+          router.push(`/challenge/detail/${challengeId}`);
+        },
+        onError: () => {
+          showToast({
+            kind: 'error',
+            title: '작업물 삭제 실패',
+          });
+        },
+      },
+    );
   };
 
   const handleCommentUpdate = (feedbackId, content) => {
@@ -180,16 +213,24 @@ const Work = ({
     );
   };
 
-  const handleCommentCancel = () => {
-    console.log('comment cancel');
-  };
+  // TODO 어드민 삭제 사유 모달 추가
 
   return (
     <>
+      {isDeleteConfirmModalOpen && (
+        <TwoButtonModal
+          isOpen={isDeleteConfirmModalOpen}
+          onClose={() => setIsDeleteConfirmModalOpen(false)}
+          onConfirm={handleWorkDeleteConfirm}
+          children="정말 삭제하시겠어요?"
+        />
+      )}
       <div className={styles.titleHeader}>
         <div className={styles.titleHeaderTop}>
           <div className={styles.title}>{title}</div>
-          {(isMyWork || isAdmin) && <DropdownOption onEdit={handleEdit} onDelete={handleDelete} />}
+          {(isMyWork || isAdmin) && (
+            <DropdownOption onEdit={handleWorkEdit} onDelete={handleWorkDelete} />
+          )}
         </div>
         <div className={styles.chipWrapper}>
           <TypeChip label={type} color="green" />
