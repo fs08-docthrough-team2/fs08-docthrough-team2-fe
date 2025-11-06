@@ -94,7 +94,7 @@ export const getChallengeParticipants = async ({ challengeId, page = 1, pageSize
   return res.data;
 };
 
-// GET /challenge/inquiry/individual-participate-list (pagination + search/sort)
+// GET /challenge/inquiry/individual-challenge-detail (pagination + search/sort)
 export const getMyAppliedChallenges = async ({
   page,
   pageSize,
@@ -113,7 +113,7 @@ export const getMyAppliedChallenges = async ({
   if (sort) params.set('sort', sort);
 
   const { data } = await api.get(
-    `/challenge/inquiry/individual-participate-list?${params.toString()}`,
+    `/challenge/inquiry/individual-challenge-detail?${params.toString()}`,
     { signal },
   );
   return data;
