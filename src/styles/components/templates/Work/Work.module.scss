@@ -81,3 +81,10 @@
   flex-direction: column;
   gap: 16px;
 }
+
+.likeButton {
+  @include m.reset-button;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}

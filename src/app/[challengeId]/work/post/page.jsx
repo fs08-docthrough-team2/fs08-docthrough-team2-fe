@@ -38,7 +38,6 @@ const WorkPostPage = () => {
   const { data: challengeWorkDraftList } = useGetChallengeWorkDraftList();
   const { data: challengeWorkDraftDetail } = useGetChallengeWorkDraftDetail(selectedAttendId);
 
-  // TODO: API 정보로 수정
   const isHasDraft = challengeWorkDraftList?.data?.items?.length > 0;
 
   const handleContentChange = (value) => {

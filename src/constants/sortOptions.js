@@ -1,4 +1,4 @@
-export const adminFilterSortOptions = [
+export const filterSortOptions = [
   // 상태 필터
   { value: 'status:신청대기', label: '승인 대기' },
   { value: 'status:신청승인', label: '신청 승인' },
