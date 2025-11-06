@@ -3,6 +3,7 @@ import {
   createChallenge,
   updateChallenge,
   approveAdminChallenge,
+  rejectAdminChallenge,
   deleteChallenge,
 } from '@/services/challenge.service.js';
 
@@ -61,8 +62,27 @@ export const useApproveChallengeMutation = (options = {}) => {
       }
       queryClient.invalidateQueries({ queryKey: CHALLENGE_LIST_KEY });
       queryClient.invalidateQueries({ queryKey: ADMIN_CHALLENGE_LIST_KEY });
-
       onSuccess?.(data, challengeId, context);
+    },
+    ...restOptions,
+  });
+};
+
+// 챌린지 거절 (어드민)
+export const useRejectChallengeMutation = (options = {}) => {
+  const queryClient = useQueryClient();
+  const { onSuccess, ...restOptions } = options;
+
+  return useMutation({
+    mutationFn: ({ challengeId, reason }) => rejectAdminChallenge({ challengeId, reason }),
+    onSuccess: (data, variables, context) => {
+      const challengeId = variables?.challengeId;
+      if (challengeId) {
+        queryClient.invalidateQueries({ queryKey: challengeDetailKey(challengeId) });
+      }
+      queryClient.invalidateQueries({ queryKey: CHALLENGE_LIST_KEY });
+      queryClient.invalidateQueries({ queryKey: ADMIN_CHALLENGE_LIST_KEY });
+      onSuccess?.(data, variables, context);
     },
     ...restOptions,
   });

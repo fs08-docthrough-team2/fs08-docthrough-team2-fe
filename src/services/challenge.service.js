@@ -74,12 +74,6 @@ export const fetchChallenges = async (params = {}) => {
   };
 };
 
-// PATCH /challenge/admin/new-challenge/approve/:challengeId
-export const approveAdminChallenge = async (challengeId) => {
-  const { data } = await api.patch(`/challenge/admin/new-challenge/approve/${challengeId}`);
-  return data;
-};
-
 // GET /challenge/inquiry/participate-list/:challengeId
 export const getChallengeParticipants = async ({ challengeId, page = 1, pageSize = 5, signal }) => {
   const params = new URLSearchParams({
@@ -122,5 +116,18 @@ export const getMyAppliedChallenges = async ({
 // PATCH /challenge/delete/:challengeId (챌린지 논리적 삭제)
 export const deleteChallenge = async (challengeId) => {
   const { data } = await api.patch(`/challenge/delete/${challengeId}`);
+  return data;
+};
+
+// PATCH /challenge/admin/new-challenge/approve/:challengeId
+export const approveAdminChallenge = async (challengeId) => {
+  const { data } = await api.patch(`/challenge/admin/new-challenge/approve/${challengeId}`);
+  return data;
+};
+
+// PATCH /challenge/admin/new-challenge/reject/:challengeId
+export const rejectAdminChallenge = async ({ challengeId, reason }) => {
+  const payload = { reject_comment: reason };
+  const { data } = await api.patch(`/challenge/admin/new-challenge/reject/${challengeId}`, payload);
   return data;
 };

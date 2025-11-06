@@ -21,7 +21,9 @@ const statusMap = {
   },
   cancelled: {
     title: '신청 취소',
-    description: '취소 사유',
+  },
+  deadline: {
+    title: '신청 마감',
   },
 };
 

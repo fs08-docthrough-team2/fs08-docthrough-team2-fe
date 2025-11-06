@@ -1,0 +1,133 @@
+@use '@/styles/mixin' as m;
+@use '@/styles/variable' as v;
+
+.modal {
+  width: 496px;
+  height: 423px;
+  max-width: 90vw;      
+
+  @include m.tablet {
+    max-width: 80vw;
+  }
+
+  @include m.mobile {
+    max-width: 92vw;
+    padding: 20px;
+  }
+}
+
+.container {
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+}
+
+.header {
+  min-width: 448px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.title {
+  color: v.$gray-800;
+  font-size: 18px;
+  font-weight: 700;
+  line-height: 26px;
+}
+
+.closeButton {
+  @include m.reset-button;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 4px;
+
+  &:hover {
+    opacity: 0.9;
+}
+
+  &:active {
+    transform: scale(0.96);
+  }
+}
+
+.body {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  align-items: flex-start;
+}
+
+.fieldLabel {
+  color: v.$gray-900;
+  font-size: 16px;
+  font-weight: 400;
+  line-height: 26px;
+}
+
+.textBox {
+  width: 100%;
+  min-height: 187px;
+
+  .field {
+    width: 100%;
+    padding: 12px;
+    border-radius: 8px;
+    border: 1px solid v.$gray-200;
+    resize: vertical;
+    font-size: 14px;
+    color: v.$gray-800;
+    line-height: 1.5;
+
+    &:focus {
+      outline: none;
+      border-color: v.$brand-black;
+      box-shadow: 0 0 0 2px rgba(17, 17, 17, 0.08);
+    }
+
+    &::placeholder {
+      color: v.$gray-400;
+    }
+
+    @include m.mobile {
+      min-height: 140px;
+    }
+  }
+}
+
+.footer {
+  padding: 0 24px;
+  @include m.mobile {
+    padding: 0;            
+  }
+
+  :global(.solid.lg) { 
+    width: 100%;
+    height: 48px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.12);
+    transform: translateY(-1px);
+    transition: transform 0.15s ease, box-shadow 0.15s ease;
+
+    .btnContent {
+      color: v.$white;
+      font-size: 16px;
+      font-weight: 600;
+      letter-spacing: 0.2px;
+    }
+
+    &:disabled {
+      background: v.$gray-200;
+      box-shadow: none;
+
+      .btnContent {
+        color: v.$gray-500;
+      }
+    }
+
+    &:not(:disabled):active {
+      transform: translateY(0);
+      box-shadow: none;
+    }
+  }
+}

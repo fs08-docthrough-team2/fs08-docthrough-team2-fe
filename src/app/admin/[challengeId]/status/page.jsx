@@ -1,22 +1,26 @@
 'use client';
 
-import { useMemo } from 'react';
+import { useMemo, useState } from 'react';
 import { useParams, useRouter } from 'next/navigation';
+import { useChallengeDetailQuery } from '@/hooks/queries/useChallengeQueries';
+import {
+  useApproveChallengeMutation,
+  useRejectChallengeMutation,
+} from '@/hooks/mutations/useChallengeMutations';
+import { showToast } from '@/components/common/Sonner';
+import { formatYYMMDD } from '@/libs/day';
 import ChallengeApprovalStatus from '@/components/atoms/ChallengeApprovalStatus/ChallengeApprovalStatus';
 import ChallengeCardDetail from '@/components/molecules/ChallengeCard/ChallengeCardDetail';
 import LinkPreview from '@/components/common/LinkPreview/LinkPreview';
 import Button from '@/components/atoms/Button/Button';
 import LoadingSpinner from '@/components/organisms/Loading/LoadingSpinner';
-import { useChallengeDetailQuery } from '@/hooks/queries/useChallengeQueries';
-import { useApproveChallengeMutation } from '@/hooks/mutations/useChallengeMutations';
-import { showToast } from '@/components/common/Sonner';
-import { formatYYMMDD } from '@/libs/day';
+import TextModal from '@/components/molecules/Modal/TextModal';
 import styles from '@/styles/pages/admin/AdminChallengeStatusPage.module.scss';
 
 const APPROVAL_STATUS_MAP = {
   PENDING: 'pending',
   APPROVED: 'approved',
-  INPROGRESS: 'approved', // 이미 시작된 챌린지도 승인 완료로 간주
+  INPROGRESS: 'approved',
   REJECTED: 'rejected',
   CANCELLED: 'cancelled',
   DEADLINE: 'cancelled',
@@ -44,6 +48,8 @@ const stroke = (
 export default function AdminChallengeStatusPage() {
   const router = useRouter();
   const { challengeId } = useParams();
+  const [isRejectModalOpen, setRejectModalOpen] = useState(false);
+  const [rejectReason, setRejectReason] = useState('');
 
   const {
     data: detail,
@@ -61,16 +67,32 @@ export default function AdminChallengeStatusPage() {
       refetch();
     },
     onError: (error) => {
-      const description = error?.response?.data?.message;
       showToast({
         kind: 'error',
         title: '승인에 실패했어요.',
-        description,
+        description: error?.response?.data?.message,
+      });
+    },
+  });
+
+  const rejectMutation = useRejectChallengeMutation({
+    onSuccess: () => {
+      showToast({ kind: 'success', title: '챌린지를 거절했어요.' });
+      setRejectModalOpen(false);
+      setRejectReason('');
+      refetch();
+    },
+    onError: (error) => {
+      showToast({
+        kind: 'error',
+        title: '거절에 실패했어요.',
+        description: error?.response?.data?.message,
       });
     },
   });
 
   const challenge = detail?.data;
+  const isMutating = approveMutation.isPending || rejectMutation.isPending;
 
   const approvalStatus = useMemo(() => {
     if (!challenge?.status) return 'pending';
@@ -79,16 +101,21 @@ export default function AdminChallengeStatusPage() {
 
   const typeLabel = useMemo(
     () => TYPE_LABEL_MAP[challenge?.type] ?? challenge?.type ?? '-',
-    [challenge],
+    [challenge?.type],
   );
   const fieldLabel = useMemo(
     () => FIELD_LABEL_MAP[challenge?.field] ?? challenge?.field ?? '-',
-    [challenge],
+    [challenge?.field],
   );
 
   const handleApprove = () => {
-    if (!challengeId || approveMutation.isPending) return;
+    if (!challengeId || isMutating) return;
     approveMutation.mutate(challengeId);
+  };
+
+  const handleRejectSubmit = (trimmedReason) => {
+    if (!challengeId) return;
+    rejectMutation.mutate({ challengeId, reason: trimmedReason });
   };
 
   const showActions = challenge?.status === 'PENDING';
@@ -108,6 +135,7 @@ export default function AdminChallengeStatusPage() {
     return (
       <section className={styles.stateWrapper}>
         <LoadingSpinner loading />
+        <p className={styles.stateMessage}>챌린지 정보를 불러오는 중입니다.</p>
       </section>
     );
   }
@@ -117,7 +145,7 @@ export default function AdminChallengeStatusPage() {
       <section className={styles.stateWrapper}>
         <p className={styles.stateMessage}>챌린지 정보를 불러오지 못했어요.</p>
         <div className={styles.stateActions}>
-          <Button variant="solid" onClick={() => router.back()}>
+          <Button variant="outline" onClick={() => router.back()}>
             이전 화면
           </Button>
           <Button variant="solid" onClick={() => refetch()}>
@@ -129,54 +157,71 @@ export default function AdminChallengeStatusPage() {
   }
 
   return (
-    <div className={styles.page}>
-      <ChallengeApprovalStatus
-        status={approvalStatus}
-        userName={challenge.submittedBy ?? ''}
-        reason={challenge.rejectionReason ?? ''}
-        createdAt={challenge.appliedDate ? formatYYMMDD(challenge.appliedDate) : ''}
-      />
-      <div className={styles.stroke}>{stroke}</div>
-      <div className={styles.content}>
-        <ChallengeCardDetail
-          isMyChallenge
-          challengeName={challenge.title}
-          description={challenge.content}
-          type={typeLabel}
-          category={fieldLabel}
-          dueDate={challenge.deadline}
-          total={challenge.maxParticipants}
-          onEdit={() => router.push(`/admin/${challengeId}/edit`)}
+    <>
+      <div className={styles.page}>
+        <ChallengeApprovalStatus
+          status={approvalStatus}
+          userName={challenge.submittedBy ?? ''}
+          reason={challenge.rejectionReason ?? ''}
+          createdAt={challenge.appliedDate ? formatYYMMDD(challenge.appliedDate) : ''}
         />
-        {stroke}
-        <div className={styles.description}>
-          <div className={styles.title}>원문 링크</div>
-          {challenge.source ? (
-            <LinkPreview url={challenge.source} />
-          ) : (
-            <div className={styles.emptyLink}>등록된 링크가 없습니다.</div>
-          )}
-        </div>
-        {showActions && (
-          <div className={styles.actions}>
-            <Button
-              variant="outline"
-              size="lg"
-              onClick={() => router.push(`/admin/${challengeId}/status/reject`)}
-            >
-              거절하기
-            </Button>
-            <Button
-              variant="solid"
-              size="lg"
-              onClick={handleApprove}
-              disabled={approveMutation.isPending}
-            >
-              {approveMutation.isPending ? '승인 중…' : '승인하기'}
-            </Button>
+
+        <div className={styles.stroke}>{stroke}</div>
+
+        <div className={styles.content}>
+          <ChallengeCardDetail
+            isMyChallenge
+            challengeName={challenge.title}
+            description={challenge.content}
+            type={typeLabel}
+            category={fieldLabel}
+            dueDate={challenge.deadline}
+            total={challenge.maxParticipants}
+            onEdit={() => router.push(`/admin/${challengeId}/edit`)}
+          />
+
+          {stroke}
+
+          <div className={styles.description}>
+            <div className={styles.title}>원문 링크</div>
+            {challenge.source ? (
+              <LinkPreview url={challenge.source} />
+            ) : (
+              <div className={styles.emptyLink}>등록된 링크가 없습니다.</div>
+            )}
+
+            {showActions && (
+              <div className={styles.actions}>
+                <Button
+                  variant="tonal"
+                  size="lg"
+                  onClick={() => setRejectModalOpen(true)}
+                  disabled={isMutating}
+                >
+                  거절하기
+                </Button>
+                <Button variant="solid" size="lg" onClick={handleApprove} disabled={isMutating}>
+                  {approveMutation.isPending ? '승인 중…' : '승인하기'}
+                </Button>
+              </div>
+            )}
           </div>
-        )}
+        </div>
       </div>
-    </div>
+
+      <TextModal
+        isOpen={isRejectModalOpen}
+        title="거절 사유"
+        value={rejectReason}
+        placeholder="거절 사유를 입력해 주세요."
+        onChange={(event) => setRejectReason(event.target.value)}
+        onSubmit={handleRejectSubmit}
+        onClose={() => {
+          setRejectModalOpen(false);
+          setRejectReason('');
+        }}
+        isSubmitting={rejectMutation.isPending}
+      />
+    </>
   );
 }
