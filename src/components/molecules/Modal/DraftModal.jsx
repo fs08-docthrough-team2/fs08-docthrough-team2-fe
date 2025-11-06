@@ -5,7 +5,12 @@ import { formatYYMMDD } from '@/libs/day';
 import icOut from '@/../public/icon/ic_out.svg';
 import styles from '@/styles/components/molecules/Modal/DraftModal.module.scss';
 
-export default function DraftModal({ isOpen, drafts = [], onClose, onLoadDraft }) {
+export default function DraftModal({
+  isOpen,
+  drafts = [],
+  onClose = () => {},
+  onLoadDraft = () => {},
+}) {
   const sortedDrafts = useMemo(
     () => [...drafts].sort((a, b) => new Date(b.updatedAt) - new Date(a.updatedAt)),
     [drafts],
@@ -27,10 +32,10 @@ export default function DraftModal({ isOpen, drafts = [], onClose, onLoadDraft }
 
         <ul className={styles.list}>
           {sortedDrafts.map((draft) => (
-            <li key={draft.id} className={styles.listItem}>
+            <li key={draft.attendId} className={styles.listItem}>
               <button type="button" className={styles.entry} onClick={() => onLoadDraft?.(draft)}>
                 <span className={styles.draftTitle}>{draft.title || '제목 없음'}</span>
-                <time className={styles.timestamp}>{formatDate(draft.updatedAt)}</time>
+                <time className={styles.timestamp}>{formatDate(draft.createdAt)}</time>
               </button>
             </li>
           ))}
