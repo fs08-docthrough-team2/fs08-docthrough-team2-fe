@@ -14,8 +14,11 @@ import { useCreateFeedbackMutation } from '@/hooks/mutations/useFeedbackMutation
 
 import ic_profile from '/public/icon/ic_profile.svg';
 import ic_like from '/public/icon/ic_like.svg';
+import ic_like_active from '/public/icon/ic_heart_active.svg';
 import styles from '@/styles/components/templates/Work/Work.module.scss';
 import { useRouter, useParams } from 'next/navigation';
+import { useLikeToggleMutation } from '@/hooks/mutations/useChallengeWorkMutations';
+import { showToast } from '@/components/common/Sonner';
 
 const Work = ({
   isMyWork = false,
@@ -33,7 +36,10 @@ const Work = ({
   const router = useRouter();
   const { challengeId, workId } = useParams();
   const [commentValue, setCommentValue] = useState('');
+  const [isLiked, setIsLiked] = useState(false);
+
   const createFeedbackMutation = useCreateFeedbackMutation();
+  const likeToggleMutation = useLikeToggleMutation();
 
   const formattedCreatedAt = formatKoreanDate(createdAt);
 
@@ -51,8 +57,28 @@ const Work = ({
       },
       {
         onSuccess: () => {
-          queryClient.invalidateQueries({ queryKey: ['feedback-list', attendId] });
+          queryClient.invalidateQueries({ queryKey: ['feedback-list-infinite', attendId] });
           setCommentValue('');
+        },
+      },
+    );
+  };
+
+  const handleLike = () => {
+    setIsLiked((prev) => !prev);
+    likeToggleMutation.mutate(
+      {
+        attendId,
+      },
+      {
+        onSuccess: () => {
+          queryClient.invalidateQueries({ queryKey: ['challenge-work-detail', attendId] });
+        },
+        onError: () => {
+          showToast({
+            kind: 'error',
+            title: '좋아요 실패',
+          });
         },
       },
     );
@@ -85,7 +111,9 @@ const Work = ({
             <div className={styles.name}>{nickName}</div>
           </div>
           <div className={styles.likeWrapper}>
-            <Image src={ic_like} alt="like" width={16} height={16} />
+            <button className={styles.likeButton} onClick={handleLike}>
+              <Image src={isLiked ? ic_like_active : ic_like} alt="like" width={16} height={16} />
+            </button>
             <div className={styles.likeCount}>{likeCount}</div>
           </div>
         </div>
