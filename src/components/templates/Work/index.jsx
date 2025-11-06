@@ -47,6 +47,7 @@ const Work = ({
   const [isLiked, setIsLiked] = useState(likeByMe);
   const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
   const [isDeleteConfirmModalOpen, setIsDeleteConfirmModalOpen] = useState(false);
+  const [deleteReason, setDeleteReason] = useState('');
 
   const createFeedbackMutation = useCreateFeedbackMutation();
   const updateFeedbackMutation = useUpdateFeedbackMutation();
@@ -133,11 +134,23 @@ const Work = ({
   };
 
   const handleWorkDelete = () => {
-    console.log('handleWorkDelete');
     if (!isAdmin) {
       setIsDeleteConfirmModalOpen(true);
+    } else if (isAdmin) {
+      setIsDeleteModalOpen(true);
     }
   };
+
+  /*
+  TODO 어드민 삭제 관련 로직 추가
+  const handleDeleteReasonChange = (e) => {
+    setDeleteReason(e.target.value);
+  };
+
+  const handleAdminDeleteWithReason = () => {
+    console.log('handleAdminDeleteWithReason', deleteReason);
+  }
+  */
 
   const handleWorkDeleteConfirm = () => {
     console.log('handleWorkDeleteConfirm');
