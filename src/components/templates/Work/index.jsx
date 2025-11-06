@@ -120,7 +120,11 @@ const Work = ({
   };
 
   const handleEdit = () => {
-    router.push(`/${challengeId}/work/edit/${workId}`);
+    if (isAdmin) {
+      router.push(`/admin/${challengeId}/work/edit/${workId}`);
+    } else {
+      router.push(`/${challengeId}/work/edit/${workId}`);
+    }
   };
 
   const handleDelete = () => {
