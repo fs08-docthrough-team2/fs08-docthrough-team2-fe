@@ -25,10 +25,17 @@ export const getChallengeDetail = async (challengeId) => {
 };
 
 // GET /challenge/inquiry/challenge-list (User)
-export const getChallengeList = async ({ page, pageSize }) => {
-  const { data } = await api.get('/challenge/inquiry/challenge-list', {
-    params: { page, pageSize },
+export const getChallengeList = async ({ page, pageSize, searchKeyword, status, sort }) => {
+  const params = new URLSearchParams({
+    page: String(page),
+    pageSize: String(pageSize),
   });
+
+  if (searchKeyword) params.set('searchKeyword', searchKeyword);
+  if (status) params.set('status', status);
+  if (sort) params.set('sort', sort);
+
+  const { data } = await api.get(`/challenge/inquiry/challenge-list?${params.toString()}`);
   return data;
 };
 
@@ -65,4 +72,24 @@ export const fetchChallenges = async (params = {}) => {
       totalPages: 1,
     },
   };
+};
+
+// PATCH /challenge/admin/new-challenge/approve/:challengeId
+export const approveAdminChallenge = async (challengeId) => {
+  const { data } = await api.patch(`/challenge/admin/new-challenge/approve/${challengeId}`);
+  return data;
+};
+
+// GET /challenge/inquiry/participate-list/:challengeId
+export const getChallengeParticipants = async ({ challengeId, page = 1, pageSize = 5, signal }) => {
+  const params = new URLSearchParams({
+    page: String(page),
+    pageSize: String(pageSize),
+  });
+
+  const res = await api.get(
+    `/challenge/inquiry/participate-list/${challengeId}?${params.toString()}`,
+    { signal },
+  );
+  return res.data;
 };
