@@ -2,6 +2,7 @@ import { useMutation } from '@tanstack/react-query';
 import {
   createChallengeWork,
   createChallengeWorkDraft,
+  LikeToggle,
   updateChallengeWork,
 } from '@/services/challengeWork.service.js';
 
@@ -20,5 +21,11 @@ export const useCreateChallengeWorkDraftMutation = () => {
 export const useUpdateChallengeWorkMutation = () => {
   return useMutation({
     mutationFn: updateChallengeWork,
+  });
+};
+
+export const useLikeToggleMutation = () => {
+  return useMutation({
+    mutationFn: LikeToggle,
   });
 };
