@@ -3,6 +3,7 @@ import {
   createChallenge,
   updateChallenge,
   approveAdminChallenge,
+  deleteChallenge,
 } from '@/services/challenge.service.js';
 
 const CHALLENGE_LIST_KEY = ['challenge-list'];
@@ -61,6 +62,24 @@ export const useApproveChallengeMutation = (options = {}) => {
       queryClient.invalidateQueries({ queryKey: CHALLENGE_LIST_KEY });
       queryClient.invalidateQueries({ queryKey: ADMIN_CHALLENGE_LIST_KEY });
 
+      onSuccess?.(data, challengeId, context);
+    },
+    ...restOptions,
+  });
+};
+
+// 챌린지 논리적 삭제
+export const useDeleteChallengeMutation = (options = {}) => {
+  const queryClient = useQueryClient();
+  const { onSuccess, ...restOptions } = options;
+
+  return useMutation({
+    mutationFn: (challengeId) => deleteChallenge(challengeId),
+    onSuccess: (data, challengeId, context) => {
+      queryClient.invalidateQueries({ queryKey: CHALLENGE_LIST_KEY });
+      if (challengeId) {
+        queryClient.removeQueries({ queryKey: challengeDetailKey(challengeId) });
+      }
       onSuccess?.(data, challengeId, context);
     },
     ...restOptions,

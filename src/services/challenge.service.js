@@ -118,3 +118,9 @@ export const getMyAppliedChallenges = async ({
   );
   return data;
 };
+
+// PATCH /challenge/delete/:challengeId (챌린지 논리적 삭제)
+export const deleteChallenge = async (challengeId) => {
+  const { data } = await api.patch(`/challenge/delete/${challengeId}`);
+  return data;
+};
