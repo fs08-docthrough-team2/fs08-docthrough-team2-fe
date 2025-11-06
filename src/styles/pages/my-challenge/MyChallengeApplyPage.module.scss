@@ -10,9 +10,15 @@
 }
 
 .headerTitleWrapper {
+  height: 40px;
   display: flex;
   justify-content: space-between;
   align-items: center;
+  margin-top: 10px;
+}
+
+.tabWrapper {
+  margin-bottom: 24px;
 }
 
 .pageTitle {

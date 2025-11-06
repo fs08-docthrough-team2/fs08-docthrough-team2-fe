@@ -2,10 +2,8 @@
 
 import { useEffect, useMemo, useState } from 'react';
 import { useRouter, useParams } from 'next/navigation';
-import {
-  useChallengeDetailQuery,
-  useUpdateChallengeMutation,
-} from '@/hooks/mutations/useChallengeMutations';
+import { useUpdateChallengeMutation } from '@/hooks/mutations/useChallengeMutations';
+import { useChallengeDetailQuery } from '@/hooks/queries/useChallengeQueries.js';
 import { formatUTCDate, formatYYMMDD } from '@/libs/day';
 import { showToast } from '@/components/common/Sonner';
 import Button from '@/components/atoms/Button/Button';

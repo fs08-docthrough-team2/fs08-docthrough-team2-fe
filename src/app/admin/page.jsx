@@ -3,8 +3,8 @@
 import { useMemo, useState } from 'react';
 import { useRouter } from 'next/navigation';
 import clsx from 'clsx';
-import { adminFilterSortOptions } from '@/constants/sortOptions.js';
-import { useAdminChallengeListQuery } from '@/hooks/mutations/useChallengeMutations';
+import { filterSortOptions } from '@/constants/sortOptions.js';
+import { useAdminChallengeListQuery } from '@/hooks/queries/useChallengeQueries.js';
 import SearchInput from '@/components/atoms/Input/SearchInput';
 import DropdownSort from '@/components/molecules/Dropdown/DropdownSort';
 import ChallengeList from '@/components/atoms/List/ChallengeList';
@@ -86,7 +86,7 @@ export default function AdminPage() {
         </div>
         <DropdownSort
           className={styles.dropdownSort}
-          options={adminFilterSortOptions}
+          options={filterSortOptions}
           value={filterSortValue}
           onChange={(nextValue) => {
             setFilterSortValue(nextValue);
