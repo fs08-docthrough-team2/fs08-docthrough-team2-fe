@@ -31,12 +31,13 @@ const Work = ({
   likeCount = 0,
   workItem = '',
   attendId = '',
+  likeByMe = false,
 }) => {
   const queryClient = useQueryClient();
   const router = useRouter();
   const { challengeId, workId } = useParams();
   const [commentValue, setCommentValue] = useState('');
-  const [isLiked, setIsLiked] = useState(false);
+  const [isLiked, setIsLiked] = useState(likeByMe);
 
   const createFeedbackMutation = useCreateFeedbackMutation();
   const likeToggleMutation = useLikeToggleMutation();
