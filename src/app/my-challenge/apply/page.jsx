@@ -4,7 +4,7 @@ import { useMemo, useState } from 'react';
 import { useRouter } from 'next/navigation';
 import clsx from 'clsx';
 import { filterSortOptions } from '@/constants/sortOptions.js';
-import { useChallengeListQuery } from '@/hooks/queries/useChallengeQueries.js';
+import { useMyAppliedChallengeListQuery } from '@/hooks/queries/useChallengeQueries';
 import Button from '@/components/atoms/Button/Button';
 import SearchInput from '@/components/atoms/Input/SearchInput';
 import ChallengeList from '@/components/atoms/List/ChallengeList';
@@ -23,13 +23,6 @@ export default function MyChallengeApplyPage() {
   const [filterSortValue, setFilterSortValue] = useState(null);
   const [currentPage, setCurrentPage] = useState(1);
 
-  const [activeTab, setActiveTab] = useState(2);
-  const handleTabChange = (index) => {
-    if (index === 2) return;
-    if (index === 0) router.push('/my-challenge');
-    if (index === 1) router.push('/my-challenge?tab=complete');
-  };
-
   const { statusParam, sortParam } = useMemo(() => {
     if (!filterSortValue) return { statusParam: undefined, sortParam: undefined };
     const [kind, payload] = filterSortValue.split(':');
@@ -38,24 +31,28 @@ export default function MyChallengeApplyPage() {
     return { statusParam: undefined, sortParam: undefined };
   }, [filterSortValue]);
 
-  const { data, isLoading, error } = useChallengeListQuery({
+  const { data, isLoading, error } = useMyAppliedChallengeListQuery({
     page: currentPage,
     pageSize: ITEMS_PER_PAGE,
     searchKeyword: searchKeyword || undefined,
     status: statusParam,
-    sort: sortParam,
+    sort: sortParam ?? '신청시간빠름순',
   });
 
-  const challenges = data?.data ?? [];
-  const pagination = data?.pagination;
+  const challenges = Array.isArray(data?.data?.participates) ? data.data.participates : [];
+  const pagination = data?.pagination ?? {
+    page: currentPage,
+    pageSize: ITEMS_PER_PAGE,
+    totalPages: 1,
+  };
   const serverPage = pagination?.page ?? currentPage;
   const totalPages = pagination?.totalPages ?? 1;
 
   const mappedItems = useMemo(
     () =>
       challenges.map((item, index) => ({
-        no: item.challenge_no ?? (serverPage - 1) * ITEMS_PER_PAGE + index + 1,
-        challengeId: item.challengeId ?? item.challenge_id ?? null,
+        no: (serverPage - 1) * ITEMS_PER_PAGE + index + 1,
+        challengeId: item.challengeId,
         type: item.type,
         field: item.field,
         title: item.title,
@@ -80,10 +77,16 @@ export default function MyChallengeApplyPage() {
     router.push(`/my-challenge/${challengeId}/status`);
   };
 
+  const handleTabChange = (index) => {
+    if (index === 2) return;
+    if (index === 0) router.push('/my-challenge');
+    if (index === 1) router.push('/my-challenge');
+  };
+
   return (
     <div className={styles.myChallengeApplyPage}>
       <div className={styles.headerTitleWrapper}>
-        <div className={styles.pageTitle}>나의 챌린지</div>
+        <div className={styles.pageTitle}>신청한 챌린지</div>
         <Button
           variant="solid"
           size="pill"
@@ -94,13 +97,16 @@ export default function MyChallengeApplyPage() {
         </Button>
       </div>
       <div className={styles.tabWrapper}>
-        <Tabs activeIndex={activeTab} onTabChange={handleTabChange} />
+        <Tabs activeIndex={2} onTabChange={handleTabChange} />
       </div>
       <div className={styles.filters}>
         <div className={styles.searchInput}>
           <SearchInput
             value={searchKeyword}
-            onChange={(e) => setSearchKeyword(e.target.value)}
+            onChange={(e) => {
+              setSearchKeyword(e.target.value);
+              setCurrentPage(1);
+            }}
             onSearch={handleSearch}
             placeholder="챌린지 제목을 검색해 보세요"
           />
@@ -199,7 +205,7 @@ export default function MyChallengeApplyPage() {
             <ChallengeList
               items={mappedItems}
               onClickTitle={handleClickTitle}
-              emptyMessage="현재 등록된 챌린지가 없습니다."
+              emptyMessage="현재 신청한 챌린지가 없습니다."
             />
           )}
         </div>

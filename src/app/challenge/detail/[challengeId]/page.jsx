@@ -7,6 +7,7 @@ import {
   useGetChallengeDetail,
   useChallengeParticipantsQuery,
 } from '@/hooks/queries/useChallengeQueries';
+import { useIsAdmin } from '@/hooks/useAuthStatus';
 import ChallengeCardDetail from '@/components/molecules/ChallengeCard/ChallengeCardDetail';
 import ChallengeContainer from '@/components/molecules/ChallengeContainer/ChallengeContainer';
 import List from '@/components/atoms/List/List';
@@ -22,6 +23,7 @@ const ChallengeDetailPage = () => {
   const router = useRouter();
   const { challengeId } = useParams();
   const [page, setPage] = useState(1);
+  const isAdmin = useIsAdmin();
 
   const {
     data: challengeDetailRes,
@@ -179,9 +181,12 @@ const ChallengeDetailPage = () => {
                       name={participant.nickName}
                       user_type={lastSubmittedLabel(participant.lastSubmittedAt)}
                       likes={participant.hearts}
-                      onWorkClick={() =>
-                        router.push(`/${challengeId}/work/${participant.attendId}`)
-                      }
+                      onWorkClick={() => {
+                        const basePath = isAdmin
+                          ? `/admin/${challengeId}/work/${participant.attendId}`
+                          : `/${challengeId}/work/${participant.attendId}`;
+                        router.push(basePath);
+                      }}
                     />
                   ))
                 ) : (
