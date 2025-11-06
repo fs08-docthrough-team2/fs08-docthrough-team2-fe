@@ -23,7 +23,7 @@ const APPROVAL_STATUS_MAP = {
   INPROGRESS: 'approved',
   REJECTED: 'rejected',
   CANCELLED: 'cancelled',
-  DEADLINE: 'cancelled',
+  DEADLINE: 'deadline',
 };
 
 const FIELD_LABEL_MAP = {
