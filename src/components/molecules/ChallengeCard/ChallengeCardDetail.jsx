@@ -42,7 +42,11 @@ const ChallengeCardDetail = ({
       <div className={styles.header}>
         <div className={styles.headerTop}>
           <div className={styles.title}>{challengeName}</div>
-          <DropdownOption onEdit={onEdit} onDelete={onDelete} />
+          {isMyChallenge ? (
+            <DropdownOption showCancelOnly={true} />
+          ) : (
+            <DropdownOption onEdit={onEdit} onDelete={onDelete} />
+          )}
         </div>
         <div className={styles.headerBottom}>
           <TypeChip label={type} color="green" />
