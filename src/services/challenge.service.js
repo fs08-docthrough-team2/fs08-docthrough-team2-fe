@@ -36,9 +36,31 @@ const FIELD_MAP = {
 const TYPE_MAP = { 공식문서: 'OFFICIAL', 블로그: 'BLOG' };
 const STATUS_MAP = { 진행중: 'INPROGRESS', 마감: 'DEADLINE' };
 
+const CANONICALS = new Set([
+  'NEXT',
+  'MODERN',
+  'API',
+  'WEB',
+  'CAREER',
+  'OFFICIAL',
+  'BLOG',
+  'INPROGRESS',
+  'DEADLINE',
+]);
+
+function normalizeEnumLike(v) {
+  if (!v || typeof v !== 'string') return undefined;
+  const canon = v.replace(/\s|-/g, '').toUpperCase();
+  return CANONICALS.has(canon) ? canon : undefined;
+}
+
 function mapValue(value, map) {
   if (!value) return undefined;
-  return map[value] ?? value;
+
+  if (map[value]) return map[value];
+
+  const canon = normalizeEnumLike(value);
+  return canon ?? undefined;
 }
 
 // GET /challenge/inquiry/challenge-list (User)
