@@ -28,35 +28,11 @@ export const getChallengeDetail = async (challengeId) => {
   return res.data;
 };
 
-// --------------------------------------
-// ✅ 유저용 챌린지 목록 조회 (공개) — 400 방지 버전
-export const getChallengeList = async ({
-  title = '',
-  field = '',
-  type = '',
-  status = '',
-  sort, // 사용자가 실제로 선택한 경우에만 보냄
-  page = 1,
-  pageSize = 10,
-} = {}) => {
-  // 필수(page/pageSize)는 숫자 보장, 나머지는 값 있을 때만 전송
-  const params = {
-    page: Math.max(1, Number(page) || 1),
-    pageSize: Math.max(1, Number(pageSize) || 10),
-  };
-  if (typeof title === 'string' && title.trim()) params.title = title.trim();
-  if (field) params.field = field;
-  if (type) params.type = type;
-  if (status) params.status = status;
-  if (sort) params.sort = sort;
-
+export const getChallengeList = async ({ page, pageSize }) => {
   const { data } = await api.get('/challenge/inquiry/challenge-list', {
-    params,
-    withCredentials: false, // 공개면 쿠키 X
-    skipAuth: true, // 공개 호출 → Authorization 스킵
+    params: { page, pageSize },
   });
-
-  return data; // { success, data:[], pagination:{} }
+  return data;
 };
 
 // ✅ useChallenges 훅이 기대하는 형태로 변환
