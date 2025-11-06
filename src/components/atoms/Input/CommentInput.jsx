@@ -5,9 +5,9 @@ import FeedbackButton from '@/components/atoms/Button/FeedbackButton.jsx';
 import styles from '@/styles/components/atoms/input/CommentInput.module.scss';
 
 export default function CommentInput({
-  value,
-  onChange,
-  onSubmit,
+  value = '',
+  onChange = () => {},
+  onSubmit = () => {},
   placeholder = '피드백을 남겨주세요',
   disabled = false,
   loading = false,
@@ -20,24 +20,13 @@ export default function CommentInput({
     (e) => {
       e?.preventDefault?.();
       if (disabled || loading || !isActive) return;
-      onSubmit?.(value.trim());
+      onSubmit?.(value?.trim?.() || '');
     },
     [disabled, loading, isActive, onSubmit, value],
   );
 
-  const handleKeyDown = (e) => {
-    if (e.key === 'Enter' && !e.shiftKey) {
-      e.preventDefault();
-      handleSubmit(e);
-    }
-  };
-
   return (
-    <form
-      onSubmit={handleSubmit}
-      onKeyDown={handleKeyDown}
-      className={clsx(styles.form, className)}
-    >
+    <form onSubmit={handleSubmit} className={clsx(styles.form, className)}>
       <div className={styles.row}>
         <div className={styles.left}>
           <TextBox

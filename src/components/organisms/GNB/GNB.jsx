@@ -26,7 +26,7 @@ const HIDDEN_ROUTES = new Set([
   '/auth/login',
   '/auth/signup',
   '/:challengeId/work/post',
-  '/:challengeId/work/edit',
+  '/:challengeId/work/edit/:workId',
 ]);
 
 const GNB = ({ notifications = [] }) => {
@@ -40,7 +40,7 @@ const GNB = ({ notifications = [] }) => {
   const isHiddenRoute =
     HIDDEN_ROUTES.has(normalizedPath) ||
     /^\/[^/]+\/work\/post$/.test(normalizedPath) ||
-    /^\/[^/]+\/work\/edit$/.test(normalizedPath);
+    /^\/[^/]+\/work\/edit\/[^/]+$/.test(normalizedPath);
   if (isHiddenRoute) {
     return null;
   }
