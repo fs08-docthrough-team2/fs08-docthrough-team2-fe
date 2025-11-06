@@ -127,7 +127,7 @@ const Work = ({
           onChange={handleCommentValueChange}
           onSubmit={handleCommentSubmit}
         />
-        <CommentCardList userVariant={userVariant} attendId={attendId} isAdmin={isAdmin} />
+        <CommentCardList userVariant={userVariant} attendId={attendId} />
       </div>
     </>
   );

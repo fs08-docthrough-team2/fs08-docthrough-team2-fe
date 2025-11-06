@@ -1,7 +1,7 @@
 import { useInfiniteQuery } from '@tanstack/react-query';
 import { getFeedbackListInfinite } from '@/services/feedback.service';
 
-export const useGetFeedbackListInfinite = (attendId, pageSize = 3) => {
+export const useGetFeedbackListInfinite = (attendId, pageSize = 15) => {
   return useInfiniteQuery({
     queryKey: ['feedback-list-infinite', attendId],
     queryFn: ({ pageParam = 1 }) => getFeedbackListInfinite({ attendId, pageParam, pageSize }),

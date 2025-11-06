@@ -1,7 +1,7 @@
 'use client';
 
 import { useMemo, useState, useEffect, useCallback } from 'react';
-import debounce from 'lodash.debounce';
+// import debounce from 'lodash.debounce';
 import { useChallenges } from '@/hooks/queries/useChallenge';
 import ChallengeListToolbar from '@/components/organisms/ChallengeListToolbar';
 import Pagination from '@/components/molecules/Pagination/Pagination.jsx';
@@ -48,15 +48,15 @@ export default function ChallengeListPage() {
     refetch,
   } = useChallenges(params);
 
-  // ── 디바운스된 refetch: 검색/필터/페이지 변경 시 300ms 후 재요청
-  const debouncedRefetch = useCallback(
-    debounce(() => refetch(), 300),
-    [refetch],
-  );
-  useEffect(() => {
-    debouncedRefetch();
-    return () => debouncedRefetch.cancel();
-  }, [params, debouncedRefetch]);
+  // // ── 디바운스된 refetch: 검색/필터/페이지 변경 시 300ms 후 재요청
+  // const debouncedRefetch = useCallback(
+  //   debounce(() => refetch(), 300),
+  //   [refetch],
+  // );
+  // useEffect(() => {
+  //   debouncedRefetch();
+  //   return () => debouncedRefetch.cancel();
+  // }, [params, debouncedRefetch]);
 
   // ── 응답 매핑
   const items = data?.items ?? [];
