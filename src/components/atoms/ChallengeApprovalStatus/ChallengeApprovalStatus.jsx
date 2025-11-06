@@ -16,6 +16,13 @@ const statusMap = {
   approved: {
     title: '신청이 승인된 챌린지입니다.',
   },
+  inprogress: {
+    title: '진행 중인 챌린지',
+  },
+  cancelled: {
+    title: '신청 취소',
+    description: '취소 사유',
+  },
 };
 
 /*
