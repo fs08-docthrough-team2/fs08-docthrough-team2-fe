@@ -1,25 +1,39 @@
-import styles from '@/styles/pages/my-challenge/ChallengeApprovalDetailPage.module.scss';
+'use client';
 
+import { useGetChallengeDetail } from '@/hooks/queries/useChallengeQueries';
+import { useParams } from 'next/navigation';
+import Image from 'next/image';
 import ChallengeApprovalStatus from '@/components/atoms/ChallengeApprovalStatus/ChallengeApprovalStatus';
 import ChallengeCardDetail from '@/components/molecules/ChallengeCard/ChallengeCardDetail';
 import LinkPreview from '@/components/common/LinkPreview/LinkPreview';
 
+import ic_stroke from '/public/stroke.svg';
+import styles from '@/styles/pages/my-challenge/ChallengeApprovalDetailPage.module.scss';
+
 const ChallengeApprovalDetailPage = () => {
-  const stroke = (
-    <svg xmlns="http://www.w3.org/2000/svg" width="891" height="1" viewBox="0 0 891 1" fill="none">
-      <path d="M0.5 0.5H890.5" stroke="#E5E5E5" strokeLinecap="round" />
-    </svg>
-  );
+  const { challengeId } = useParams();
+  const { data: challengeDetail } = useGetChallengeDetail(challengeId);
+
   return (
     <div className={styles.page}>
       <ChallengeApprovalStatus />
-      <div className={styles.stroke}>{stroke}</div>
+      <div className={styles.stroke}>
+        <Image src={ic_stroke} alt="stroke" width={890} height={0} />
+      </div>
       <div className={styles.content}>
-        <ChallengeCardDetail isMyChallenge={true} />
-        {stroke}
+        <ChallengeCardDetail
+          isMyChallenge={true}
+          challengeName={challengeDetail?.data?.title}
+          type={challengeDetail?.data?.field}
+          category={challengeDetail?.data?.type}
+          description={challengeDetail?.data?.content}
+          dueDate={challengeDetail?.data?.deadline}
+          total={challengeDetail?.data?.maxParticipants}
+        />
+        <Image src={ic_stroke} alt="stroke" width={890} height={0} />
         <div className={styles.description}>
           <div className={styles.title}>원문 링크</div>
-          <LinkPreview url="https://github.com/fs08-docthrough-team2/fs08-docthrough-team2-fe" />
+          <LinkPreview url={challengeDetail?.data?.source} />
         </div>
       </div>
     </div>
