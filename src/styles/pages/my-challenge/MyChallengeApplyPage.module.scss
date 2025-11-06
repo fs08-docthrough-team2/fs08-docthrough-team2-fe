@@ -10,11 +10,17 @@
 }
 
 .headerTitleWrapper {
-  height: 40px;
   display: flex;
   justify-content: space-between;
   align-items: center;
-  margin-top: 10px;
+  margin-top: 24px;
+
+  .title {
+    color: v.$gray-800;
+    font-size: 20px;
+    font-weight: 600;
+    line-height: normal;
+  }
 }
 
 .tabWrapper {
@@ -24,7 +30,7 @@
 .pageTitle {
   width: 131px;
   height: 24px;
-  margin: 34px 0 16px 0;
+  padding: 0 0 14px 0;
   color: v.$gray-800;
   font-size: 20px;
   font-weight: 600;

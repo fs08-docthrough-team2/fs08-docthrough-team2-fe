@@ -126,12 +126,6 @@ export const fetchChallenges = async (params = {}) => {
   };
 };
 
-// PATCH /challenge/admin/new-challenge/approve/:challengeId
-export const approveAdminChallenge = async (challengeId) => {
-  const { data } = await api.patch(`/challenge/admin/new-challenge/approve/${challengeId}`);
-  return data;
-};
-
 // GET /challenge/inquiry/participate-list/:challengeId
 export const getChallengeParticipants = async ({ challengeId, page = 1, pageSize = 5, signal }) => {
   const params = new URLSearchParams({
@@ -146,7 +140,7 @@ export const getChallengeParticipants = async ({ challengeId, page = 1, pageSize
   return res.data;
 };
 
-// GET /challenge/inquiry/individual-participate-list (pagination + search/sort)
+// GET /challenge/inquiry/individual-challenge-detail (pagination + search/sort)
 export const getMyAppliedChallenges = async ({
   page,
   pageSize,
@@ -165,8 +159,27 @@ export const getMyAppliedChallenges = async ({
   if (sort) params.set('sort', sort);
 
   const { data } = await api.get(
-    `/challenge/inquiry/individual-participate-list?${params.toString()}`,
+    `/challenge/inquiry/individual-challenge-detail?${params.toString()}`,
     { signal },
   );
+  return data;
+};
+
+// PATCH /challenge/delete/:challengeId (챌린지 논리적 삭제)
+export const deleteChallenge = async (challengeId) => {
+  const { data } = await api.patch(`/challenge/delete/${challengeId}`);
+  return data;
+};
+
+// PATCH /challenge/admin/new-challenge/approve/:challengeId
+export const approveAdminChallenge = async (challengeId) => {
+  const { data } = await api.patch(`/challenge/admin/new-challenge/approve/${challengeId}`);
+  return data;
+};
+
+// PATCH /challenge/admin/new-challenge/reject/:challengeId
+export const rejectAdminChallenge = async ({ challengeId, reason }) => {
+  const payload = { reject_comment: reason };
+  const { data } = await api.patch(`/challenge/admin/new-challenge/reject/${challengeId}`, payload);
   return data;
 };

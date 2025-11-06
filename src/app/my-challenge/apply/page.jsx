@@ -65,6 +65,11 @@ export default function MyChallengeApplyPage() {
     [challenges, serverPage],
   );
 
+  const handleCreateChallenge = (e) => {
+    e.preventDefault();
+    router.push('/challenge/post');
+  };
+
   const handleSearch = (value) => {
     setCurrentPage(1);
     setSearchKeyword(value);
@@ -86,15 +91,14 @@ export default function MyChallengeApplyPage() {
   return (
     <div className={styles.myChallengeApplyPage}>
       <div className={styles.headerTitleWrapper}>
-        <div className={styles.pageTitle}>신청한 챌린지</div>
+        <div className={styles.title}>나의 챌린지</div>
         <Button
           variant="solid"
           size="pill"
+          children="신규 챌린지 신청"
           icon="newChallenge"
-          onClick={() => router.push('/challenge/post')}
-        >
-          신규 챌린지 신청
-        </Button>
+          onClick={handleCreateChallenge}
+        />
       </div>
       <div className={styles.tabWrapper}>
         <Tabs activeIndex={2} onTabChange={handleTabChange} />
