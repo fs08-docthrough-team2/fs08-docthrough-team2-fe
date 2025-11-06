@@ -38,10 +38,10 @@ const CommentCardList = ({ userVariant = 'user', attendId = '' }) => {
     <div className={styles.commentList}>
       {comments?.map((comment) => (
         <CommentCard
-          key={comment?.feedback_id}
+          key={comment?.feedbackId}
           variant={userVariant}
-          name={comment?.user?.nick_name}
-          date={formatToKoreanTime(comment?.created_at)}
+          name={comment?.user?.nickName}
+          date={formatToKoreanTime(comment?.createdAt)}
           text={comment?.content}
         />
       ))}

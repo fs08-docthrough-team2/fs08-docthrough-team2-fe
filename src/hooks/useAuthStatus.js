@@ -3,9 +3,9 @@
 import { useAuthStore } from '@/stores/useAuthStore';
 
 export const useIsMine = () => {
-  const myId = useAuthStore((state) => state.user?.id);
-  return (userId = 'null') => {
-    if (myId !== userId) return false;
+  const myId = useAuthStore((state) => state.user?.userId);
+  return (userId) => {
+    if (!myId || !userId) return false;
     return String(myId) === String(userId);
   };
 };
