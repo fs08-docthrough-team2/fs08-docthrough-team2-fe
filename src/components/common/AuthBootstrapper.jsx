@@ -24,7 +24,7 @@ const AuthBootstrapper = () => {
         }
 
         const res = await api.get('/user/my');
-        const user = res.data?.data;
+        const user = res.data?.data?.user;
 
         if (user) setUser(user);
       } catch (error) {
