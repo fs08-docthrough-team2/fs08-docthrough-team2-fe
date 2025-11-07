@@ -47,13 +47,11 @@ export const useSignup = () => {
     try {
       const res = await api.post('/auth/signup', { email, nickName, password });
       const token = res.data?.data?.accessToken;
+      const user = res.data?.data?.user;
 
       if (token) {
         setAccessToken(token);
       }
-
-      const userRes = await api.get('/user/my');
-      const user = userRes.data?.data;
 
       if (user) {
         setUser(user);

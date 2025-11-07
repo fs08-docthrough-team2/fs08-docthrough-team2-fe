@@ -5,6 +5,7 @@ import {
   approveAdminChallenge,
   rejectAdminChallenge,
   deleteChallenge,
+  cancelChallenge,
 } from '@/services/challenge.service.js';
 
 const CHALLENGE_LIST_KEY = ['challenge-list'];
@@ -106,5 +107,12 @@ export const useDeleteChallengeMutation = (options = {}) => {
       onSuccess?.(data, variables, context);
     },
     ...restOptions,
+  });
+};
+
+// 챌린지 취소
+export const useCancelChallengeMutation = () => {
+  return useMutation({
+    mutationFn: cancelChallenge,
   });
 };

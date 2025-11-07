@@ -9,6 +9,7 @@ import {
   getChallengeDetail,
   getChallengeParticipants,
   getMyAppliedChallenges,
+  getChallengeApprovalDetail,
 } from '@/services/challenge.service.js';
 
 const challengeDetailKey = (challengeId) => ['challenge-detail', challengeId];
@@ -31,6 +32,13 @@ export const useGetChallengeDetail = (challengeId) => {
   return useQuery({
     queryKey: ['challenge-detail', challengeId],
     queryFn: () => getChallengeDetail(challengeId),
+  });
+};
+
+export const useGetChallengeApprovalDetail = (challengeId) => {
+  return useQuery({
+    queryKey: ['challenge-approval-detail', challengeId],
+    queryFn: () => getChallengeApprovalDetail(challengeId),
   });
 };
 
