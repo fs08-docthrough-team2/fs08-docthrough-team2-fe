@@ -6,6 +6,7 @@ import { useChallengeDetailQuery } from '@/hooks/queries/useChallengeQueries';
 import {
   useApproveChallengeMutation,
   useRejectChallengeMutation,
+  useDeleteChallengeMutation,
 } from '@/hooks/mutations/useChallengeMutations';
 import { showToast } from '@/components/common/Sonner';
 import { formatYYMMDD } from '@/libs/day';
@@ -91,6 +92,20 @@ export default function AdminChallengeStatusPage() {
     },
   });
 
+  const deleteMutation = useDeleteChallengeMutation({
+    onSuccess: () => {
+      showToast({ kind: 'success', title: '챌린지를 삭제했어요.' });
+      router.push('/admin'); // 필요 시 다른 경로로 이동
+    },
+    onError: (error) => {
+      showToast({
+        kind: 'error',
+        title: '삭제에 실패했어요.',
+        description: error?.response?.data?.message,
+      });
+    },
+  });
+
   const challenge = detail?.data;
   const isMutating = approveMutation.isPending || rejectMutation.isPending;
 
@@ -116,6 +131,11 @@ export default function AdminChallengeStatusPage() {
   const handleRejectSubmit = (trimmedReason) => {
     if (!challengeId) return;
     rejectMutation.mutate({ challengeId, reason: trimmedReason });
+  };
+
+  const handleDeleteChallenge = () => {
+    if (!challengeId || deleteMutation.isPending) return;
+    deleteMutation.mutate(challengeId);
   };
 
   const showActions = challenge?.status === 'PENDING';
@@ -178,6 +198,7 @@ export default function AdminChallengeStatusPage() {
             dueDate={challenge.deadline}
             total={challenge.maxParticipants}
             onEdit={() => router.push(`/challenge/edit/${challengeId}`)}
+            onDelete={handleDeleteChallenge}
           />
 
           {stroke}
@@ -192,17 +213,24 @@ export default function AdminChallengeStatusPage() {
 
             {showActions && (
               <div className={styles.actions}>
-                <Button
-                  variant="tonal"
-                  size="lg"
-                  onClick={() => setRejectModalOpen(true)}
-                  disabled={isMutating}
-                >
-                  거절하기
-                </Button>
-                <Button variant="solid" size="lg" onClick={handleApprove} disabled={isMutating}>
-                  {approveMutation.isPending ? '승인 중…' : '승인하기'}
-                </Button>
+                <div className={styles.rejectButtonWrapper}>
+                  <Button
+                    variant="tonal"
+                    size="lg"
+                    onClick={() => setRejectModalOpen(true)}
+                    disabled={isMutating}
+                    children={<span>거절하기</span>}
+                  />
+                </div>
+                <div className={styles.approveButtonWrapper}>
+                  <Button
+                    variant="solid"
+                    size="lg"
+                    onClick={handleApprove}
+                    disabled={isMutating}
+                    children={<span>{approveMutation.isPending ? '승인 중…' : '승인하기'}</span>}
+                  />
+                </div>
               </div>
             )}
           </div>

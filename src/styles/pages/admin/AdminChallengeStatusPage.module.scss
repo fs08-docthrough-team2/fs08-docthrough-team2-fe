@@ -31,11 +31,14 @@
   flex-direction: column;
   gap: 16px;
 
+  @include m.mobile {
+    align-items: center;
+  }
+
   .title {
     color: v.$gray-800;
     font-size: 18px;
     font-weight: 600;
-    line-height: normal;
 
     @include m.mobile {
       font-size: 16px;
@@ -47,11 +50,6 @@
     justify-content: flex-end;
     gap: 12px;
     margin-top: 16px;
-
-    @include m.mobile {
-      flex-direction: column;
-      align-items: stretch;
-    }
   }
 }
 
@@ -63,12 +61,15 @@
   color: v.$gray-500;
 }
 
-/* 버튼 조합(tonal/solid + lg)을 디자인 토큰처럼 보이게 덮어쓰기 */
-.description .actions :global(.tonal.lg) {
+.rejectButtonWrapper {
   background: #ffe7e7;
-  border: 1px solid rgba(242, 71, 68, 0.2);
-  min-width: 140px;
+  min-width: 153px;
   padding: 0 24px;
+  border-radius: 12px;                     
+  display: flex;
+  justify-content: center;                   
+  align-items: center;                      
+  white-space: nowrap; 
 
   .btnContent {
     color: #f24744;
@@ -77,29 +78,23 @@
   }
 }
 
-.description .actions :global(.solid.lg) {
+.approveButtonWrapper {
   background: v.$brand-black;
-  min-width: 140px;
+  min-width: 153px;
   padding: 0 24px;
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.12);
-  transform: translateY(-1px);
-  transition:
-    transform 0.15s ease,
-    box-shadow 0.15s ease;
+  border-radius: 12px;                     
+  display: flex;
+  justify-content: center;                   
+  align-items: center;                      
+  white-space: nowrap; 
 
   .btnContent {
     color: v.$white;
     font-size: 16px;
     font-weight: 600;
   }
-
-  &:active {
-    transform: translateY(0);
-    box-shadow: none;
-  }
 }
 
-/* 상태/에러 섹션 */
 .stateWrapper {
   min-height: 320px;
   @include m.center-container(520px);

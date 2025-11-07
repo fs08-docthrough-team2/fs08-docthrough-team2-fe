@@ -21,8 +21,6 @@ function DropdownOption({ onEdit = () => {}, onDelete = () => {} }) {
     setIsOpen(false);
   };
 
-  // 외부 클릭 시 닫히도록 설정
-
   useEffect(() => {
     if (!isOpen) return;
     const handleClickOutside = (event) => {
