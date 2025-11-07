@@ -32,8 +32,10 @@ const ChallengeCardDetail = ({
   user = CARD_DATA.user,
   dueDate = CARD_DATA.dueDate,
   total = CARD_DATA.total,
+  isPending = false,
   onEdit = () => {},
   onDelete = () => {},
+  onCancel = () => {},
 }) => {
   const formattedDueDate = formatKoreanDate(dueDate);
 
@@ -42,7 +44,11 @@ const ChallengeCardDetail = ({
       <div className={styles.header}>
         <div className={styles.headerTop}>
           <div className={styles.title}>{challengeName}</div>
-          <DropdownOption onEdit={onEdit} onDelete={onDelete} />
+          {isMyChallenge && isPending ? (
+            <DropdownOption showCancelOnly={true} onCancel={onCancel} />
+          ) : isMyChallenge ? null : (
+            <DropdownOption onEdit={onEdit} onDelete={onDelete} />
+          )}
         </div>
         <div className={styles.headerBottom}>
           <TypeChip label={type} color="green" />

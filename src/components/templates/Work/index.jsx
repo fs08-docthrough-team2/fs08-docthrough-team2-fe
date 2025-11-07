@@ -1,6 +1,6 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { useQueryClient } from '@tanstack/react-query';
 import Image from 'next/image';
 import TypeChip from '@/components/atoms/Chips/TypeChip';
@@ -10,7 +10,12 @@ import CommentInput from '@/components/atoms/Input/CommentInput';
 import DropdownOption from '@/components/molecules/Dropdown/DropdownOption';
 import CommentCardList from '@/components/organisms/CommentCardList';
 import { formatKoreanDate } from '@/libs/day.js';
-import { useCreateFeedbackMutation } from '@/hooks/mutations/useFeedbackMutations';
+import {
+  useCreateFeedbackMutation,
+  useUpdateFeedbackMutation,
+  useDeleteFeedbackMutation,
+} from '@/hooks/mutations/useFeedbackMutations';
+import { useGetFeedbackListInfinite } from '@/hooks/queries/useFeedbackQueries';
 
 import ic_profile from '/public/icon/ic_profile.svg';
 import ic_like from '/public/icon/ic_like.svg';
@@ -19,6 +24,8 @@ import styles from '@/styles/components/templates/Work/Work.module.scss';
 import { useRouter, useParams } from 'next/navigation';
 import { useLikeToggleMutation } from '@/hooks/mutations/useChallengeWorkMutations';
 import { showToast } from '@/components/common/Sonner';
+import TwoButtonModal from '@/components/molecules/Modal/TwoButtonModal';
+import { useDeleteChallengeWorkMutation } from '@/hooks/mutations/useChallengeWorkMutations';
 
 const Work = ({
   isMyWork = false,
@@ -38,13 +45,46 @@ const Work = ({
   const { challengeId, workId } = useParams();
   const [commentValue, setCommentValue] = useState('');
   const [isLiked, setIsLiked] = useState(likeByMe);
+  const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
+  const [isDeleteConfirmModalOpen, setIsDeleteConfirmModalOpen] = useState(false);
+  const [deleteReason, setDeleteReason] = useState('');
 
   const createFeedbackMutation = useCreateFeedbackMutation();
+  const updateFeedbackMutation = useUpdateFeedbackMutation();
+  const deleteFeedbackMutation = useDeleteFeedbackMutation();
   const likeToggleMutation = useLikeToggleMutation();
+  const deleteChallengeWorkMutation = useDeleteChallengeWorkMutation();
+
+  const {
+    data: feedbackList,
+    fetchNextPage,
+    hasNextPage,
+    isFetchingNextPage,
+  } = useGetFeedbackListInfinite(attendId);
 
   const formattedCreatedAt = formatKoreanDate(createdAt);
 
   const userVariant = isAdmin ? 'admin' : 'user';
+
+  const comments = feedbackList?.pages?.flatMap((page) => page?.data?.items || []) ?? [];
+
+  useEffect(() => {
+    const handleScroll = () => {
+      const { scrollTop, clientHeight, scrollHeight } = document.documentElement;
+      const scrollBottom = scrollTop + clientHeight;
+      const isNearBottom = scrollHeight - scrollBottom <= clientHeight * 0.5;
+
+      if (isNearBottom && hasNextPage && !isFetchingNextPage) {
+        fetchNextPage();
+      }
+    };
+
+    window.addEventListener('scroll', handleScroll);
+
+    return () => {
+      window.removeEventListener('scroll', handleScroll);
+    };
+  }, [hasNextPage, isFetchingNextPage, fetchNextPage]);
 
   const handleCommentValueChange = (e) => {
     setCommentValue(e.target.value);
@@ -85,20 +125,125 @@ const Work = ({
     );
   };
 
-  const handleEdit = () => {
-    router.push(`/${challengeId}/work/edit/${workId}`);
+  const handleWorkEdit = () => {
+    if (isAdmin) {
+      router.push(`/admin/${challengeId}/work/edit/${workId}`);
+    } else {
+      router.push(`/${challengeId}/work/edit/${workId}`);
+    }
   };
 
-  const handleDelete = () => {
-    console.log('delete');
+  const handleWorkDelete = () => {
+    if (!isAdmin) {
+      setIsDeleteConfirmModalOpen(true);
+    } else if (isAdmin) {
+      setIsDeleteModalOpen(true);
+    }
   };
+
+  /*
+  TODO 어드민 삭제 관련 로직 추가
+  const handleDeleteReasonChange = (e) => {
+    setDeleteReason(e.target.value);
+  };
+
+  const handleAdminDeleteWithReason = () => {
+    console.log('handleAdminDeleteWithReason', deleteReason);
+  }
+  */
+
+  const handleWorkDeleteConfirm = () => {
+    console.log('handleWorkDeleteConfirm');
+    setIsDeleteConfirmModalOpen(false);
+    deleteChallengeWorkMutation.mutate(
+      {
+        attendId: workId,
+      },
+      {
+        onSuccess: () => {
+          showToast({
+            kind: 'success',
+            title: '작업물 삭제 성공',
+          });
+          router.push(`/challenge/detail/${challengeId}`);
+        },
+        onError: () => {
+          showToast({
+            kind: 'error',
+            title: '작업물 삭제 실패',
+          });
+        },
+      },
+    );
+  };
+
+  const handleCommentUpdate = (feedbackId, content) => {
+    console.log('comment update', feedbackId, content);
+    updateFeedbackMutation.mutate(
+      {
+        feedbackId,
+        content,
+      },
+      {
+        onSuccess: () => {
+          queryClient.invalidateQueries({ queryKey: ['feedback-list-infinite', attendId] });
+          showToast({
+            kind: 'success',
+            title: '댓글 수정 성공',
+          });
+        },
+        onError: () => {
+          showToast({
+            kind: 'error',
+            title: '댓글 수정 실패',
+          });
+        },
+      },
+    );
+  };
+
+  const handleCommentDelete = (feedbackId) => {
+    console.log('handleCommentDelete', feedbackId);
+    deleteFeedbackMutation.mutate(
+      {
+        feedbackId,
+      },
+      {
+        onSuccess: () => {
+          queryClient.invalidateQueries({ queryKey: ['feedback-list-infinite', attendId] });
+          showToast({
+            kind: 'success',
+            title: '댓글 삭제 성공',
+          });
+        },
+        onError: () => {
+          showToast({
+            kind: 'error',
+            title: '댓글 삭제 실패',
+          });
+        },
+      },
+    );
+  };
+
+  // TODO 어드민 삭제 사유 모달 추가
 
   return (
     <>
+      {isDeleteConfirmModalOpen && (
+        <TwoButtonModal
+          isOpen={isDeleteConfirmModalOpen}
+          onClose={() => setIsDeleteConfirmModalOpen(false)}
+          onConfirm={handleWorkDeleteConfirm}
+          children="정말 삭제하시겠어요?"
+        />
+      )}
       <div className={styles.titleHeader}>
         <div className={styles.titleHeaderTop}>
           <div className={styles.title}>{title}</div>
-          {(isMyWork || isAdmin) && <DropdownOption onEdit={handleEdit} onDelete={handleDelete} />}
+          {(isMyWork || isAdmin) && (
+            <DropdownOption onEdit={handleWorkEdit} onDelete={handleWorkDelete} />
+          )}
         </div>
         <div className={styles.chipWrapper}>
           <TypeChip label={type} color="green" />
@@ -127,7 +272,12 @@ const Work = ({
           onChange={handleCommentValueChange}
           onSubmit={handleCommentSubmit}
         />
-        <CommentCardList userVariant={userVariant} attendId={attendId} isAdmin={isAdmin} />
+        <CommentCardList
+          userVariant={userVariant}
+          comments={comments}
+          onUpdate={handleCommentUpdate}
+          onDelete={handleCommentDelete}
+        />
       </div>
     </>
   );
