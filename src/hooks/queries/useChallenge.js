@@ -16,7 +16,8 @@ export function useChallenges(params) {
       Number(page) || 1,
       Number(pageSize) || 10,
     ],
-    queryFn: () => fetchChallenges({ title, field, type, status, page, pageSize }),
+    queryFn: ({ signal }) =>
+      fetchChallenges({ title, field, type, status, page, pageSize, signal }),
     keepPreviousData: true,
     staleTime: 30_000,
   });

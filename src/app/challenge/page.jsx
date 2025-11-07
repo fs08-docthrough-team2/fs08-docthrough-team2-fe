@@ -9,18 +9,6 @@ import ChallengeCard from '@/components/molecules/ChallengeCard/ChallengeCard.js
 import FilterPopup from '@/components/molecules/Popup/FilterPopup';
 import styles from '@/styles/pages/ChallengeList.module.scss';
 
-// function toKoDateText(iso) {
-//   if (!iso) return '';
-//   try {
-//     const d = new Date(iso);
-//     return (
-//       d.toLocaleDateString('ko-KR', { year: 'numeric', month: 'long', day: 'numeric' }) + ' 마감'
-//     );
-//   } catch {
-//     return '';
-//   }
-// }
-
 export default function ChallengeListPage() {
   const [title, setTitle] = useState('');
   const [field, setField] = useState(''); // 문자열 | 객체 | 배열 OK
