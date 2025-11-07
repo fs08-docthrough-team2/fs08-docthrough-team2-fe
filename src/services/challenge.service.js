@@ -12,6 +12,12 @@ export const getIndividualCompleteChallengeList = async ({ searchValue = '', sig
   return res.data;
 };
 
+// GET /challenge/inquiry/challenge-status/:challengeId
+export const getChallengeApprovalDetail = async (challengeId) => {
+  const res = await api.get(`/challenge/inquiry/challenge-status/${challengeId}`);
+  return res.data;
+};
+
 // PATCH /challenge/cancel/:challengeId
 export const cancelChallenge = async ({ challengeId }) => {
   const res = await api.patch(`/challenge/cancel/${challengeId}`);
