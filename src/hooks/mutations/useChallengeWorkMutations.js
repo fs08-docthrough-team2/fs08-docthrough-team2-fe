@@ -3,6 +3,7 @@ import {
   createChallengeWork,
   createChallengeWorkDraft,
   LikeToggle,
+  deleteChallengeWork,
   updateChallengeWork,
 } from '@/services/challengeWork.service.js';
 
@@ -27,5 +28,11 @@ export const useUpdateChallengeWorkMutation = () => {
 export const useLikeToggleMutation = () => {
   return useMutation({
     mutationFn: LikeToggle,
+  });
+};
+
+export const useDeleteChallengeWorkMutation = () => {
+  return useMutation({
+    mutationFn: deleteChallengeWork,
   });
 };

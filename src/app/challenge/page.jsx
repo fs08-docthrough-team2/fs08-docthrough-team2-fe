@@ -36,6 +36,9 @@ export default function ChallengeListPage() {
     totalPages: Math.max(1, Math.ceil((items.length || 0) / pageSize)),
   };
 
+  //
+  console.log('pagination => ', pagination);
+
   return (
     <main className={styles.page}>
       <header className={styles.header}>
@@ -99,12 +102,11 @@ export default function ChallengeListPage() {
               ))
             )}
           </section>
-
           <nav className={styles.pagination}>
             <Pagination
-              page={pagination.page}
+              currentPage={pagination.page}
               totalPages={pagination.totalPages}
-              onChange={(next) => setPage(next)}
+              onPageChange={(next) => setPage(next)}
             />
             <div style={{ fontSize: 12, opacity: 0.6, marginTop: 8 }}>
               {`status: ${qStatus}, fetching: ${String(isFetching)}`}
