@@ -1,6 +1,6 @@
 'use client';
 
-import { useMemo, useState } from 'react';
+import { useState } from 'react';
 import { useChallenges } from '@/hooks/queries/useChallenge';
 import { useDebounce } from '@/hooks/useDebounce';
 import ChallengeListToolbar from '@/components/organisms/ChallengeListToolbar';
@@ -102,15 +102,13 @@ export default function ChallengeListPage() {
               ))
             )}
           </section>
-          <nav className={styles.pagination}>
+          <nav className={styles.paginationWrapper}>
             <Pagination
-              currentPage={pagination.page}
+              currentPage={Math.min(pagination.page, pagination.totalPages)}
               totalPages={pagination.totalPages}
+              maxPages={5}
               onPageChange={(next) => setPage(next)}
             />
-            <div style={{ fontSize: 12, opacity: 0.6, marginTop: 8 }}>
-              {`status: ${qStatus}, fetching: ${String(isFetching)}`}
-            </div>
           </nav>
         </>
       )}
