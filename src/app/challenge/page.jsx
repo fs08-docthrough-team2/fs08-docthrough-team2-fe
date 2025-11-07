@@ -1,82 +1,57 @@
 'use client';
 
-import { useMemo, useState, useEffect, useCallback } from 'react';
-import debounce from 'lodash.debounce';
+import { useMemo, useState } from 'react';
 import { useChallenges } from '@/hooks/queries/useChallenge';
+import { useDebounce } from '@/hooks/useDebounce';
 import ChallengeListToolbar from '@/components/organisms/ChallengeListToolbar';
 import Pagination from '@/components/molecules/Pagination/Pagination.jsx';
 import ChallengeCard from '@/components/molecules/ChallengeCard/ChallengeCard.jsx';
 import FilterPopup from '@/components/molecules/Popup/FilterPopup';
 import styles from '@/styles/pages/ChallengeList.module.scss';
 
-// 한국어 마감일 텍스트
-function toKoDateText(iso) {
-  if (!iso) return '';
-  try {
-    const d = new Date(iso);
-    return (
-      d.toLocaleDateString('ko-KR', { year: 'numeric', day: 'numeric', month: 'long' }) + ' 마감'
-    );
-  } catch {
-    return '';
-  }
-}
-
 export default function ChallengeListPage() {
-  // ── 컨트롤 상태 (라벨 그대로 사용)
-  const [title, setTitle] = useState(''); // 검색어
-  const [field, setField] = useState(''); // 예: 'Next.js' | 'Modern JS' | ...
-  const [type, setType] = useState(''); // 예: '공식문서' | '블로그'
-  const [status, setStatus] = useState(''); // 예: '진행중' | '마감'
+  const [title, setTitle] = useState('');
+  const [field, setField] = useState(''); // 문자열 | 객체 | 배열 OK
+  const [type, setType] = useState(''); // 문자열 | 객체(단일 가정)
+  const [status, setStatus] = useState(''); // 문자열 | 객체(단일 가정)
   const [page, setPage] = useState(1);
   const pageSize = 10;
 
-  // ── 서버 파라미터 (라벨 그대로 전달)
-  const params = useMemo(
-    () => ({ title, field, type, status, page, pageSize }),
-    [title, field, type, status, page, pageSize],
-  );
+  const dTitle = useDebounce(title, 300);
 
-  // ── 쿼리 훅 (queryFn 내부에서 params 사용하도록 구성)
-  const {
-    data,
-    isLoading,
-    isError,
-    error,
-    isFetching,
-    status: qStatus,
-    refetch,
-  } = useChallenges(params);
+  // const params = useMemo(
+  //   () => ({ title: dTitle, field, type, status, page, pageSize }),
+  //   [dTitle, field, type, status, page, pageSize],
+  // );
 
-  // ── 디바운스된 refetch: 검색/필터/페이지 변경 시 300ms 후 재요청
-  const debouncedRefetch = useCallback(
-    debounce(() => refetch(), 300),
-    [refetch],
-  );
-  useEffect(() => {
-    debouncedRefetch();
-    return () => debouncedRefetch.cancel();
-  }, [params, debouncedRefetch]);
+  const params = {
+    title: dTitle,
+    field,
+    type,
+    status,
+    page,
+    pageSize,
+  };
 
-  // ── 응답 매핑
+  const { data, isLoading, isFetching, isError, error, status: qStatus } = useChallenges(params);
+
   const items = data?.items ?? [];
-  const pagination = data?.pagination ?? { page: 1, totalPages: 1 };
+  const pagination = data?.pagination ?? {
+    page,
+    totalPages: Math.max(1, Math.ceil((items.length || 0) / pageSize)),
+  };
 
-  const cards = useMemo(
-    () =>
-      items.map((ch) => ({
-        key: ch.challengeId ?? ch.no ?? ch.id,
-        title: ch.title ?? '제목 없음',
-        tags: [ch.field, ch.type].filter(Boolean), // 서버가 라벨로 내려주는 경우 그대로 표시
-        dateText: toKoDateText(ch.deadline),
-        progressText:
-          typeof ch.currentParticipants === 'number' && typeof ch.maxParticipants === 'number'
-            ? `${ch.currentParticipants}/${ch.maxParticipants} 참여중`
-            : '',
-        badge: ch.status ?? '',
-      })),
-    [items],
-  );
+  // const cards = items.map((ch) => ({
+  //   key: ch.challengeId,
+  //   title: ch.title,
+  //   tags: [ch.field, ch.type].filter(Boolean), // 서버가 내려준 걸 그대로 보여줌
+  //   dateText: toKoDateText(ch.deadline),
+  //   progressText:
+  //     typeof ch.currentParticipants === 'number' && typeof ch.maxParticipants === 'number'
+  //       ? `${ch.currentParticipants}/${ch.maxParticipants} 참여중`
+  //       : '',
+  //   badge: ch.status ?? '',
+  // }));
 
   return (
     <main className={styles.page}>
@@ -84,18 +59,22 @@ export default function ChallengeListPage() {
         <ChallengeListToolbar
           search={title}
           onSearchChange={(v) => {
-            const next = v?.target ? v.target.value : v;
-            setPage(1);
+            const next = typeof v === 'string' ? v : (v?.target?.value ?? '');
             setTitle(next);
+            setPage(1);
           }}
           onCreateClick={() => (window.location.href = '/challenge/post')}
           filterSlot={
             <FilterPopup
-              // ✅ 라벨을 그대로 올려주면 그대로 저장 → 그대로 API로 보냄
+              value={{ field, type, status }}
               onApply={(f) => {
-                setField(f?.field || ''); // ex) 'Next.js'
-                setType(f?.type || ''); // ex) '공식문서'
-                setStatus(f?.status || ''); // ex) '진행중'
+                // FilterPopup에서 전달되는 fields 객체에서 선택된 필드만 추출
+                const selectedFields = Object.keys(f?.fields || {}).filter(
+                  (key) => f.fields[key] === true,
+                );
+                setField(selectedFields.length > 0 ? selectedFields : '');
+                setType(f?.type ?? f?.docType ?? f?.documentType ?? '');
+                setStatus(f?.status ?? f?.state ?? '');
                 setPage(1);
               }}
               onReset={() => {
@@ -105,13 +84,11 @@ export default function ChallengeListPage() {
                 setPage(1);
               }}
               onClose={() => {}}
-              // (선택) 현재 선택값 라벨을 내려주고 싶으면 value={{ field, type, status }}
             />
           }
         />
       </header>
 
-      {/* 상태 출력 */}
       {(isLoading || isFetching) && <section className={styles.list}>불러오는 중…</section>}
       {isError && (
         <section className={styles.list}>
@@ -122,17 +99,19 @@ export default function ChallengeListPage() {
       {!isLoading && !isError && (
         <>
           <section className={styles.list}>
-            {cards.length === 0 ? (
+            {items.length === 0 ? (
               <div className={styles.empty}>조건에 맞는 챌린지가 없어요.</div>
             ) : (
-              cards.map((c) => (
+              items.map((item) => (
                 <ChallengeCard
-                  key={c.key}
-                  title={c.title}
-                  tags={c.tags}
-                  dateText={c.dateText}
-                  progressText={c.progressText}
-                  badge={c.badge}
+                  key={item.challengeId}
+                  challengeName={item.title}
+                  type={item.field}
+                  category={item.type}
+                  status={item.status}
+                  dueDate={item.deadline}
+                  total={item.maxParticipants}
+                  capacity={item.currentParticipants}
                 />
               ))
             )}
