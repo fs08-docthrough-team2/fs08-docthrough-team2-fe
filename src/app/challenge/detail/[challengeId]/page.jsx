@@ -163,22 +163,24 @@ const ChallengeDetailPage = () => {
     deleteChallengeMutation.mutate(challengeId);
   };
 
-  const lastSubmittedLabel = (isoString) => {
-    if (!isoString) return '제출 이력 없음';
-    try {
-      const date = new Date(isoString);
-      return `마지막 제출 ${date.toLocaleDateString('ko-KR')}`;
-    } catch {
-      return '마지막 제출 미상';
-    }
-  };
-
   const authorName =
     challenge?.submittedBy ??
     topParticipantNickname ??
     challenge?.ownerNickName ??
     challenge?.author ??
     '유저';
+
+  const roleLabel = (role) => {
+    switch (role) {
+      case 'ADMIN':
+        return '어드민';
+      case 'EXPERT':
+        return '전문가';
+      case 'USER':
+      default:
+        return '유저';
+    }
+  };
 
   return (
     <div className={styles.page}>
@@ -284,7 +286,7 @@ const ChallengeDetailPage = () => {
                         key={participant.attendId}
                         rank={displayRank}
                         name={participant.nickName}
-                        user_type={lastSubmittedLabel(participant.lastSubmittedAt)}
+                        user_type={roleLabel(participant.role)}
                         likes={participant.hearts}
                         onWorkClick={() => router.push(destination)}
                       />
