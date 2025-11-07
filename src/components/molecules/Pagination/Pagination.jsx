@@ -30,7 +30,11 @@ const Pagination = ({ currentPage = 1, totalPages = 5, onPageChange = () => {}, 
 
   return (
     <div className={styles.pagination}>
-      <button type="button" className={styles.button} onClick={() => moveToPage(currentPage - 1)}>
+      <button
+        type="button"
+        className={clsx(styles.button, styles.arrowButton)}
+        onClick={() => moveToPage(currentPage - 1)}
+      >
         {currentPage > 1 ? (
           <Image src={ic_arrow_left} alt="prev" width={40} height={40} />
         ) : (
@@ -51,7 +55,11 @@ const Pagination = ({ currentPage = 1, totalPages = 5, onPageChange = () => {}, 
         ))}
       </div>
 
-      <button type="button" className={styles.button} onClick={() => moveToPage(currentPage + 1)}>
+      <button
+        type="button"
+        className={clsx(styles.button, styles.arrowButton)}
+        onClick={() => moveToPage(currentPage + 1)}
+      >
         {currentPage < totalPages ? (
           <Image src={ic_arrow_right} alt="next" width={40} height={40} />
         ) : (
