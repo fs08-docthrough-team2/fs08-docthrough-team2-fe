@@ -19,11 +19,6 @@ export default function ChallengeListPage() {
 
   const dTitle = useDebounce(title, 300);
 
-  // const params = useMemo(
-  //   () => ({ title: dTitle, field, type, status, page, pageSize }),
-  //   [dTitle, field, type, status, page, pageSize],
-  // );
-
   const params = {
     title: dTitle,
     field,
@@ -40,18 +35,6 @@ export default function ChallengeListPage() {
     page,
     totalPages: Math.max(1, Math.ceil((items.length || 0) / pageSize)),
   };
-
-  // const cards = items.map((ch) => ({
-  //   key: ch.challengeId,
-  //   title: ch.title,
-  //   tags: [ch.field, ch.type].filter(Boolean), // 서버가 내려준 걸 그대로 보여줌
-  //   dateText: toKoDateText(ch.deadline),
-  //   progressText:
-  //     typeof ch.currentParticipants === 'number' && typeof ch.maxParticipants === 'number'
-  //       ? `${ch.currentParticipants}/${ch.maxParticipants} 참여중`
-  //       : '',
-  //   badge: ch.status ?? '',
-  // }));
 
   return (
     <main className={styles.page}>
