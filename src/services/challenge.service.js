@@ -5,12 +5,22 @@ import api from '@/libs/api.js';
  * ========================= */
 const FIELD_MAP = {
   'Next.js': 'NEXT',
+  nextjs: 'NEXT',
   'Modern JS': 'MODERN',
+  modernjs: 'MODERN',
   API: 'API',
+  api: 'API',
   Web: 'WEB',
+  web: 'WEB',
   Career: 'CAREER',
+  career: 'CAREER',
 };
-const TYPE_MAP = { 공식문서: 'OFFICIAL', 블로그: 'BLOG' };
+const TYPE_MAP = {
+  공식문서: 'OFFICIAL',
+  블로그: 'BLOG',
+  official: 'OFFICIAL',
+  blog: 'BLOG',
+};
 const STATUS_MAP = {
   진행중: 'INPROGRESS',
   '진행 중': 'INPROGRESS',
@@ -143,23 +153,34 @@ export const getChallengeList = async ({
   const tTitle = String(title ?? '').trim();
   if (tTitle) params.title = tTitle;
 
-  // ✅ field: 다중 허용 (백엔드가 반복키를 못 받는 경우가 많으니 콤마로 직렬화)
+  // field: 다중 허용 - 반복 키로 전달 (&field=MODERN&field=API)
   const fieldEnums = extractMany(field)
     .map((lbl) => mapValue(lbl, FIELD_MAP))
     .filter(Boolean);
-  if (fieldEnums.length === 1) {
-    params.field = fieldEnums[0]; // &field=NEXT
-  } else if (fieldEnums.length > 1) {
-    params.field = fieldEnums.join(','); // &field=NEXT,MODERN
-    // 만약 반복키 방식 지원이면 위 한 줄 대신 다음을 사용:
-    // // paramsSerializer가 필요하므로 URLSearchParams로 직접 보내는 방식을 써야 함
-  }
 
   // type/status (단일 기준)
   const ty = mapValue(extractLabel(type), TYPE_MAP);
   const st = mapValue(extractLabel(status), STATUS_MAP);
   if (ty) params.type = ty;
   if (st) params.status = st;
+
+  // field가 여러 개일 경우 URLSearchParams로 반복 키 생성
+  if (fieldEnums.length > 1) {
+    const searchParams = new URLSearchParams();
+    Object.entries(params).forEach(([key, value]) => {
+      searchParams.set(key, String(value));
+    });
+    fieldEnums.forEach((fieldEnum) => {
+      searchParams.append('field', fieldEnum);
+    });
+    const { data } = await api.get(`/challenge/inquiry/challenge-list?${searchParams.toString()}`);
+    return data;
+  }
+
+  // field가 1개이거나 없을 경우 기존 방식
+  if (fieldEnums.length === 1) {
+    params.field = fieldEnums[0];
+  }
 
   const { data } = await api.get('/challenge/inquiry/challenge-list', { params });
   return data; // { success, data:[], pagination:{} }

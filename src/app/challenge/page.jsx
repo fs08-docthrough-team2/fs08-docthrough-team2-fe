@@ -9,17 +9,17 @@ import ChallengeCard from '@/components/molecules/ChallengeCard/ChallengeCard.js
 import FilterPopup from '@/components/molecules/Popup/FilterPopup';
 import styles from '@/styles/pages/ChallengeList.module.scss';
 
-function toKoDateText(iso) {
-  if (!iso) return '';
-  try {
-    const d = new Date(iso);
-    return (
-      d.toLocaleDateString('ko-KR', { year: 'numeric', month: 'long', day: 'numeric' }) + ' 마감'
-    );
-  } catch {
-    return '';
-  }
-}
+// function toKoDateText(iso) {
+//   if (!iso) return '';
+//   try {
+//     const d = new Date(iso);
+//     return (
+//       d.toLocaleDateString('ko-KR', { year: 'numeric', month: 'long', day: 'numeric' }) + ' 마감'
+//     );
+//   } catch {
+//     return '';
+//   }
+// }
 
 export default function ChallengeListPage() {
   const [title, setTitle] = useState('');
@@ -31,30 +31,39 @@ export default function ChallengeListPage() {
 
   const dTitle = useDebounce(title, 300);
 
-  const params = useMemo(
-    () => ({ title: dTitle, field, type, status, page, pageSize }),
-    [dTitle, field, type, status, page, pageSize],
-  );
+  // const params = useMemo(
+  //   () => ({ title: dTitle, field, type, status, page, pageSize }),
+  //   [dTitle, field, type, status, page, pageSize],
+  // );
+
+  const params = {
+    title: dTitle,
+    field,
+    type,
+    status,
+    page,
+    pageSize,
+  };
 
   const { data, isLoading, isFetching, isError, error, status: qStatus } = useChallenges(params);
 
-  const items = Array.isArray(data?.data) ? data.data : (data?.items ?? []);
+  const items = data?.items ?? [];
   const pagination = data?.pagination ?? {
     page,
     totalPages: Math.max(1, Math.ceil((items.length || 0) / pageSize)),
   };
 
-  const cards = items.map((ch) => ({
-    key: ch.challengeId ?? ch.id ?? ch.no,
-    title: ch.title ?? '제목 없음',
-    tags: [ch.field, ch.type].filter(Boolean), // 서버가 내려준 걸 그대로 보여줌
-    dateText: toKoDateText(ch.deadline),
-    progressText:
-      typeof ch.currentParticipants === 'number' && typeof ch.maxParticipants === 'number'
-        ? `${ch.currentParticipants}/${ch.maxParticipants} 참여중`
-        : '',
-    badge: ch.status ?? '',
-  }));
+  // const cards = items.map((ch) => ({
+  //   key: ch.challengeId,
+  //   title: ch.title,
+  //   tags: [ch.field, ch.type].filter(Boolean), // 서버가 내려준 걸 그대로 보여줌
+  //   dateText: toKoDateText(ch.deadline),
+  //   progressText:
+  //     typeof ch.currentParticipants === 'number' && typeof ch.maxParticipants === 'number'
+  //       ? `${ch.currentParticipants}/${ch.maxParticipants} 참여중`
+  //       : '',
+  //   badge: ch.status ?? '',
+  // }));
 
   return (
     <main className={styles.page}>
@@ -71,8 +80,11 @@ export default function ChallengeListPage() {
             <FilterPopup
               value={{ field, type, status }}
               onApply={(f) => {
-                // ✅ 그대로 저장(배열/객체 허용) → 서비스에서 ENUM/직렬화 처리
-                setField(f?.field ?? f?.fields ?? '');
+                // FilterPopup에서 전달되는 fields 객체에서 선택된 필드만 추출
+                const selectedFields = Object.keys(f?.fields || {}).filter(
+                  (key) => f.fields[key] === true,
+                );
+                setField(selectedFields.length > 0 ? selectedFields : '');
                 setType(f?.type ?? f?.docType ?? f?.documentType ?? '');
                 setStatus(f?.status ?? f?.state ?? '');
                 setPage(1);
@@ -99,10 +111,21 @@ export default function ChallengeListPage() {
       {!isLoading && !isError && (
         <>
           <section className={styles.list}>
-            {cards.length === 0 ? (
+            {items.length === 0 ? (
               <div className={styles.empty}>조건에 맞는 챌린지가 없어요.</div>
             ) : (
-              cards.map(({ key, ...rest }) => <ChallengeCard key={key} {...rest} />)
+              items.map((item) => (
+                <ChallengeCard
+                  key={item.challengeId}
+                  challengeName={item.title}
+                  type={item.field}
+                  category={item.type}
+                  status={item.status}
+                  dueDate={item.deadline}
+                  total={item.maxParticipants}
+                  capacity={item.currentParticipants}
+                />
+              ))
             )}
           </section>
 
