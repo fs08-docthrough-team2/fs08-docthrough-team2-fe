@@ -39,3 +39,8 @@ export const formatToKoreanTime = (date) => {
   if (!date) return '';
   return dayjs.utc(date).tz('Asia/Seoul').format('YY/MM/DD HH:mm');
 };
+
+export const formatToKoreanHyphenDate = (date) => {
+  if (!date) return '';
+  return dayjs.utc(date).tz('Asia/Seoul').format('YY-MM-DD');
+};

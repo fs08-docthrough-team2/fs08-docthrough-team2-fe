@@ -8,13 +8,13 @@ import styles from '@/styles/components/molecules/Modal/TextModal.module.scss';
 import closeIcon from '/public/icon/ic_out.svg';
 
 export default function TextModal({
-  isOpen,
-  title,
-  value,
-  placeholder,
-  onChange,
-  onSubmit,
-  onClose,
+  isOpen = false,
+  title = '',
+  value = '',
+  placeholder = '',
+  onChange = () => {},
+  onSubmit = () => {},
+  onClose = () => {},
   isSubmitting = false,
 }) {
   const trimmed = value?.trim() ?? '';
