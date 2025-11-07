@@ -74,6 +74,28 @@ export default function AdminChallengeListPage() {
     setDeleteTarget({ id: null, title: '' });
   };
 
+  // ✅ 삭제 모달 제출
+  const submitDelete = async () => {
+    if (!deleteTarget.id) return;
+
+    try {
+      // TODO: 실제 삭제 API 연동 (예시)
+      // await deleteChallengeMutation.mutateAsync({
+      //   id: deleteTarget.id,
+      //   reason: deleteReason.trim(),
+      // });
+
+      // 성공 후 목록 갱신이 필요하면 invalidate
+      // await queryClient.invalidateQueries({ queryKey: ['admin-challenge-list'] });
+
+      closeDeleteModal(); // 모달 닫기
+      setDeleteReason(''); // 입력값 초기화
+    } catch (err) {
+      // TODO: 에러 토스트 등
+      console.error(err);
+    }
+  };
+
   // 액션
   const handleEdit = (challengeId) => {
     if (!challengeId) return;
@@ -138,6 +160,23 @@ export default function AdminChallengeListPage() {
                   <div
                     key={id ?? `${item.title}-${item.deadline}`}
                     className={styles.adminCardOverride}
+                    onClickCapture={(e) => {
+                      const btn = e.target.closest('button, a');
+                      if (!btn) return;
+                      const label = (btn.textContent || '').trim();
+                      if (!label) return;
+
+                      // ✅ DropdownOption 내부를 못 고치므로, 여기서 가로채기
+                      if (label.includes('삭제하기')) {
+                        e.preventDefault();
+                        e.stopPropagation();
+                        openDeleteModal(id, item.title); // ← TextModal 열기
+                      } else if (label.includes('수정하기')) {
+                        e.preventDefault();
+                        e.stopPropagation();
+                        handleEdit(id); // ← /admin/{id}/edit 이동
+                      }
+                    }}
                   >
                     <ChallengeCard
                       isAdmin
