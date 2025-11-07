@@ -1,7 +1,6 @@
 'use client';
 
 import Image from 'next/image';
-import Link from 'next/link';
 import styles from '@/styles/pages/LandingPage.module.scss';
 import Button from '@/components/atoms/Button/Button.jsx';
 import { useRouter } from 'next/navigation';
