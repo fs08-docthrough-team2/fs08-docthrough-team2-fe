@@ -1,13 +1,15 @@
 'use client';
 
 import Image from 'next/image';
-import { useMemo, useState } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 import { useParams, useRouter } from 'next/navigation';
 import {
   useGetChallengeDetail,
   useChallengeParticipantsQuery,
 } from '@/hooks/queries/useChallengeQueries';
 import { useIsAdmin } from '@/hooks/useAuthStatus';
+import { useDeleteChallengeMutation } from '@/hooks/mutations/useChallengeMutations';
+import { showToast } from '@/components/common/Sonner';
 import ChallengeCardDetail from '@/components/molecules/ChallengeCard/ChallengeCardDetail';
 import ChallengeContainer from '@/components/molecules/ChallengeContainer/ChallengeContainer';
 import List from '@/components/atoms/List/List';
@@ -22,8 +24,9 @@ const ITEMS_PER_PAGE = 5;
 const ChallengeDetailPage = () => {
   const router = useRouter();
   const { challengeId } = useParams();
-  const [page, setPage] = useState(1);
   const isAdmin = useIsAdmin();
+  const [page, setPage] = useState(1);
+  const [topParticipantNickname, setTopParticipantNickname] = useState(null);
 
   const {
     data: challengeDetailRes,
@@ -37,6 +40,20 @@ const ChallengeDetailPage = () => {
     isError: isParticipantsError,
   } = useChallengeParticipantsQuery({ challengeId, page, pageSize: ITEMS_PER_PAGE });
 
+  const deleteChallengeMutation = useDeleteChallengeMutation({
+    onSuccess: () => {
+      showToast({ kind: 'success', title: '챌린지를 삭제했어요.' });
+      router.push(isAdmin ? '/admin' : '/challenge');
+    },
+    onError: (error) => {
+      showToast({
+        kind: 'error',
+        title: '삭제에 실패했어요.',
+        description: error?.response?.data?.message,
+      });
+    },
+  });
+
   const challenge = challengeDetailRes?.data;
   const participantsResponse = participantsRes ?? null;
   const participants = participantsResponse?.data?.participates ?? [];
@@ -45,16 +62,68 @@ const ChallengeDetailPage = () => {
     pageSize: ITEMS_PER_PAGE,
   };
 
+  const pageSize = pagination.pageSize ?? ITEMS_PER_PAGE;
+  const apiTotalPages = pagination.totalPages;
+  const totalCount = pagination.totalCount;
+  const totalParticipants = useMemo(() => {
+    if (!Number.isFinite(challenge?.currentParticipants)) return null;
+    return Math.max(0, challenge.currentParticipants);
+  }, [challenge?.currentParticipants]);
+
   const totalPages = useMemo(() => {
-    if (pagination.totalPages) return pagination.totalPages;
-    const pageSize = pagination.pageSize ?? ITEMS_PER_PAGE;
-    return participants.length === pageSize ? page + 1 : page;
-  }, [pagination, participants.length, page]);
+    if (Number.isFinite(apiTotalPages)) {
+      return Math.max(1, apiTotalPages);
+    }
+    if (Number.isFinite(totalCount)) {
+      return Math.max(1, Math.ceil(totalCount / pageSize));
+    }
+    if (Number.isFinite(totalParticipants)) {
+      return Math.max(1, Math.ceil(totalParticipants / pageSize));
+    }
+    return null;
+  }, [apiTotalPages, totalCount, totalParticipants, pageSize]);
+
+  const inferredTotalPages = useMemo(() => {
+    if (totalPages != null) return totalPages;
+    const hasFullPage = participants.length === pageSize;
+    return Math.max(1, page + (hasFullPage ? 1 : 0));
+  }, [totalPages, participants.length, page, pageSize]);
+
+  useEffect(() => {
+    const currentPage = pagination.page ?? page;
+    if (currentPage !== 1 || participants.length === 0) return;
+
+    const bestParticipant = participants.reduce((best, candidate) => {
+      if (!best) return candidate;
+
+      const candidateHearts = Number(candidate.hearts) || 0;
+      const bestHearts = Number(best.hearts) || 0;
+      if (candidateHearts > bestHearts) return candidate;
+      if (candidateHearts === bestHearts) {
+        const candidateRank = Number(candidate.rank) || Infinity;
+        const bestRank = Number(best.rank) || Infinity;
+        if (candidateRank < bestRank) return candidate;
+      }
+      return best;
+    }, null);
+
+    setTopParticipantNickname(bestParticipant?.nickName ?? null);
+  }, [participants, pagination.page, page]);
+
+  useEffect(() => {
+    if (totalPages == null && !isParticipantsLoading && participants.length === 0 && page > 1) {
+      setPage((prev) => Math.max(1, prev - 1));
+    }
+  }, [totalPages, isParticipantsLoading, participants.length, page]);
+
+  useEffect(() => {
+    if (page > inferredTotalPages) {
+      setPage(inferredTotalPages);
+    }
+  }, [page, inferredTotalPages]);
 
   const canPrev = page > 1;
-  const canNext = canPrev
-    ? page < totalPages
-    : participants.length === (pagination.pageSize ?? ITEMS_PER_PAGE);
+  const canNext = page < inferredTotalPages;
 
   if (!challengeId) {
     return <div className={styles.page}>잘못된 접근입니다.</div>;
@@ -66,7 +135,6 @@ const ChallengeDetailPage = () => {
     return <div className={styles.page}>챌린지 정보를 가져오지 못했습니다.</div>;
   }
 
-  // 더 이상 참여할 수 없는 상태인지 확인
   const closedStatusSet = new Set(['DEADLINE', 'ISCLOSED', 'ISCOMPLETED', 'CANCELLED']);
   const isClosedByStatus = closedStatusSet.has(challenge.status);
   const isClosedByDeadline =
@@ -77,8 +145,23 @@ const ChallengeDetailPage = () => {
     challenge.currentParticipants >= challenge.maxParticipants;
   const isClosed = isClosedByStatus || isClosedByDeadline || isFull;
 
-  const handlePrev = () => canPrev && setPage((prev) => prev - 1);
-  const handleNext = () => canNext && setPage((prev) => prev + 1);
+  const handlePrev = () => {
+    if (canPrev) setPage((prev) => prev - 1);
+  };
+
+  const handleNext = () => {
+    if (canNext) setPage((prev) => prev + 1);
+  };
+
+  const handleEdit = () => {
+    router.push(isAdmin ? `/admin/${challengeId}/edit` : `/challenge/edit/${challengeId}`);
+  };
+
+  const handleDelete = () => {
+    if (!challengeId || deleteChallengeMutation.isPending) return;
+    if (!window.confirm('정말 이 챌린지를 삭제하시겠어요?')) return;
+    deleteChallengeMutation.mutate(challengeId);
+  };
 
   const lastSubmittedLabel = (isoString) => {
     if (!isoString) return '제출 이력 없음';
@@ -90,8 +173,12 @@ const ChallengeDetailPage = () => {
     }
   };
 
-  console.log('participate-list response', participantsResponse);
-  console.log('rendering participants', participants);
+  const authorName =
+    challenge?.submittedBy ??
+    topParticipantNickname ??
+    challenge?.ownerNickName ??
+    challenge?.author ??
+    '';
 
   return (
     <div className={styles.page}>
@@ -103,12 +190,12 @@ const ChallengeDetailPage = () => {
               type={challenge.field ?? ''}
               category={challenge.type ?? ''}
               description={challenge.content ?? ''}
-              user={challenge.submittedBy ?? ''}
+              user={authorName}
               dueDate={challenge.deadline}
               total={challenge.maxParticipants}
               isMyChallenge={challenge.isMine}
-              onEdit={() => router.push(`/challenge/edit/${challengeId}`)}
-              onDelete={() => console.log('TODO: delete challenge', challengeId)}
+              onEdit={handleEdit}
+              onDelete={handleDelete}
             />
           </div>
 
@@ -150,7 +237,7 @@ const ChallengeDetailPage = () => {
                   />
                 </button>
                 <span className={styles.paginationStatus}>
-                  {page} / {totalPages}
+                  {page} / {inferredTotalPages}
                 </span>
                 <button
                   type="button"
@@ -174,21 +261,35 @@ const ChallengeDetailPage = () => {
             {!isParticipantsLoading && !isParticipantsError && (
               <ul className={styles.participantList}>
                 {participants.length > 0 ? (
-                  participants.map((participant) => (
-                    <List
-                      key={participant.attendId}
-                      rank={participant.rank}
-                      name={participant.nickName}
-                      user_type={lastSubmittedLabel(participant.lastSubmittedAt)}
-                      likes={participant.hearts}
-                      onWorkClick={() => {
-                        const basePath = isAdmin
-                          ? `/admin/${challengeId}/work/${participant.attendId}`
-                          : `/${challengeId}/work/${participant.attendId}`;
-                        router.push(basePath);
-                      }}
-                    />
-                  ))
+                  participants.map((participant, index) => {
+                    const currentPage = pagination.page ?? page;
+                    const apiRank = Number(participant.rank);
+                    const expectedMinRank = (currentPage - 1) * pageSize + 1;
+                    const expectedMaxRank = currentPage * pageSize;
+                    const hasValidApiRank =
+                      Number.isFinite(apiRank) &&
+                      apiRank >= expectedMinRank &&
+                      apiRank <= expectedMaxRank;
+
+                    const displayRank = hasValidApiRank
+                      ? apiRank
+                      : (currentPage - 1) * pageSize + (index + 1);
+
+                    const destination = isAdmin
+                      ? `/admin/${challengeId}/work/${participant.attendId}`
+                      : `/${challengeId}/work/${participant.attendId}`;
+
+                    return (
+                      <List
+                        key={participant.attendId}
+                        rank={displayRank}
+                        name={participant.nickName}
+                        user_type={lastSubmittedLabel(participant.lastSubmittedAt)}
+                        likes={participant.hearts}
+                        onWorkClick={() => router.push(destination)}
+                      />
+                    );
+                  })
                 ) : (
                   <li className={styles.participantEmpty}>
                     아직 참여자가 없습니다.
