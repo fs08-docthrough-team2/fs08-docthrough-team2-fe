@@ -24,22 +24,74 @@ export const getChallengeDetail = async (challengeId) => {
   return res.data;
 };
 
-// GET /challenge/inquiry/challenge-list (User)
-export const getChallengeList = async ({ page, pageSize, searchKeyword, status, sort }) => {
-  const params = new URLSearchParams({
-    page: String(page),
-    pageSize: String(pageSize),
-  });
-
-  if (searchKeyword) params.set('searchKeyword', searchKeyword);
-  if (status) params.set('status', status);
-  if (sort) params.set('sort', sort);
-
-  const { data } = await api.get(`/challenge/inquiry/challenge-list?${params.toString()}`);
-  return data;
+// ------------------------------------------------------
+// ✅ UI 라벨 → 서버 ENUM 매핑 (UI에서는 ENUM 안 쓰지만 여기서만 변환)
+const FIELD_MAP = {
+  'Next.js': 'NEXT',
+  'Modern JS': 'MODERN',
+  API: 'API',
+  Web: 'WEB',
+  Career: 'CAREER',
 };
+const TYPE_MAP = { 공식문서: 'OFFICIAL', 블로그: 'BLOG' };
+const STATUS_MAP = { 진행중: 'INPROGRESS', 마감: 'DEADLINE' };
 
-// GET /challenge/inquiry/challenge-list (Admin)
+const CANONICALS = new Set([
+  'NEXT',
+  'MODERN',
+  'API',
+  'WEB',
+  'CAREER',
+  'OFFICIAL',
+  'BLOG',
+  'INPROGRESS',
+  'DEADLINE',
+]);
+
+function normalizeEnumLike(v) {
+  if (!v || typeof v !== 'string') return undefined;
+  const canon = v.replace(/\s|-/g, '').toUpperCase();
+  return CANONICALS.has(canon) ? canon : undefined;
+}
+
+function mapValue(value, map) {
+  if (!value) return undefined;
+
+  if (map[value]) return map[value];
+
+  const canon = normalizeEnumLike(value);
+  return canon ?? undefined;
+}
+
+// GET /challenge/inquiry/challenge-list (User)
+export const getChallengeList = async ({
+  title = '',
+  field = '',
+  type = '',
+  status = '',
+  page = 1,
+  pageSize = 10,
+} = {}) => {
+  const params = {
+    page: Math.max(1, Number(page) || 1),
+    pageSize: Math.max(1, Number(pageSize) || 10),
+  };
+
+  if (title?.trim()) params.title = title.trim();
+
+  const f = mapValue(field, FIELD_MAP);
+  const t = mapValue(type, TYPE_MAP);
+  const s = mapValue(status, STATUS_MAP);
+
+  if (f) params.field = f;
+  if (t) params.type = t;
+  if (s) params.status = s;
+
+  const { data } = await api.get('/challenge/inquiry/challenge-list', { params });
+  return data; // { success, data:[], pagination:{} }
+};
+// ------------------------------------------------------
+
 export const getAdminChallengeList = async ({ page, pageSize, searchKeyword, status, sort }) => {
   const params = new URLSearchParams({
     page: String(page),
@@ -60,7 +112,7 @@ export const updateChallenge = async ({ challengeId, payload }) => {
   return data;
 };
 
-// 호환용 래퍼: 훅(useChallenges)이 기대하는 형태로 변환해서 반환
+// 호환용 래퍼: 훅(useChallenges)에서 기대하는 형태로 변환
 export const fetchChallenges = async (params = {}) => {
   const res = await getChallengeList(params);
   return {
