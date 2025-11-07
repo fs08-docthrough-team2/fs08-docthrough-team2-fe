@@ -1,14 +1,14 @@
 'use client';
 
-import { useMemo, useState, useEffect } from 'react';
+import { useMemo, useState } from 'react';
 import { useChallenges } from '@/hooks/queries/useChallenge';
+import { useDebounce } from '@/hooks/useDebounce';
 import ChallengeListToolbar from '@/components/organisms/ChallengeListToolbar';
 import Pagination from '@/components/molecules/Pagination/Pagination.jsx';
 import ChallengeCard from '@/components/molecules/ChallengeCard/ChallengeCard.jsx';
 import FilterPopup from '@/components/molecules/Popup/FilterPopup';
 import styles from '@/styles/pages/ChallengeList.module.scss';
 
-// 한국어 마감일 텍스트
 function toKoDateText(iso) {
   if (!iso) return '';
   try {
@@ -22,49 +22,39 @@ function toKoDateText(iso) {
 }
 
 export default function ChallengeListPage() {
-  // ── 컨트롤 상태(라벨 그대로 보관)
-  const [title, setTitle] = useState(''); // 검색어(실시간 입력)
-  const [debouncedTitle, setDebouncedTitle] = useState(''); // 서버에 보낼 디바운스 값
-  const [field, setField] = useState(''); // 'Next.js' | 'Modern JS' | ...
-  const [type, setType] = useState(''); // '공식문서' | '블로그'
-  const [status, setStatus] = useState(''); // '진행중' | '마감'
+  const [title, setTitle] = useState('');
+  const [field, setField] = useState(''); // 문자열 | 객체 | 배열 OK
+  const [type, setType] = useState(''); // 문자열 | 객체(단일 가정)
+  const [status, setStatus] = useState(''); // 문자열 | 객체(단일 가정)
   const [page, setPage] = useState(1);
   const pageSize = 10;
 
-  // ── 검색어 디바운스(300ms)
-  useEffect(() => {
-    const t = setTimeout(() => setDebouncedTitle(title), 300);
-    return () => clearTimeout(t);
-  }, [title]);
+  const dTitle = useDebounce(title, 300);
 
-  // ── 서버 파라미터 (라벨 그대로 전달; 훅 내부/서비스에서 ENUM 변환)
   const params = useMemo(
-    () => ({ title: field, type, status, page, pageSize }),
-    [field, type, status, page, pageSize],
+    () => ({ title: dTitle, field, type, status, page, pageSize }),
+    [dTitle, field, type, status, page, pageSize],
   );
 
-  // ── 쿼리 훅 (queryKey에 params 요소 포함해서 자동 refetch)
-  const { data, isLoading, isError, error, isFetching, status: qStatus } = useChallenges(params);
+  const { data, isLoading, isFetching, isError, error, status: qStatus } = useChallenges(params);
 
-  // ── 응답 매핑
-  const items = data?.items ?? [];
-  const pagination = data?.pagination ?? { page: 1, totalPages: 1 };
+  const items = Array.isArray(data?.data) ? data.data : (data?.items ?? []);
+  const pagination = data?.pagination ?? {
+    page,
+    totalPages: Math.max(1, Math.ceil((items.length || 0) / pageSize)),
+  };
 
-  const cards = useMemo(
-    () =>
-      items.map((ch) => ({
-        key: ch.challengeId ?? ch.no ?? ch.id,
-        title: ch.title ?? '제목 없음',
-        tags: [ch.field, ch.type].filter(Boolean),
-        dateText: toKoDateText(ch.deadline),
-        progressText:
-          typeof ch.currentParticipants === 'number' && typeof ch.maxParticipants === 'number'
-            ? `${ch.currentParticipants}/${ch.maxParticipants} 참여중`
-            : '',
-        badge: ch.status ?? '',
-      })),
-    [items],
-  );
+  const cards = items.map((ch) => ({
+    key: ch.challengeId ?? ch.id ?? ch.no,
+    title: ch.title ?? '제목 없음',
+    tags: [ch.field, ch.type].filter(Boolean), // 서버가 내려준 걸 그대로 보여줌
+    dateText: toKoDateText(ch.deadline),
+    progressText:
+      typeof ch.currentParticipants === 'number' && typeof ch.maxParticipants === 'number'
+        ? `${ch.currentParticipants}/${ch.maxParticipants} 참여중`
+        : '',
+    badge: ch.status ?? '',
+  }));
 
   return (
     <main className={styles.page}>
@@ -72,34 +62,19 @@ export default function ChallengeListPage() {
         <ChallengeListToolbar
           search={title}
           onSearchChange={(v) => {
-            const next = v?.target ? v.target.value : v;
-            setPage(1);
+            const next = typeof v === 'string' ? v : (v?.target?.value ?? '');
             setTitle(next);
+            setPage(1);
           }}
           onCreateClick={() => (window.location.href = '/challenge/post')}
           filterSlot={
             <FilterPopup
               value={{ field, type, status }}
               onApply={(f) => {
-                // 어떤 키로 오든 1개 값만 뽑아 문자열로
-                const pickOne = (obj, keys) => {
-                  for (const k of keys) {
-                    const v = obj?.[k];
-                    if (v != null)
-                      return Array.isArray(v) ? String(v[0] ?? '').trim() : String(v).trim();
-                  }
-                  return '';
-                };
-
-                const nextField = pickOne(f, ['field']);
-                const nextType = pickOne(f, ['type']);
-                const nextStatus = pickOne(f, ['status', 'state']); // ← 핵심: 둘 다 지원
-
-                console.debug('[popup] onApply ->', { nextField, nextType, nextStatus });
-
-                setField(nextField);
-                setType(nextType);
-                setStatus(nextStatus); // ← 여기서 '마감'이 실제로 들어와야 함
+                // ✅ 그대로 저장(배열/객체 허용) → 서비스에서 ENUM/직렬화 처리
+                setField(f?.field ?? f?.fields ?? '');
+                setType(f?.type ?? f?.docType ?? f?.documentType ?? '');
+                setStatus(f?.status ?? f?.state ?? '');
                 setPage(1);
               }}
               onReset={() => {
@@ -108,6 +83,7 @@ export default function ChallengeListPage() {
                 setStatus('');
                 setPage(1);
               }}
+              onClose={() => {}}
             />
           }
         />
@@ -126,16 +102,7 @@ export default function ChallengeListPage() {
             {cards.length === 0 ? (
               <div className={styles.empty}>조건에 맞는 챌린지가 없어요.</div>
             ) : (
-              cards.map((c) => (
-                <ChallengeCard
-                  key={c.key}
-                  title={c.title}
-                  tags={c.tags}
-                  dateText={c.dateText}
-                  progressText={c.progressText}
-                  badge={c.badge}
-                />
-              ))
+              cards.map(({ key, ...rest }) => <ChallengeCard key={key} {...rest} />)
             )}
           </section>
 

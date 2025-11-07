@@ -53,6 +53,24 @@ function mapValue(value, map) {
   return normalizeEnumLike(raw);
 }
 
+/* 배열/객체 → 문자열(들) 뽑기 */
+function extractMany(v) {
+  if (v == null) return [];
+  const one = (x) => {
+    if (Array.isArray(x)) return x.flatMap(one);
+    if (x && typeof x === 'object') {
+      const s = x.value ?? x.label ?? x.name ?? x.key ?? x.id;
+      return s != null ? [String(s).trim()] : [];
+    }
+    return [String(x).trim()];
+  };
+  return one(v).filter(Boolean);
+}
+function extractLabel(v) {
+  const arr = extractMany(v);
+  return arr[0] ?? '';
+}
+
 /* =========================
  * 개별/완료 챌린지 목록(내 것)
  * ========================= */
@@ -104,6 +122,8 @@ export const rejectAdminChallenge = async ({ challengeId, reason }) => {
 
 /* =========================
  * 공개 챌린지 리스트(유저)
+ *  - field: 다중/객체/배열 전부 허용
+ *  - type/status: 단일(필요시 동일 패턴으로 다중 확장 가능)
  * ========================= */
 export const getChallengeList = async ({
   title = '',
@@ -113,29 +133,40 @@ export const getChallengeList = async ({
   page = 1,
   pageSize = 10,
 } = {}) => {
+  // 기본 페이지 파라미터
   const params = {
     page: Math.max(1, Number(page) || 1),
     pageSize: Math.max(1, Number(pageSize) || 10),
   };
 
-  if (title?.trim()) params.title = title.trim();
+  // 검색어
+  const tTitle = String(title ?? '').trim();
+  if (tTitle) params.title = tTitle;
 
-  const f = mapValue(field, FIELD_MAP);
-  const t = mapValue(type, TYPE_MAP);
-  const s = mapValue(status, STATUS_MAP);
+  // ✅ field: 다중 허용 (백엔드가 반복키를 못 받는 경우가 많으니 콤마로 직렬화)
+  const fieldEnums = extractMany(field)
+    .map((lbl) => mapValue(lbl, FIELD_MAP))
+    .filter(Boolean);
+  if (fieldEnums.length === 1) {
+    params.field = fieldEnums[0]; // &field=NEXT
+  } else if (fieldEnums.length > 1) {
+    params.field = fieldEnums.join(','); // &field=NEXT,MODERN
+    // 만약 반복키 방식 지원이면 위 한 줄 대신 다음을 사용:
+    // // paramsSerializer가 필요하므로 URLSearchParams로 직접 보내는 방식을 써야 함
+  }
 
-  if (f) params.field = f;
-  if (t) params.type = t;
-  if (s) params.status = s;
+  // type/status (단일 기준)
+  const ty = mapValue(extractLabel(type), TYPE_MAP);
+  const st = mapValue(extractLabel(status), STATUS_MAP);
+  if (ty) params.type = ty;
+  if (st) params.status = st;
 
   const { data } = await api.get('/challenge/inquiry/challenge-list', { params });
-  // 서버 형식: { success, data: [...], pagination: {...} }
-  return data;
+  return data; // { success, data:[], pagination:{} }
 };
 
 // React Query 훅 호환용(아이템/페이지네이션만 추려서 반환)
 export const fetchChallenges = async (params = {}) => {
-  // console.debug('[fetchChallenges] incoming params =', params);
   const res = await getChallengeList(params);
   return {
     items: res?.data ?? [],
