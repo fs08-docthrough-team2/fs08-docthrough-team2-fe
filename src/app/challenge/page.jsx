@@ -90,7 +90,8 @@ export default function ChallengeListPage() {
             ) : (
               items.map((item) => (
                 <ChallengeCard
-                  key={item.challengeId}
+                  isAdmin
+                  challengeId={id}
                   challengeName={item.title}
                   type={item.field}
                   category={item.type}
@@ -98,6 +99,8 @@ export default function ChallengeListPage() {
                   dueDate={item.deadline}
                   total={item.maxParticipants}
                   capacity={item.currentParticipants}
+                  onEdit={() => handleEdit(id)}
+                  onDelete={() => handleDelete(id)}
                 />
               ))
             )}

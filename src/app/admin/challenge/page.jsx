@@ -117,8 +117,12 @@ export default function AdminChallengeListPage() {
               items.map((item) => {
                 const id = item.challenge_id ?? item.challengeId ?? item.id ?? null;
                 return (
-                  <div key={id ?? `${item.title}-${item.deadline}`} style={{}}>
+                  <div
+                    key={id ?? `${item.title}-${item.deadline}`}
+                    className={styles.adminCardOverride}
+                  >
                     <ChallengeCard
+                      isAdmin
                       challengeName={item.title}
                       type={item.field}
                       category={item.type}
@@ -126,6 +130,8 @@ export default function AdminChallengeListPage() {
                       dueDate={item.deadline}
                       total={item.maxParticipants}
                       capacity={item.currentParticipants}
+                      onEdit={() => handleEdit(id)}
+                      onDelete={() => handleDelete(id)}
                     />
                   </div>
                 );
