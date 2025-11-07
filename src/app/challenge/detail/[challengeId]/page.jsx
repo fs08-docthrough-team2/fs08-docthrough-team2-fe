@@ -10,9 +10,10 @@ import {
 import { useIsAdmin } from '@/hooks/useAuthStatus';
 import { useDeleteChallengeMutation } from '@/hooks/mutations/useChallengeMutations';
 import { showToast } from '@/components/common/Sonner';
+import List from '@/components/atoms/List/List';
+import TextModal from '@/components/molecules/Modal/TextModal';
 import ChallengeCardDetail from '@/components/molecules/ChallengeCard/ChallengeCardDetail';
 import ChallengeContainer from '@/components/molecules/ChallengeContainer/ChallengeContainer';
-import List from '@/components/atoms/List/List';
 import icArrowLeft from '/public/icon/pagination/ic_arrow_left.svg';
 import icArrowLeftDisabled from '/public/icon/pagination/ic_arrow_left_disabled.svg';
 import icArrowRight from '/public/icon/pagination/ic_arrow_right.svg';
@@ -27,6 +28,8 @@ const ChallengeDetailPage = () => {
   const isAdmin = useIsAdmin();
   const [page, setPage] = useState(1);
   const [topParticipantNickname, setTopParticipantNickname] = useState(null);
+  const [isDeleteModalOpen, setDeleteModalOpen] = useState(false);
+  const [deleteReason, setDeleteReason] = useState('');
 
   const {
     data: challengeDetailRes,
@@ -51,6 +54,10 @@ const ChallengeDetailPage = () => {
         title: '삭제에 실패했어요.',
         description: error?.response?.data?.message,
       });
+    },
+    onSettled: () => {
+      setDeleteModalOpen(false);
+      setDeleteReason('');
     },
   });
 
@@ -157,20 +164,14 @@ const ChallengeDetailPage = () => {
     router.push(isAdmin ? `/admin/${challengeId}/edit` : `/challenge/edit/${challengeId}`);
   };
 
-  const handleDelete = () => {
+  const handleOpenDeleteModal = () => {
     if (!challengeId || deleteChallengeMutation.isPending) return;
-    if (!window.confirm('정말 이 챌린지를 삭제하시겠어요?')) return;
-    deleteChallengeMutation.mutate(challengeId);
+    setDeleteModalOpen(true);
   };
 
-  const lastSubmittedLabel = (isoString) => {
-    if (!isoString) return '제출 이력 없음';
-    try {
-      const date = new Date(isoString);
-      return `마지막 제출 ${date.toLocaleDateString('ko-KR')}`;
-    } catch {
-      return '마지막 제출 미상';
-    }
+  const handleDeleteSubmit = (trimmedReason) => {
+    if (!challengeId || deleteChallengeMutation.isPending) return;
+    deleteChallengeMutation.mutate({ challengeId, reason: trimmedReason });
   };
 
   const authorName =
@@ -178,7 +179,19 @@ const ChallengeDetailPage = () => {
     topParticipantNickname ??
     challenge?.ownerNickName ??
     challenge?.author ??
-    '';
+    '유저';
+
+  const roleLabel = (role) => {
+    switch (role) {
+      case 'ADMIN':
+        return '어드민';
+      case 'EXPERT':
+        return '전문가';
+      case 'USER':
+      default:
+        return '유저';
+    }
+  };
 
   return (
     <div className={styles.page}>
@@ -195,7 +208,7 @@ const ChallengeDetailPage = () => {
               total={challenge.maxParticipants}
               isMyChallenge={challenge.isMine}
               onEdit={handleEdit}
-              onDelete={handleDelete}
+              onDelete={handleOpenDeleteModal}
             />
           </div>
 
@@ -284,7 +297,7 @@ const ChallengeDetailPage = () => {
                         key={participant.attendId}
                         rank={displayRank}
                         name={participant.nickName}
-                        user_type={lastSubmittedLabel(participant.lastSubmittedAt)}
+                        user_type={roleLabel(participant.role)}
                         likes={participant.hearts}
                         onWorkClick={() => router.push(destination)}
                       />
@@ -302,6 +315,20 @@ const ChallengeDetailPage = () => {
           </div>
         </section>
       </div>
+
+      <TextModal
+        isOpen={isDeleteModalOpen}
+        title="챌린지 삭제"
+        value={deleteReason}
+        placeholder="삭제 이유를 입력해 주세요."
+        onChange={(event) => setDeleteReason(event.target.value)}
+        onSubmit={handleDeleteSubmit}
+        onClose={() => {
+          setDeleteModalOpen(false);
+          setDeleteReason('');
+        }}
+        isSubmitting={deleteChallengeMutation.isPending}
+      />
     </div>
   );
 };

@@ -4,7 +4,7 @@ import { useEffect, useRef, useState, useCallback } from 'react';
 import Image from 'next/image';
 import clsx from 'clsx';
 import userIcon from '/public/image/img_profile_user.svg';
-import styles from '@/styles/components/molecules/comment/CommentCard.module.scss';
+import styles from '@/styles/components/molecules/Comment/CommentCard.module.scss';
 import DropdownOption from '@/components/molecules/Dropdown/DropdownOption';
 
 export default function CommentCard({

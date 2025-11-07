@@ -5,6 +5,7 @@ import { useRouter, useParams } from 'next/navigation';
 import { useUpdateChallengeMutation } from '@/hooks/mutations/useChallengeMutations';
 import { useChallengeDetailQuery } from '@/hooks/queries/useChallengeQueries.js';
 import { formatUTCDate, formatYYMMDD } from '@/libs/day';
+import { useIsAdmin } from '@/hooks/useAuthStatus';
 import { showToast } from '@/components/common/Sonner';
 import Button from '@/components/atoms/Button/Button';
 import BaseInput from '@/components/atoms/Input/BaseInput';
@@ -12,7 +13,7 @@ import DateInput from '@/components/atoms/Input/DateInput';
 import TextBox from '@/components/atoms/Input/TextBox';
 import DropdownCategory from '@/components/molecules/Dropdown/DropdownCategory';
 import DropdownDocument from '@/components/molecules/Dropdown/DropdownDocument';
-import styles from '@/styles/pages/admin/AdminChallengeEditPage.module.scss';
+import styles from '@/styles/pages/challenge/edit/ChallengeEditPage.module.scss';
 
 const FIELD_LABEL_TO_CODE = {
   'Next.js': 'NEXT',
@@ -35,7 +36,7 @@ const DOCUMENT_CODE_TO_LABEL = Object.fromEntries(
   Object.entries(DOCUMENT_LABEL_TO_CODE).map(([label, code]) => [code, label]),
 );
 
-export default function AdminChallengeEditPage() {
+export default function ChallengeEditPage() {
   const router = useRouter();
   const { challengeId } = useParams();
   const [form, setForm] = useState({
@@ -48,23 +49,24 @@ export default function AdminChallengeEditPage() {
   const [fieldLabel, setFieldLabel] = useState(null);
   const [typeLabel, setTypeLabel] = useState(null);
   const { data: challengeData, isLoading, error } = useChallengeDetailQuery(challengeId);
+  const challengeDetail = challengeData?.data;
+  const isAdmin = useIsAdmin();
 
   useEffect(() => {
-    if (!challengeData) return;
-
-    const normalizedCapacity = challengeData.capacity ?? challengeData.maxParticipants ?? '';
+    if (!challengeDetail) return;
+    const normalizedCapacity = challengeDetail.capacity ?? challengeDetail.maxParticipants ?? '';
 
     setForm({
-      title: challengeData.title ?? '',
-      source: challengeData.source ?? '',
-      deadline: challengeData.deadline ? formatYYMMDD(challengeData.deadline) : '',
+      title: challengeDetail.title ?? '',
+      source: challengeDetail.source ?? '',
+      deadline: challengeDetail.deadline ? formatYYMMDD(challengeDetail.deadline) : '',
       capacity: normalizedCapacity !== '' ? String(normalizedCapacity) : '',
-      content: challengeData.content ?? '',
+      content: challengeDetail.content ?? '',
     });
 
-    setFieldLabel(FIELD_CODE_TO_LABEL[challengeData.field] ?? null);
-    setTypeLabel(DOCUMENT_CODE_TO_LABEL[challengeData.type] ?? null);
-  }, [challengeData]);
+    setFieldLabel(FIELD_CODE_TO_LABEL[challengeDetail.field] ?? null);
+    setTypeLabel(DOCUMENT_CODE_TO_LABEL[challengeDetail.type] ?? null);
+  }, [challengeDetail]);
 
   const requestBody = useMemo(
     () => ({
@@ -85,7 +87,7 @@ export default function AdminChallengeEditPage() {
         kind: 'success',
         title: '챌린지를 수정했어요.',
       });
-      router.push(`/challenge/detail/${challengeId}`);
+      router.push(isAdmin ? `/admin/${challengeId}/status` : `/challenge/detail/${challengeId}`);
     },
     onError: (error) => {
       const message = error.response?.data?.message;

@@ -127,22 +127,6 @@ export const updateChallenge = async ({ challengeId, payload }) => {
   return data;
 };
 
-export const deleteChallenge = async (challengeId) => {
-  const { data } = await api.patch(`/challenge/delete/${challengeId}`);
-  return data;
-};
-
-export const approveAdminChallenge = async (challengeId) => {
-  const { data } = await api.patch(`/challenge/admin/new-challenge/approve/${challengeId}`);
-  return data;
-};
-
-export const rejectAdminChallenge = async ({ challengeId, reason }) => {
-  const payload = { reject_comment: reason };
-  const { data } = await api.patch(`/challenge/admin/new-challenge/reject/${challengeId}`, payload);
-  return data;
-};
-
 /* =========================
  * 공개 챌린지 리스트(유저)
  *  - field: 다중/객체/배열 전부 허용
@@ -263,5 +247,25 @@ export const getMyAppliedChallenges = async ({
     `/challenge/inquiry/individual-challenge-detail?${qs.toString()}`,
     { signal },
   );
+  return data;
+};
+
+// PATCH /challenge/delete/:challengeId (챌린지 논리적 삭제)
+export const deleteChallenge = async ({ challengeId, reason }) => {
+  const payload = { delete_reason: reason ?? '' };
+  const { data } = await api.patch(`/challenge/delete/${challengeId}`, payload);
+  return data;
+};
+
+// PATCH /challenge/admin/new-challenge/approve/:challengeId
+export const approveAdminChallenge = async (challengeId) => {
+  const { data } = await api.patch(`/challenge/admin/new-challenge/approve/${challengeId}`);
+  return data;
+};
+
+// PATCH /challenge/admin/new-challenge/reject/:challengeId
+export const rejectAdminChallenge = async ({ challengeId, reason }) => {
+  const payload = { reject_comment: reason };
+  const { data } = await api.patch(`/challenge/admin/new-challenge/reject/${challengeId}`, payload);
   return data;
 };

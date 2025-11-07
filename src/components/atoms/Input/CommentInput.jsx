@@ -1,8 +1,8 @@
 import { useCallback } from 'react';
 import clsx from 'clsx';
-import TextBox from '@/components/atoms/input/TextBox';
+import TextBox from '@/components/atoms/Input/TextBox';
 import FeedbackButton from '@/components/atoms/Button/FeedbackButton.jsx';
-import styles from '@/styles/components/atoms/input/CommentInput.module.scss';
+import styles from '@/styles/components/atoms/Input/CommentInput.module.scss';
 
 export default function CommentInput({
   value = '',

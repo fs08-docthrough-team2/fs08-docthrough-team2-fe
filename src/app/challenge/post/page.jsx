@@ -83,11 +83,12 @@ export default function ChallengePostPage() {
 
     createChallengeMutation.mutate(requestBody, {
       onSuccess: (data) => {
+        const challengeId = data?.data?.createChallenge?.challenge_id;
         showToast({
           kind: 'success',
           title: '챌린지 등록 성공',
         });
-        router.push('/my-challenge');
+        router.push(`/my-challenge/${challengeId}/status`);
       },
       onError: (error) => {
         const message = error.response?.data?.message ?? '챌린지 등록 실패';

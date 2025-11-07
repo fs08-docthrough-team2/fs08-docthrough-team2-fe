@@ -3,7 +3,7 @@
 import { useState } from 'react';
 import clsx from 'clsx';
 import BaseInput from './BaseInput';
-import styles from '@/styles/components/atoms/input/BaseInput.module.scss';
+import styles from '@/styles/components/atoms/Input/BaseInput.module.scss';
 import Image from 'next/image';
 
 import ic_eye from '/public/icons/eye.svg';

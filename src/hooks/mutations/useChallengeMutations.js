@@ -90,18 +90,21 @@ export const useRejectChallengeMutation = (options = {}) => {
 };
 
 // 챌린지 논리적 삭제
+
 export const useDeleteChallengeMutation = (options = {}) => {
   const queryClient = useQueryClient();
   const { onSuccess, ...restOptions } = options;
 
   return useMutation({
-    mutationFn: (challengeId) => deleteChallenge(challengeId),
-    onSuccess: (data, challengeId, context) => {
+    mutationFn: ({ challengeId, reason }) => deleteChallenge({ challengeId, reason }),
+    onSuccess: (data, variables, context) => {
       queryClient.invalidateQueries({ queryKey: CHALLENGE_LIST_KEY });
-      if (challengeId) {
-        queryClient.removeQueries({ queryKey: challengeDetailKey(challengeId) });
+
+      if (variables?.challengeId) {
+        queryClient.removeQueries({ queryKey: challengeDetailKey(variables.challengeId) });
       }
-      onSuccess?.(data, challengeId, context);
+
+      onSuccess?.(data, variables, context);
     },
     ...restOptions,
   });

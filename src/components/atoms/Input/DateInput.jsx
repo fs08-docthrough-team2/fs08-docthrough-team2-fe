@@ -3,8 +3,8 @@ import { useState, forwardRef, useMemo } from 'react';
 import dayjs from 'dayjs';
 import ReactDatePicker from 'react-datepicker';
 import 'react-datepicker/dist/react-datepicker.css';
-import BaseInput from '@/components/atoms/input/BaseInput';
-import baseStyles from '@/styles/components/atoms/input/BaseInput.module.scss';
+import BaseInput from '@/components/atoms/Input/BaseInput';
+import baseStyles from '@/styles/components/atoms/Input/BaseInput.module.scss';
 
 // 안 보이는 더미 input
 const HiddenInput = forwardRef(function HiddenInput(props, ref) {

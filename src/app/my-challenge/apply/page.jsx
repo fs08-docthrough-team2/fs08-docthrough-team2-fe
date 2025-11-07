@@ -36,7 +36,7 @@ export default function MyChallengeApplyPage() {
     pageSize: ITEMS_PER_PAGE,
     searchKeyword: searchKeyword || undefined,
     status: statusParam,
-    sort: sortParam ?? '신청시간빠름순',
+    sort: sortParam ?? '신청시간느림순',
   });
 
   const challenges = Array.isArray(data?.data?.participates) ? data.data.participates : [];

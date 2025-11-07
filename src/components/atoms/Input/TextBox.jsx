@@ -1,5 +1,5 @@
 import clsx from 'clsx';
-import styles from '@/styles/components/atoms/input/TextBox.module.scss';
+import styles from '@/styles/components/atoms/Input/TextBox.module.scss';
 
 export default function TextBox({
   value,

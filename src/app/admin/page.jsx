@@ -34,7 +34,7 @@ export default function AdminPage() {
     pageSize: ITEMS_PER_PAGE,
     searchKeyword: searchKeyword || undefined,
     status: statusParam,
-    sort: sortParam,
+    sort: sortParam ?? '신청시간느림순',
   });
 
   const challenges = data?.data ?? [];
