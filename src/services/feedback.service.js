@@ -24,8 +24,8 @@ export const updateFeedback = async ({ feedbackId, content }) => {
 };
 
 export const deleteFeedback = async ({ feedbackId }) => {
-  const res = await api.delete(`/challenge/feedback/translated-detail/feedback-detail`, {
-    feedbackId,
-  });
+  const res = await api.delete(
+    `/challenge/feedback/translated-detail/feedback-detail?feedbackId=${feedbackId}`,
+  );
   return res.data;
 };
