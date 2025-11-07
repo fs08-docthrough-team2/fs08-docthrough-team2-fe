@@ -90,8 +90,6 @@ export default function ChallengeListPage() {
             ) : (
               items.map((item) => (
                 <ChallengeCard
-                  isAdmin
-                  challengeId={id}
                   challengeName={item.title}
                   type={item.field}
                   category={item.type}

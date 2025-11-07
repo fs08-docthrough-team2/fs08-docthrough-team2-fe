@@ -9,6 +9,7 @@ import Pagination from '@/components/molecules/Pagination/Pagination.jsx';
 import ChallengeCard from '@/components/molecules/ChallengeCard/ChallengeCard.jsx';
 import FilterPopup from '@/components/molecules/Popup/FilterPopup';
 import styles from '@/styles/pages/ChallengeList.module.scss';
+import TextModal from '@/components/molecules/Modal/TextModal.jsx';
 
 const PAGE_SIZE = 10;
 
@@ -55,6 +56,23 @@ export default function AdminChallengeListPage() {
     }
     return { page, totalPages: Math.max(1, Math.ceil((items.length || 0) / PAGE_SIZE)) };
   }, [data?.pagination, items.length, page]);
+
+  // 삭제 모달
+  const [isDeleteOpen, setIsDeleteOpen] = useState(false);
+  const [deleteTarget, setDeleteTarget] = useState({ id: null, title: '' });
+  const [deleteReason, setDeleteReason] = useState('');
+
+  const openDeleteModal = (id, title) => {
+    setDeleteTarget({ id, title });
+    setDeleteReason('');
+    setIsDeleteOpen(true);
+  };
+
+  const closeDeleteModal = () => {
+    setIsDeleteOpen(false);
+    setDeleteReason('');
+    setDeleteTarget({ id: null, title: '' });
+  };
 
   // 액션
   const handleEdit = (challengeId) => {
@@ -147,6 +165,27 @@ export default function AdminChallengeListPage() {
               onPageChange={setPage}
             />
           </nav>
+
+          {/* 삭제 모달 */}
+          {isDeleteOpen && (
+            <TextModal
+              title="삭제 사유"
+              label="내용"
+              placeholder="삭제 사유를 입력해주세요"
+              value={deleteReason}
+              onChange={(e) => setDeleteReason(e?.target ? e.target.value : String(e))}
+              isOpen={isDeleteOpen}
+              onClose={closeDeleteModal}
+              onCancel={closeDeleteModal}
+              onConfirm={submitDelete}
+              confirmText="전송"
+              cancelText="취소"
+              // 필요시 추가 prop(TextModal 인터페이스에 따라)
+              // maxLength={500}
+              // required
+              // description={`[${deleteTarget.title}]을(를) 삭제합니다.`}
+            />
+          )}
         </>
       )}
     </main>
