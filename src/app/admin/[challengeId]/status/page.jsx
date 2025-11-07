@@ -177,7 +177,7 @@ export default function AdminChallengeStatusPage() {
             category={fieldLabel}
             dueDate={challenge.deadline}
             total={challenge.maxParticipants}
-            onEdit={() => router.push(`/admin/${challengeId}/edit`)}
+            onEdit={() => router.push(`/challenge/edit/${challengeId}`)}
           />
 
           {stroke}

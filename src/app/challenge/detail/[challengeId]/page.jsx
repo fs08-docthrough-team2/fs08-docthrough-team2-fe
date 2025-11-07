@@ -154,7 +154,7 @@ const ChallengeDetailPage = () => {
   };
 
   const handleEdit = () => {
-    router.push(isAdmin ? `/admin/${challengeId}/edit` : `/challenge/edit/${challengeId}`);
+    router.push(`/challenge/edit/${challengeId}`);
   };
 
   const handleDelete = () => {
@@ -178,7 +178,7 @@ const ChallengeDetailPage = () => {
     topParticipantNickname ??
     challenge?.ownerNickName ??
     challenge?.author ??
-    '';
+    '유저';
 
   return (
     <div className={styles.page}>
