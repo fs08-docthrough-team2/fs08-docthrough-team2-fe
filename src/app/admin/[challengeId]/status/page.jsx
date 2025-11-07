@@ -51,6 +51,8 @@ export default function AdminChallengeStatusPage() {
   const { challengeId } = useParams();
   const [isRejectModalOpen, setRejectModalOpen] = useState(false);
   const [rejectReason, setRejectReason] = useState('');
+  const [isDeleteModalOpen, setDeleteModalOpen] = useState(false);
+  const [deleteReason, setDeleteReason] = useState('');
 
   const {
     data: detail,
@@ -95,7 +97,7 @@ export default function AdminChallengeStatusPage() {
   const deleteMutation = useDeleteChallengeMutation({
     onSuccess: () => {
       showToast({ kind: 'success', title: '챌린지를 삭제했어요.' });
-      router.push('/admin'); // 필요 시 다른 경로로 이동
+      router.push('/admin');
     },
     onError: (error) => {
       showToast({
@@ -103,6 +105,10 @@ export default function AdminChallengeStatusPage() {
         title: '삭제에 실패했어요.',
         description: error?.response?.data?.message,
       });
+    },
+    onSettled: () => {
+      setDeleteModalOpen(false);
+      setDeleteReason('');
     },
   });
 
@@ -135,7 +141,12 @@ export default function AdminChallengeStatusPage() {
 
   const handleDeleteChallenge = () => {
     if (!challengeId || deleteMutation.isPending) return;
-    deleteMutation.mutate(challengeId);
+    setDeleteModalOpen(true);
+  };
+
+  const handleConfirmDelete = (trimmedReason) => {
+    if (!challengeId || deleteMutation.isPending) return;
+    deleteMutation.mutate({ challengeId, reason: trimmedReason });
   };
 
   const showActions = challenge?.status === 'PENDING';
@@ -238,17 +249,17 @@ export default function AdminChallengeStatusPage() {
       </div>
 
       <TextModal
-        isOpen={isRejectModalOpen}
-        title="거절 사유"
-        value={rejectReason}
-        placeholder="거절 사유를 입력해 주세요."
-        onChange={(event) => setRejectReason(event.target.value)}
-        onSubmit={handleRejectSubmit}
+        isOpen={isDeleteModalOpen}
+        title="챌린지 삭제"
+        value={deleteReason}
+        placeholder="삭제 사유를 입력해 주세요."
+        onChange={(event) => setDeleteReason(event.target.value)}
+        onSubmit={handleConfirmDelete}
         onClose={() => {
-          setRejectModalOpen(false);
-          setRejectReason('');
+          setDeleteModalOpen(false);
+          setDeleteReason('');
         }}
-        isSubmitting={rejectMutation.isPending}
+        isSubmitting={deleteMutation.isPending}
       />
     </>
   );

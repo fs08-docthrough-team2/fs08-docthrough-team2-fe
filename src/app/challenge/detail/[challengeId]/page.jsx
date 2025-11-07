@@ -10,9 +10,10 @@ import {
 import { useIsAdmin } from '@/hooks/useAuthStatus';
 import { useDeleteChallengeMutation } from '@/hooks/mutations/useChallengeMutations';
 import { showToast } from '@/components/common/Sonner';
+import List from '@/components/atoms/List/List';
+import TextModal from '@/components/molecules/Modal/TextModal';
 import ChallengeCardDetail from '@/components/molecules/ChallengeCard/ChallengeCardDetail';
 import ChallengeContainer from '@/components/molecules/ChallengeContainer/ChallengeContainer';
-import List from '@/components/atoms/List/List';
 import icArrowLeft from '/public/icon/pagination/ic_arrow_left.svg';
 import icArrowLeftDisabled from '/public/icon/pagination/ic_arrow_left_disabled.svg';
 import icArrowRight from '/public/icon/pagination/ic_arrow_right.svg';
@@ -27,6 +28,8 @@ const ChallengeDetailPage = () => {
   const isAdmin = useIsAdmin();
   const [page, setPage] = useState(1);
   const [topParticipantNickname, setTopParticipantNickname] = useState(null);
+  const [isDeleteModalOpen, setDeleteModalOpen] = useState(false);
+  const [deleteReason, setDeleteReason] = useState('');
 
   const {
     data: challengeDetailRes,
@@ -51,6 +54,10 @@ const ChallengeDetailPage = () => {
         title: '삭제에 실패했어요.',
         description: error?.response?.data?.message,
       });
+    },
+    onSettled: () => {
+      setDeleteModalOpen(false);
+      setDeleteReason('');
     },
   });
 
@@ -154,13 +161,17 @@ const ChallengeDetailPage = () => {
   };
 
   const handleEdit = () => {
-    router.push(`/challenge/edit/${challengeId}`);
+    router.push(isAdmin ? `/admin/${challengeId}/edit` : `/challenge/edit/${challengeId}`);
   };
 
-  const handleDelete = () => {
+  const handleOpenDeleteModal = () => {
     if (!challengeId || deleteChallengeMutation.isPending) return;
-    if (!window.confirm('정말 이 챌린지를 삭제하시겠어요?')) return;
-    deleteChallengeMutation.mutate(challengeId);
+    setDeleteModalOpen(true);
+  };
+
+  const handleDeleteSubmit = (trimmedReason) => {
+    if (!challengeId || deleteChallengeMutation.isPending) return;
+    deleteChallengeMutation.mutate({ challengeId, reason: trimmedReason });
   };
 
   const authorName =
@@ -197,7 +208,7 @@ const ChallengeDetailPage = () => {
               total={challenge.maxParticipants}
               isMyChallenge={challenge.isMine}
               onEdit={handleEdit}
-              onDelete={handleDelete}
+              onDelete={handleOpenDeleteModal}
             />
           </div>
 
@@ -304,6 +315,20 @@ const ChallengeDetailPage = () => {
           </div>
         </section>
       </div>
+
+      <TextModal
+        isOpen={isDeleteModalOpen}
+        title="챌린지 삭제"
+        value={deleteReason}
+        placeholder="삭제 이유를 입력해 주세요."
+        onChange={(event) => setDeleteReason(event.target.value)}
+        onSubmit={handleDeleteSubmit}
+        onClose={() => {
+          setDeleteModalOpen(false);
+          setDeleteReason('');
+        }}
+        isSubmitting={deleteChallengeMutation.isPending}
+      />
     </div>
   );
 };
