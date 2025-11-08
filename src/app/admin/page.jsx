@@ -81,7 +81,7 @@ export default function AdminPage() {
             value={searchKeyword}
             onChange={(e) => setSearchKeyword(e.target.value)}
             onSearch={handleSearch}
-            placeholder="챌린지 제목을 검색해 보세요"
+            placeholder="챌린지 이름을 검색해 보세요"
           />
         </div>
         <DropdownSort
