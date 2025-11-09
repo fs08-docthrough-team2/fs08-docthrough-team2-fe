@@ -3,12 +3,14 @@
 import { useRouter, usePathname } from 'next/navigation';
 import Link from 'next/link';
 import Image from 'next/image';
-import styles from '@/styles/components/organisms/GNB/GNB.module.scss';
+import { useAuthStore } from '@/stores/useAuthStore';
+import { useLogout } from '@/hooks/useAuth';
+import { useMyNotifications } from '@/hooks/queries/useNotificationQueries';
+import { useMarkNoticeAsRead } from '@/hooks/mutations/useNotificationMutations';
 import Button from '@/components/atoms/Button/Button';
 import DropdownProfile from '@/components/molecules/Dropdown/DropdownProfile';
 import NotificationPopup from '@/components/molecules/Popup/NotificationPopup';
-import { useAuthStore } from '@/stores/useAuthStore';
-import { useLogout } from '@/hooks/useAuth';
+import styles from '@/styles/components/organisms/GNB/GNB.module.scss';
 
 const USER_TYPES = {
   GUEST: 'guest',
@@ -30,35 +32,48 @@ const HIDDEN_ROUTES = new Set([
   '/admin/:challengeId/work/edit/:workId',
 ]);
 
-const GNB = ({ notifications = [] }) => {
+const GNB = ({ notifications: notificationsProp = [] }) => {
   const user = useAuthStore((state) => state.user);
   const userType = user ? user.role : 'GUEST';
   const { logout } = useLogout();
-
   const router = useRouter();
   const pathname = usePathname();
+
   const normalizedPath = (pathname ?? '').replace(/\/+$/, '');
   const isHiddenRoute =
     HIDDEN_ROUTES.has(normalizedPath) ||
     /^\/[^/]+\/work\/post$/.test(normalizedPath) ||
     /^\/[^/]+\/work\/edit\/[^/]+$/.test(normalizedPath) ||
     /^\/admin\/[^/]+\/work\/edit\/[^/]+$/.test(normalizedPath);
-  if (isHiddenRoute) {
-    return null;
-  }
 
   const isManagePage = normalizedPath === '/admin';
   const isChallengePage = normalizedPath.startsWith('/admin/challenge');
 
-  const handleLogin = () => {
-    router.push('/auth/login');
+  const handleLogin = () => router.push('/auth/login');
+  const handleSelect = (option) => {
+    if (option === '로그아웃') logout();
   };
 
-  const handleSelect = (option) => {
-    if (option === '로그아웃') {
-      logout();
+  const {
+    data: fetchedNotifications = [],
+    isLoading: isNoticeLoading,
+    refetch: refetchNotifications,
+  } = useMyNotifications();
+
+  if (isHiddenRoute) return null;
+
+  const { mutateAsync: markAsRead } = useMarkNoticeAsRead();
+
+  const handleNotificationClick = async (notification) => {
+    try {
+      await markAsRead(notification.id);
+      // TODO: 이동이 필요하다면 여기서 router.push(...) 등으로 처리
+    } catch (error) {
+      console.error('알림 읽음 처리 실패', error);
     }
   };
+
+  const notifications = notificationsProp.length > 0 ? notificationsProp : fetchedNotifications;
 
   return (
     <header className={styles.gnbWrapper}>
@@ -79,7 +94,6 @@ const GNB = ({ notifications = [] }) => {
             <div className={styles.adminTabGroup}>
               {ADMIN_TABS.map(({ href, label }) => {
                 const isActive = href === '/admin' ? isManagePage : isChallengePage;
-
                 return (
                   <Link
                     key={href}
@@ -104,7 +118,12 @@ const GNB = ({ notifications = [] }) => {
           {(userType === 'USER' || userType === 'EXPERT') && (
             <>
               <div className={styles.iconWrapper}>
-                <NotificationPopup notifications={notifications} />
+                <NotificationPopup
+                  notifications={notifications}
+                  isLoading={isNoticeLoading}
+                  onRefresh={refetchNotifications}
+                  onClickNotification={handleNotificationClick}
+                />
               </div>
               <DropdownProfile
                 userType={userType}

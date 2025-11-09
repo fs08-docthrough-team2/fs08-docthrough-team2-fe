@@ -4,30 +4,20 @@ import { useState, useEffect, useRef } from 'react';
 import Image from 'next/image';
 import styles from '@/styles/components/molecules/Popup/NotificationPopup.module.scss';
 
-const sampleNotifications = [
-  {
-    id: 1,
-    message: "'신청한 챌린지 이름' 제출물에 새로운 피드백이 등록되었어요.",
-    date: '2024.04.01',
-  },
-  { id: 2, message: "'신청한 챌린지 이름' 챌린지 신청 결과가 도착했어요.", date: '2024.04.01' },
-  { id: 3, message: "'신청한 챌린지 이름' 제출물이 업로드 완료되었어요.", date: '2024.04.01' },
-  { id: 4, message: "'챌린지 이름' 기존 제출물에 추가 피드백이 등록되었어요.", date: '2024.04.01' },
-  { id: 5, message: "'신청한 챌린지 이름' 마감일이 다가오고 있어요.", date: '2024.04.01' },
-  { id: 6, message: "'신청한 챌린지 이름' 마감일이 다가오고 있어요.", date: '2024.04.01' },
-  { id: 7, message: "'신청한 챌린지 이름' 마감일이 다가오고 있어요.", date: '2024.04.01' },
-  { id: 8, message: "'신청한 챌린지 이름' 마감일이 다가오고 있어요.", date: '2024.04.01' },
-];
-
-const NotificationPopup = ({ notifications = [] }) => {
+const NotificationPopup = ({
+  notifications = [],
+  isLoading = false,
+  onRefresh,
+  onClickNotification,
+}) => {
   const [isOpen, setIsOpen] = useState(false);
   const popupRef = useRef(null);
   const hasNotifications = notifications.length > 0;
   const iconSrc = hasNotifications
     ? '/icon/ic_notification_on.svg'
     : '/icon/ic_notification_off.svg';
-  const iconAlt = hasNotifications ? '새 알림 있음' : '새 알림 없음';
-  const dropdownClassName = [styles.dropdown, !hasNotifications && styles['dropdown_empty']]
+  const iconAlt = hasNotifications ? '알림 있음' : '알림 없음';
+  const dropdownClassName = [styles.dropdown, !hasNotifications && styles.dropdown_empty]
     .filter(Boolean)
     .join(' ');
 
@@ -37,16 +27,23 @@ const NotificationPopup = ({ notifications = [] }) => {
         setIsOpen(false);
       }
     };
-
     document.addEventListener('mousedown', handleClickOutside);
     return () => document.removeEventListener('mousedown', handleClickOutside);
   }, []);
+
+  const togglePopup = () => {
+    const nextState = !isOpen;
+    setIsOpen(nextState);
+    if (nextState && typeof onRefresh === 'function') {
+      onRefresh();
+    }
+  };
 
   return (
     <div className={styles.notification} ref={popupRef}>
       <button
         type="button"
-        onClick={() => setIsOpen((prev) => !prev)}
+        onClick={togglePopup}
         className={styles['bell-button']}
         aria-label="알림 확인"
       >
@@ -58,17 +55,35 @@ const NotificationPopup = ({ notifications = [] }) => {
           <div className={styles.header}>
             <h3>알림</h3>
           </div>
-          {hasNotifications && (
+
+          {isLoading ? (
+            <div className={styles.body}>
+              <p className={styles.loading}>알림을 불러오는 중...</p>
+            </div>
+          ) : hasNotifications ? (
             <div className={styles.body}>
               <ul className={styles.list}>
                 {notifications.map((notification) => (
-                  <li key={notification.id} className={styles.item}>
+                  <li
+                    key={notification.id}
+                    className={styles.item}
+                    role="button"
+                    tabIndex={0}
+                    onClick={() => onClickNotification?.(notification)}
+                    onKeyDown={(event) => {
+                      if (event.key === 'Enter' || event.key === ' ') {
+                        onClickNotification?.(notification);
+                      }
+                    }}
+                  >
                     <p className={styles.message}>{notification.message}</p>
                     <span className={styles.date}>{notification.date}</span>
                   </li>
                 ))}
               </ul>
             </div>
+          ) : (
+            <div className={styles.empty}>읽지 않은 알림이 없습니다.</div>
           )}
         </div>
       )}
