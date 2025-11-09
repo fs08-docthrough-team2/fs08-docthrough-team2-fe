@@ -1,190 +1,190 @@
 @use '@/styles/variable' as v;
-  @use '@/styles/mixin' as m;
+@use '@/styles/mixin' as m;
 
-  .notification {
-    position: relative;
-    display: inline-block;
+.notification {
+  position: relative;
+  display: inline-block;
+}
+
+.bell-button {
+  background: none;
+  border: none;
+  cursor: pointer;
+  padding: 8px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  &:hover {
+    background-color: v.$gray-100;
   }
 
-  .bell-button {
-    background: none;
-    border: none;
-    cursor: pointer;
-    padding: 8px;
-    border-radius: 50%;
-    display: flex;
-    align-items: center;
-    justify-content: center;
+  img {
+    display: block;
+    width: 24px;
+    height: 24px;
+    flex-shrink: 0;
+  }
+}
 
-    &:hover {
-      background-color: v.$gray-100;
-    }
+.dropdown {
+  position: absolute;
+  top: calc(100% + 10px);
+  right: 0;
+  width: 343px;
+  max-height: 465px;
+  display: flex;
+  flex-direction: column;
+  background: v.$white;
+  border: 2px solid v.$gray-200;
+  border-top: none;
+  border-radius: 8px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+  z-index: 1000;
+  overflow: hidden;
+}
 
-    img {
-      display: block;
-      width: 24px;
-      height: 24px;
-      flex-shrink: 0;
-    }
+.dropdown_empty {
+  min-height: 170px;
+}
+
+.header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+  padding: 0 16px;
+  min-height: 50px;
+  border-bottom: 1px solid v.$gray-200;
+
+  h3 {
+    margin: 0;
+    font-size: 16px;
+    font-weight: 600;
+    color: v.$gray-800;
+  }
+}
+
+.closeButton {
+  @include m.reset-button;
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  display: none;
+  align-items: center;
+  justify-content: center;
+
+  &:hover {
+    background-color: v.$gray-100;
+  }
+}
+
+.body {
+  flex: 1;
+  padding-right: 8px;
+  max-height: calc(465px - 50px);
+  overflow-y: auto;
+  scrollbar-width: thin;
+  scrollbar-color: v.$gray-200 transparent;
+
+  &::-webkit-scrollbar {
+    width: 5px;
   }
 
+  &::-webkit-scrollbar-thumb {
+    border-radius: 7.5px;
+    background: v.$gray-200;
+  }
+
+  &::-webkit-scrollbar-track {
+    background: transparent;
+  }
+
+  &::-webkit-scrollbar-button {
+    display: none;
+    width: 0;
+    height: 0;
+  }
+}
+
+.list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+.item {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  padding: 12px 16px;
+  background: v.$white;
+  border-bottom: 1px solid v.$gray-200;
+  cursor: pointer;
+
+  &:last-child {
+    border-bottom: none;
+  }
+
+  &:hover {
+    background-color: v.$gray-50;
+  }
+}
+
+.message {
+  margin: 0;
+  color: v.$gray-800;
+  font-size: 14px;
+  font-weight: 400;
+}
+
+.date {
+  color: v.$gray-400;
+  font-size: 12px;
+  font-weight: 400;
+}
+
+.loading,
+.empty {
+  flex: 1;
+  padding: 24px 16px;
+  text-align: center;
+  color: v.$gray-500;
+  font-size: 14px;
+}
+
+.empty {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+@include m.mobile {
   .dropdown {
-    position: absolute;
-    top: calc(100% + 10px);
-    right: 0;
-    width: 343px;
-    max-height: 465px;
-    display: flex;
-    flex-direction: column;
-    background: v.$white;
-    border: 2px solid v.$gray-200;
-    border-top: none;
-    border-radius: 8px;
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
-    z-index: 1000;
-    overflow: hidden;
-  }
-
-  .dropdown_empty {
-    min-height: 170px;
+    position: fixed;
+    inset: 0;
+    width: 100vw;
+    height: 100vh;
+    max-height: none;
+    border: none;
+    border-radius: 0;
+    box-shadow: none;
+    padding-bottom: env(safe-area-inset-bottom);
+    overflow: auto;
   }
 
   .header {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    gap: 8px;
-    padding: 0 16px;
-    min-height: 50px;
-    border-bottom: 1px solid v.$gray-200;
-
-    h3 {
-      margin: 0;
-      font-size: 16px;
-      font-weight: 600;
-      color: v.$gray-800;
-    }
-  }
-
-  .closeButton {
-    @include m.reset-button;
-    width: 32px;
-    height: 32px;
-    border-radius: 50%;
-    display: none;
-    align-items: center;
-    justify-content: center;
-
-    &:hover {
-      background-color: v.$gray-100;
-    }
+    min-height: 56px;
+    padding: 0 20px;
   }
 
   .body {
-    flex: 1;
-    padding-right: 8px;
-    max-height: calc(465px - 50px);
-    overflow-y: auto;
-    scrollbar-width: thin;
-    scrollbar-color: v.$gray-200 transparent;
-
-    &::-webkit-scrollbar {
-      width: 5px;
-    }
-
-    &::-webkit-scrollbar-thumb {
-      border-radius: 7.5px;
-      background: v.$gray-200;
-    }
-
-    &::-webkit-scrollbar-track {
-      background: transparent;
-    }
-
-    &::-webkit-scrollbar-button {
-      display: none;
-      width: 0;
-      height: 0;
-    }
+    max-height: none;
+    padding: 0 8px 16px;
   }
 
-  .list {
-    list-style: none;
-    margin: 0;
-    padding: 0;
-  }
-
-  .item {
+  .closeButton {
     display: flex;
-    flex-direction: column;
-    gap: 10px;
-    padding: 12px 16px;
-    background: v.$white;
-    border-bottom: 1px solid v.$gray-200;
-    cursor: pointer;
-
-    &:last-child {
-      border-bottom: none;
-    }
-
-    &:hover {
-      background-color: v.$gray-50;
-    }
   }
-
-  .message {
-    margin: 0;
-    color: v.$gray-800;
-    font-size: 14px;
-    font-weight: 400;
-  }
-
-  .date {
-    color: v.$gray-400;
-    font-size: 12px;
-    font-weight: 400;
-  }
-
-  .loading,
-  .empty {
-    flex: 1;
-    padding: 24px 16px;
-    text-align: center;
-    color: v.$gray-500;
-    font-size: 14px;
-  }
-
-  .empty {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-  }
-
-  @include m.mobile {
-    .dropdown {
-      position: fixed;
-      inset: 0;
-      width: 100vw;
-      height: 100vh;
-      max-height: none;
-      border: none;
-      border-radius: 0;
-      box-shadow: none;
-      padding-bottom: env(safe-area-inset-bottom);
-      overflow: auto;
-    }
-
-    .header {
-      min-height: 56px;
-      padding: 0 20px;
-    }
-
-    .body {
-      max-height: none;
-      padding: 0 8px 16px;
-    }
-
-    .closeButton {
-      display: flex;
-    }
-  }
+}
