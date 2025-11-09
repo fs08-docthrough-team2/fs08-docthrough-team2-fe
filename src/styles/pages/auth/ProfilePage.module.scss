@@ -1,0 +1,297 @@
+@use '@/styles/mixin' as m;
+@use '@/styles/variable' as v;
+
+.page {
+  width: 100%;
+  min-height: calc(100vh - 80px);
+  background: v.$white;
+  padding: 48px 0;
+
+  @include m.mobile {
+    padding: 32px 0;
+  }
+}
+
+.container {
+  @include m.center-container(800px);
+  display: flex;
+  flex-direction: column;
+  gap: 48px;
+
+  @include m.mobile {
+    gap: 32px;
+  }
+}
+
+// 프로필 섹션
+.profileSection {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 24px;
+  padding: 48px 32px;
+  background: linear-gradient(135deg, v.$brand-white 0%, v.$white 100%);
+  border-radius: 24px;
+  border: 1px solid v.$gray-100;
+
+  @include m.mobile {
+    padding: 32px 24px;
+    gap: 20px;
+  }
+}
+
+.profileImageWrapper {
+  position: relative;
+  width: 120px;
+  height: 120px;
+
+  @include m.mobile {
+    width: 100px;
+    height: 100px;
+  }
+}
+
+.profileImage {
+  width: 100%;
+  height: 100%;
+  border-radius: 50%;
+  object-fit: cover;
+  border: 4px solid v.$white;
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.08);
+}
+
+.editImageButton {
+  position: absolute;
+  bottom: 0;
+  right: 0;
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  background: v.$white;
+  border: 2px solid v.$gray-200;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  color: v.$gray-700;
+
+  &:hover {
+    background: v.$gray-50;
+    border-color: v.$gray-300;
+    transform: scale(1.05);
+  }
+
+  &:active {
+    transform: scale(0.95);
+  }
+
+  @include m.mobile {
+    width: 32px;
+    height: 32px;
+  }
+}
+
+.profileInfo {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 8px;
+  width: 100%;
+}
+
+.userName {
+  color: v.$gray-800;
+  font-size: 28px;
+  font-weight: 700;
+  line-height: 1.2;
+  margin: 0;
+
+  @include m.mobile {
+    font-size: 24px;
+  }
+}
+
+.userEmail {
+  color: v.$gray-500;
+  font-size: 16px;
+  font-weight: 400;
+  line-height: 1.5;
+  margin: 0;
+
+  @include m.mobile {
+    font-size: 14px;
+  }
+}
+
+// 통계 섹션
+.statsSection {
+  display: flex;
+  align-items: center;
+  justify-content: space-around;
+  background: v.$white;
+  border-radius: 16px;
+  border: 1px solid v.$gray-100;
+  padding: 32px 24px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04);
+
+  @include m.mobile {
+    padding: 24px 16px;
+    gap: 16px;
+  }
+}
+
+.statCard {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 8px;
+  flex: 1;
+
+  @include m.mobile {
+    gap: 4px;
+  }
+}
+
+.statNumber {
+  color: v.$gray-800;
+  font-size: 32px;
+  font-weight: 700;
+  line-height: 1.2;
+
+  @include m.mobile {
+    font-size: 24px;
+  }
+}
+
+.statLabel {
+  color: v.$gray-500;
+  font-size: 14px;
+  font-weight: 400;
+  line-height: 1.5;
+  text-align: center;
+
+  @include m.mobile {
+    font-size: 12px;
+  }
+}
+
+.statDivider {
+  width: 1px;
+  height: 48px;
+  background: v.$gray-200;
+  flex-shrink: 0;
+
+  @include m.mobile {
+    height: 40px;
+  }
+}
+
+// 액션 섹션
+.actionsSection {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  width: 100%;
+
+  @include m.mobile {
+    gap: 8px;
+  }
+}
+
+.actionButton {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  padding: 20px 24px;
+  background: v.$white;
+  border: 1px solid v.$gray-100;
+  border-radius: 16px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  text-align: left;
+  width: 100%;
+
+  &:hover {
+    background: v.$gray-50;
+    border-color: v.$gray-200;
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.06);
+  }
+
+  &:active {
+    transform: translateY(0);
+  }
+
+  @include m.mobile {
+    padding: 16px 20px;
+    gap: 12px;
+  }
+}
+
+.actionIcon {
+  width: 48px;
+  height: 48px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: v.$brand-white;
+  border-radius: 12px;
+  color: v.$gray-700;
+  flex-shrink: 0;
+
+  @include m.mobile {
+    width: 40px;
+    height: 40px;
+  }
+
+  svg {
+    width: 24px;
+    height: 24px;
+
+    @include m.mobile {
+      width: 20px;
+      height: 20px;
+    }
+  }
+}
+
+.actionContent {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.actionTitle {
+  color: v.$gray-800;
+  font-size: 16px;
+  font-weight: 600;
+  line-height: 1.5;
+
+  @include m.mobile {
+    font-size: 14px;
+  }
+}
+
+.actionDescription {
+  color: v.$gray-500;
+  font-size: 14px;
+  font-weight: 400;
+  line-height: 1.5;
+
+  @include m.mobile {
+    font-size: 12px;
+  }
+}
+
+.actionArrow {
+  color: v.$gray-400;
+  flex-shrink: 0;
+  transition: transform 0.2s ease;
+
+  .actionButton:hover & {
+    transform: translateX(4px);
+    color: v.$gray-600;
+  }
+}
