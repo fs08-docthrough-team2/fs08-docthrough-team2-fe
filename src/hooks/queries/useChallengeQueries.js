@@ -10,6 +10,7 @@ import {
   getChallengeParticipants,
   getMyAppliedChallenges,
   getChallengeApprovalDetail,
+  getAdminChallengeDetail,
 } from '@/services/challenge.service.js';
 
 const challengeDetailKey = (challengeId) => ['challenge-detail', challengeId];
@@ -120,4 +121,13 @@ export const useMyAppliedChallengeListQuery = ({
     queryFn: ({ signal }) =>
       getMyAppliedChallenges({ page, pageSize, searchKeyword, status, sort, signal }),
     keepPreviousData: true,
+  });
+
+// 챌린지 상세 조회 (어드민)
+export const useAdminChallengeDetailQuery = (challengeId, options = {}) =>
+  useQuery({
+    queryKey: ['admin-challenge-detail', challengeId],
+    enabled: Boolean(challengeId),
+    queryFn: () => getAdminChallengeDetail(challengeId),
+    ...options,
   });

@@ -2,7 +2,10 @@
 
 import { useMemo, useState } from 'react';
 import { useParams, useRouter } from 'next/navigation';
-import { useChallengeDetailQuery } from '@/hooks/queries/useChallengeQueries';
+import {
+  useChallengeDetailQuery,
+  useAdminChallengeDetailQuery,
+} from '@/hooks/queries/useChallengeQueries';
 import {
   useApproveChallengeMutation,
   useRejectChallengeMutation,
@@ -64,6 +67,8 @@ export default function AdminChallengeStatusPage() {
     enabled: Boolean(challengeId),
   });
 
+  const { data: adminDetail } = useAdminChallengeDetailQuery(challengeId);
+
   const approveMutation = useApproveChallengeMutation({
     onSuccess: () => {
       showToast({ kind: 'success', title: '챌린지를 승인했어요.' });
@@ -113,6 +118,7 @@ export default function AdminChallengeStatusPage() {
   });
 
   const challenge = detail?.data;
+  const adminData = adminDetail?.data;
   const isMutating = approveMutation.isPending || rejectMutation.isPending;
 
   const approvalStatus = useMemo(() => {
@@ -128,6 +134,9 @@ export default function AdminChallengeStatusPage() {
     () => FIELD_LABEL_MAP[challenge?.field] ?? challenge?.field ?? '-',
     [challenge?.field],
   );
+
+  const rejectionReasonValue =
+    adminData?.rejectReason ?? challenge?.rejectReason ?? challenge?.rejectionReason ?? '';
 
   const handleApprove = () => {
     if (!challengeId || isMutating) return;
@@ -193,7 +202,7 @@ export default function AdminChallengeStatusPage() {
         <ChallengeApprovalStatus
           status={approvalStatus}
           userName={challenge.submittedBy ?? ''}
-          reason={challenge.rejectionReason ?? ''}
+          reason={rejectionReasonValue}
           createdAt={challenge.appliedDate ? formatYYMMDD(challenge.appliedDate) : ''}
         />
 

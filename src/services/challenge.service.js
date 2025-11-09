@@ -269,3 +269,9 @@ export const rejectAdminChallenge = async ({ challengeId, reason }) => {
   const { data } = await api.patch(`/challenge/admin/new-challenge/reject/${challengeId}`, payload);
   return data;
 };
+
+// GET /challenge/admin/inquiry/challenge/:challengeId
+export const getAdminChallengeDetail = async (challengeId) => {
+  const { data } = await api.get(`/challenge/admin/inquiry/challenge/${challengeId}`);
+  return data;
+};
