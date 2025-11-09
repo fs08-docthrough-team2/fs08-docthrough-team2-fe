@@ -1,8 +1,9 @@
 'use client';
 
-import { useMemo, useState } from 'react';
+import { useState } from 'react';
 import { useChallenges } from '@/hooks/queries/useChallenge';
 import { useDebounce } from '@/hooks/useDebounce';
+import { useRouter } from 'next/navigation';
 import ChallengeListToolbar from '@/components/organisms/ChallengeListToolbar';
 import Pagination from '@/components/molecules/Pagination/Pagination.jsx';
 import ChallengeCard from '@/components/molecules/ChallengeCard/ChallengeCard.jsx';
@@ -10,6 +11,8 @@ import FilterPopup from '@/components/molecules/Popup/FilterPopup';
 import styles from '@/styles/pages/ChallengeList.module.scss';
 
 export default function ChallengeListPage() {
+  const router = useRouter();
+
   const [title, setTitle] = useState('');
   const [field, setField] = useState(''); // 문자열 | 객체 | 배열 OK
   const [type, setType] = useState(''); // 문자열 | 객체(단일 가정)
@@ -18,11 +21,6 @@ export default function ChallengeListPage() {
   const pageSize = 10;
 
   const dTitle = useDebounce(title, 300);
-
-  // const params = useMemo(
-  //   () => ({ title: dTitle, field, type, status, page, pageSize }),
-  //   [dTitle, field, type, status, page, pageSize],
-  // );
 
   const params = {
     title: dTitle,
@@ -41,18 +39,10 @@ export default function ChallengeListPage() {
     totalPages: Math.max(1, Math.ceil((items.length || 0) / pageSize)),
   };
 
-  // const cards = items.map((ch) => ({
-  //   key: ch.challengeId,
-  //   title: ch.title,
-  //   tags: [ch.field, ch.type].filter(Boolean), // 서버가 내려준 걸 그대로 보여줌
-  //   dateText: toKoDateText(ch.deadline),
-  //   progressText:
-  //     typeof ch.currentParticipants === 'number' && typeof ch.maxParticipants === 'number'
-  //       ? `${ch.currentParticipants}/${ch.maxParticipants} 참여중`
-  //       : '',
-  //   badge: ch.status ?? '',
-  // }));
+  //
+  console.log('pagination => ', pagination);
 
+  // TODO: window.location.href 사용 금지
   return (
     <main className={styles.page}>
       <header className={styles.header}>
@@ -63,7 +53,7 @@ export default function ChallengeListPage() {
             setTitle(next);
             setPage(1);
           }}
-          onCreateClick={() => (window.location.href = '/challenge/post')}
+          onCreateClick={() => router.push('/user/challenge/post')}
           filterSlot={
             <FilterPopup
               value={{ field, type, status }}
@@ -104,7 +94,6 @@ export default function ChallengeListPage() {
             ) : (
               items.map((item) => (
                 <ChallengeCard
-                  key={item.challengeId}
                   challengeName={item.title}
                   type={item.field}
                   category={item.type}
@@ -112,20 +101,19 @@ export default function ChallengeListPage() {
                   dueDate={item.deadline}
                   total={item.maxParticipants}
                   capacity={item.currentParticipants}
+                  onEdit={() => handleEdit(id)}
+                  onDelete={() => handleDelete(id)}
                 />
               ))
             )}
           </section>
-
-          <nav className={styles.pagination}>
+          <nav className={styles.paginationWrapper}>
             <Pagination
-              page={pagination.page}
+              currentPage={Math.min(pagination.page, pagination.totalPages)}
               totalPages={pagination.totalPages}
-              onChange={(next) => setPage(next)}
+              maxPages={5}
+              onPageChange={(next) => setPage(next)}
             />
-            <div style={{ fontSize: 12, opacity: 0.6, marginTop: 8 }}>
-              {`status: ${qStatus}, fetching: ${String(isFetching)}`}
-            </div>
           </nav>
         </>
       )}

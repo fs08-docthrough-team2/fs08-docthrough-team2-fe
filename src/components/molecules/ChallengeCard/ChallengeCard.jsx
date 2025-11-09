@@ -32,7 +32,7 @@ category: 챌린지 카테고리
 status: 챌린지 상태
 */
 const ChallengeCard = ({
-  isAdmin = false,
+  isAdmin,
   challengeId = '',
   challengeName = CARD_DATA.challengeName,
   type = CARD_DATA.type,
@@ -48,7 +48,7 @@ const ChallengeCard = ({
   const formattedDueDate = formatKoreanDate(dueDate);
 
   const handleClick = () => {
-    router.push(`/challenge/detail/${challengeId}`);
+    router.push(`/user/challenge/detail/${challengeId}`);
   };
 
   return (

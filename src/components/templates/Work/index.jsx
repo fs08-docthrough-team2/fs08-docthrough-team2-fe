@@ -128,7 +128,7 @@ const Work = ({
     if (isAdmin) {
       router.push(`/admin/${challengeId}/work/edit/${workId}`);
     } else {
-      router.push(`/${challengeId}/work/edit/${workId}`);
+      router.push(`/user/${challengeId}/work/edit/${workId}`);
     }
   };
 
@@ -144,7 +144,7 @@ const Work = ({
       },
       {
         onSuccess: () => {
-          router.push(`/challenge/detail/${challengeId}`);
+          router.push(`/user/challenge/detail/${challengeId}`);
           showToast({
             kind: 'success',
             title: '작업물 삭제 성공',

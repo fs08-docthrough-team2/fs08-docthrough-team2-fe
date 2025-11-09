@@ -49,7 +49,7 @@ const WorkEditPage = () => {
             kind: 'success',
             title: '작업물 수정 성공',
           });
-          router.push(`/${challengeId}/work/${workId}`);
+          router.push(`/user/${challengeId}/work/${workId}`);
         },
         onError: () => {
           showToast({

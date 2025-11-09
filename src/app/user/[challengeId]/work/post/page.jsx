@@ -106,7 +106,7 @@ const WorkPostPage = () => {
           });
           const attendId = data?.data?.attendId;
           if (attendId) {
-            router.push(`/${challengeId}/work/${attendId}`);
+            router.push(`/user/${challengeId}/work/${attendId}`);
           }
         },
         onError: () => {
@@ -144,7 +144,7 @@ const WorkPostPage = () => {
   };
 
   const handleQuit = () => {
-    router.push(`/challenge/detail/${challengeId}`);
+    router.push(`/user/challenge/detail/${challengeId}`);
   };
 
   return (

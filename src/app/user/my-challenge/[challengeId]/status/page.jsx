@@ -64,7 +64,7 @@ const ChallengeApprovalDetailPage = () => {
             kind: 'success',
             title: '챌린지를 취소 성공.',
           });
-          router.push('/my-challenge/apply');
+          router.push('/user/my-challenge/apply');
         },
         onError: () => {
           showToast({

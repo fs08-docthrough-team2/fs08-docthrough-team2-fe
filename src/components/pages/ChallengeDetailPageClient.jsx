@@ -44,7 +44,7 @@ const ChallengeDetailPageClient = ({ isAdmin = false }) => {
   const deleteChallengeMutation = useDeleteChallengeMutation({
     onSuccess: () => {
       showToast({ kind: 'success', title: '챌린지를 삭제했어요.' });
-      router.push(isAdmin ? '/admin' : '/challenge');
+      router.push(isAdmin ? '/admin' : '/user/challenge');
     },
     onError: (error) => {
       showToast({
@@ -159,7 +159,7 @@ const ChallengeDetailPageClient = ({ isAdmin = false }) => {
   };
 
   const handleEdit = () => {
-    const editPath = isAdmin ? `/admin/${challengeId}/edit` : `/challenge/edit/${challengeId}`;
+    const editPath = isAdmin ? `/admin/${challengeId}/edit` : `/user/challenge/edit/${challengeId}`;
     router.push(editPath);
   };
 
@@ -222,7 +222,7 @@ const ChallengeDetailPageClient = ({ isAdmin = false }) => {
                   window.open(challenge.source, '_blank', 'noopener,noreferrer');
                 }
               }}
-              onApplyClick={() => router.push(`/${challengeId}/work/post`)}
+              onApplyClick={() => router.push(`/user/${challengeId}/work/post`)}
               isApplyDisabled={isClosed}
             />
           </aside>
@@ -289,7 +289,7 @@ const ChallengeDetailPageClient = ({ isAdmin = false }) => {
 
                     const destination = isAdmin
                       ? `/admin/${challengeId}/work/${participant.attendId}`
-                      : `/${challengeId}/work/${participant.attendId}`;
+                      : `/user/${challengeId}/work/${participant.attendId}`;
 
                     return (
                       <List

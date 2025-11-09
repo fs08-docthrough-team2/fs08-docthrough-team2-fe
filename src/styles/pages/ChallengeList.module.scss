@@ -44,6 +44,22 @@
   justify-content: center;
 }
 
+.adminCardOverride {
+  /* ① CTA(도전 계속하기) 버튼 숨김 */
+  :global([class*='footerWrapper']) button {
+    display: none !important;
+  }
+
+  /* ② 점 3개 옵션 트리거를 우측 상단으로 밀기 */
+  :global([class*='statusWrapper']) {
+    display: flex;
+    align-items: center;
+  }
+  :global([class*='statusWrapper'] > *:last-child) {
+    margin-left: auto; /* 오른쪽 끝으로 */
+  }
+}
+
 /* 반응형 (iPad mini ~ 모바일) */
 @media (max-width: 744px) {
   .header,

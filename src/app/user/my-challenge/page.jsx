@@ -32,7 +32,7 @@ const MyChallengePage = () => {
 
   const handleCreateChallenge = (e) => {
     e.preventDefault();
-    router.push('/challenge/post');
+    router.push('/user/challenge/post');
   };
 
   const handleSearchChange = (e) => {
@@ -46,7 +46,7 @@ const MyChallengePage = () => {
 
   useEffect(() => {
     if (activeTab === 2) {
-      router.push('/my-challenge/apply');
+      router.push('/user/my-challenge/apply');
     }
   }, [activeTab, router]);
 

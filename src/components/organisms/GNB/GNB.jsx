@@ -25,8 +25,8 @@ const ADMIN_TABS = [
 const HIDDEN_ROUTES = new Set([
   '/auth/login',
   '/auth/signup',
-  '/:challengeId/work/post',
-  '/:challengeId/work/edit/:workId',
+  '/user/:challengeId/work/post',
+  '/user/:challengeId/work/edit/:workId',
   '/admin/:challengeId/work/edit/:workId',
 ]);
 
