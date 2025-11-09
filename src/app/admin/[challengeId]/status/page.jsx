@@ -234,19 +234,29 @@ export default function AdminChallengeStatusPage() {
                   />
                 </div>
                 <div className={styles.approveButtonWrapper}>
-                  <Button
-                    variant="solid"
-                    size="lg"
-                    onClick={handleApprove}
-                    disabled={isMutating}
-                    children={<span>{approveMutation.isPending ? '승인 중…' : '승인하기'}</span>}
-                  />
+                  <Button variant="solid" size="lg" onClick={handleApprove} disabled={isMutating}>
+                    {approveMutation.isPending ? '승인 중...' : '승인하기'}
+                  </Button>
                 </div>
               </div>
             )}
           </div>
         </div>
       </div>
+
+      <TextModal
+        isOpen={isRejectModalOpen}
+        title="거절 사유"
+        value={rejectReason}
+        placeholder="거절 사유를 입력해 주세요"
+        onChange={(event) => setRejectReason(event.target.value)}
+        onSubmit={handleRejectSubmit}
+        onClose={() => {
+          setRejectModalOpen(false);
+          setRejectReason('');
+        }}
+        isSubmitting={rejectMutation.isPending}
+      />
 
       <TextModal
         isOpen={isDeleteModalOpen}
