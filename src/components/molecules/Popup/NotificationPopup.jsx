@@ -31,12 +31,19 @@ const NotificationPopup = ({
     return () => document.removeEventListener('mousedown', handleClickOutside);
   }, []);
 
+  const closePopup = () => setIsOpen(false);
+
   const togglePopup = () => {
     const nextState = !isOpen;
     setIsOpen(nextState);
     if (nextState && typeof onRefresh === 'function') {
       onRefresh();
     }
+  };
+
+  const handleItemClick = (notification) => {
+    onClickNotification?.(notification);
+    closePopup();
   };
 
   return (
@@ -54,6 +61,9 @@ const NotificationPopup = ({
         <div className={dropdownClassName}>
           <div className={styles.header}>
             <h3>알림</h3>
+            <button type="button" className={styles.closeButton} onClick={closePopup}>
+              <Image src="/icon/ic_out.svg" alt="닫기" width={24} height={24} />
+            </button>
           </div>
 
           {isLoading ? (
@@ -69,10 +79,10 @@ const NotificationPopup = ({
                     className={styles.item}
                     role="button"
                     tabIndex={0}
-                    onClick={() => onClickNotification?.(notification)}
+                    onClick={() => handleItemClick(notification)}
                     onKeyDown={(event) => {
                       if (event.key === 'Enter' || event.key === ' ') {
-                        onClickNotification?.(notification);
+                        handleItemClick(notification);
                       }
                     }}
                   >
