@@ -1,7 +1,7 @@
 import api from '@/libs/api.js';
 
-export const createChallengeWork = async ({ challengeId, workItem }) => {
-  const res = await api.post('/challenge/work/translated-detail', { challengeId, workItem });
+export const createChallengeWork = async ({ challengeId, workItem, title }) => {
+  const res = await api.post('/challenge/work/translated-detail', { challengeId, workItem, title });
   return res.data;
 };
 
@@ -20,8 +20,12 @@ export const getChallengeWorkDraftDetail = async (attendId) => {
   return res.data;
 };
 
-export const createChallengeWorkDraft = async ({ challengeId, workItem }) => {
-  const res = await api.post('/challenge/work/translated-detail/save', { challengeId, workItem });
+export const createChallengeWorkDraft = async ({ challengeId, workItem, title }) => {
+  const res = await api.post('/challenge/work/translated-detail/save', {
+    challengeId,
+    workItem,
+    title,
+  });
   return res.data;
 };
 
