@@ -30,7 +30,7 @@ export default function ChallengePostPage() {
   const router = useRouter();
   const [form, setForm] = useState({
     title: '',
-    source: '',
+    source: 'https://',
     deadline: '',
     capacity: '',
     content: '',
