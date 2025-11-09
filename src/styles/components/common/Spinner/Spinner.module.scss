@@ -1,0 +1,35 @@
+@use '@/styles/variable' as v;
+@use '@/styles/mixin' as m;
+
+.spinner {
+  width: 120px;
+}
+
+.overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background-color: rgba(0, 0, 0, 0.1);
+  backdrop-filter: blur(4px);
+  z-index: 9999;
+  opacity: 1;
+  transition:
+    opacity 0.3s ease-out,
+    visibility 0.3s ease-out;
+  visibility: visible;
+}
+
+.overlay.visible {
+  opacity: 1;
+  visibility: visible;
+}
+
+.overlay.hidden {
+  opacity: 0;
+  visibility: hidden;
+}

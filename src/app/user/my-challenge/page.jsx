@@ -11,6 +11,7 @@ import Button from '@/components/atoms/Button/Button';
 import Tabs from '@/components/molecules/Tabs/Tabs';
 import SearchInput from '@/components/atoms/Input/SearchInput';
 import ChallengeCard from '@/components/molecules/ChallengeCard/ChallengeCard';
+import Spinner from '@/components/common/Spinner';
 
 import styles from '@/styles/pages/my-challenge/MyChallengePage.module.scss';
 
@@ -20,14 +21,18 @@ const MyChallengePage = () => {
   const [activeTab, setActiveTab] = useState(0);
   const debouncedSearch = useDebounce(searchValue, 300);
 
-  const { data: participateChallenge } = useGetIndividualParticipateChallengeList({
-    searchValue: debouncedSearch,
-  });
+  const { data: participateChallenge, isLoading: isParticipateChallengeLoading } =
+    useGetIndividualParticipateChallengeList({
+      searchValue: debouncedSearch,
+      enabled: activeTab === 0,
+    });
   const participateChallengeData = participateChallenge?.data?.participates ?? [];
 
-  const { data: completeChallenge } = useGetIndividualCompleteChallengeList({
-    searchValue: debouncedSearch,
-  });
+  const { data: completeChallenge, isLoading: isCompleteChallengeLoading } =
+    useGetIndividualCompleteChallengeList({
+      searchValue: debouncedSearch,
+      enabled: activeTab === 1,
+    });
   const completeChallengeData = completeChallenge?.data?.completes ?? [];
 
   const handleCreateChallenge = (e) => {
@@ -51,68 +56,71 @@ const MyChallengePage = () => {
   }, [activeTab, router]);
 
   return (
-    <div className={styles.page}>
-      <div className={styles.header}>
-        <div className={styles.headerContent}>
-          <div className={styles.headerTitleWrapper}>
-            <div className={styles.title}>나의 챌린지</div>
-            <Button
-              variant="solid"
-              size="pill"
-              children="신규 챌린지 신청"
-              icon="newChallenge"
-              onClick={handleCreateChallenge}
-            />
+    <>
+      <Spinner isLoading={isParticipateChallengeLoading || isCompleteChallengeLoading} />
+      <div className={styles.page}>
+        <div className={styles.header}>
+          <div className={styles.headerContent}>
+            <div className={styles.headerTitleWrapper}>
+              <div className={styles.title}>나의 챌린지</div>
+              <Button
+                variant="solid"
+                size="pill"
+                children="신규 챌린지 신청"
+                icon="newChallenge"
+                onClick={handleCreateChallenge}
+              />
+            </div>
+            <Tabs activeIndex={activeTab} onTabChange={handleTabChange} />
           </div>
-          <Tabs activeIndex={activeTab} onTabChange={handleTabChange} />
+          <SearchInput value={searchValue} onChange={handleSearchChange} />
         </div>
-        <SearchInput value={searchValue} onChange={handleSearchChange} />
+        <div className={styles.challengeListWrapper}>
+          {activeTab === 0 && (
+            <>
+              {participateChallengeData.length === 0 ? (
+                <div className={styles.empty}>아직 챌린지가 없어요.</div>
+              ) : (
+                participateChallengeData.map((challenge) => (
+                  <ChallengeCard
+                    key={challenge.challengeId}
+                    challengeId={challenge.challengeId}
+                    challengeName={challenge.title}
+                    type={challenge.field}
+                    category={challenge.type}
+                    status={challenge.status}
+                    dueDate={challenge.deadline}
+                    total={challenge.maxParticipants}
+                    capacity={challenge.currentParticipants}
+                  />
+                ))
+              )}
+            </>
+          )}
+          {activeTab === 1 && (
+            <>
+              {completeChallengeData.length === 0 ? (
+                <div className={styles.empty}>아직 챌린지가 없어요.</div>
+              ) : (
+                completeChallengeData.map((challenge) => (
+                  <ChallengeCard
+                    key={challenge.challengeId}
+                    challengeId={challenge.challengeId}
+                    challengeName={challenge.title}
+                    type={challenge.field}
+                    category={challenge.type}
+                    status={challenge.status}
+                    dueDate={challenge.deadline}
+                    total={challenge.maxParticipants}
+                    capacity={challenge.currentParticipants}
+                  />
+                ))
+              )}
+            </>
+          )}
+        </div>
       </div>
-      <div className={styles.challengeListWrapper}>
-        {activeTab === 0 && (
-          <>
-            {participateChallengeData.length === 0 ? (
-              <div className={styles.empty}>아직 챌린지가 없어요.</div>
-            ) : (
-              participateChallengeData.map((challenge) => (
-                <ChallengeCard
-                  key={challenge.challengeId}
-                  challengeId={challenge.challengeId}
-                  challengeName={challenge.title}
-                  type={challenge.field}
-                  category={challenge.type}
-                  status={challenge.status}
-                  dueDate={challenge.deadline}
-                  total={challenge.maxParticipants}
-                  capacity={challenge.currentParticipants}
-                />
-              ))
-            )}
-          </>
-        )}
-        {activeTab === 1 && (
-          <>
-            {completeChallengeData.length === 0 ? (
-              <div className={styles.empty}>아직 챌린지가 없어요.</div>
-            ) : (
-              completeChallengeData.map((challenge) => (
-                <ChallengeCard
-                  key={challenge.challengeId}
-                  challengeId={challenge.challengeId}
-                  challengeName={challenge.title}
-                  type={challenge.field}
-                  category={challenge.type}
-                  status={challenge.status}
-                  dueDate={challenge.deadline}
-                  total={challenge.maxParticipants}
-                  capacity={challenge.currentParticipants}
-                />
-              ))
-            )}
-          </>
-        )}
-      </div>
-    </div>
+    </>
   );
 };
 
