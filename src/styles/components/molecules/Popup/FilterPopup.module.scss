@@ -1,273 +1,273 @@
- @use '@/styles/mixin' as m;
-  @use '@/styles/variable' as v;
+@use '@/styles/mixin' as m;
+@use '@/styles/variable' as v;
 
-  .filterLayoutContainer {
-    position: relative;
-    display: inline-block;
+.filterLayoutContainer {
+  position: relative;
+  display: inline-block;
+}
+
+.triggerWrapper {
+  width: 112px;
+
+  > button {
+    border-radius: 32px;
+  }
+}
+
+.container {
+  position: absolute;
+  top: calc(100% + 8px);
+  left: 0;
+  z-index: 1000;
+  width: 343px;
+  max-height: 541px;
+  display: flex;
+  flex-direction: column;
+  border-radius: 16px;
+  border: 1px solid v.$gray-100;
+  background: v.$white;
+  box-shadow: 0 18px 40px rgba(15, 23, 42, 0.18);
+  overflow: hidden;
+}
+
+.header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 10px 20px;
+  flex-shrink: 0;
+
+  h2 {
+    margin: 0;
+    font-size: 16px;
+    font-weight: 600;
+    color: v.$gray-900;
   }
 
-  .triggerWrapper {
-    width: 112px;
+  .closeButton {
+    @include m.reset-button;
+    color: v.$gray-500;
+    font-size: 22px;
+    line-height: 1;
 
-    > button {
-      border-radius: 32px;
+    &:hover {
+      color: v.$gray-900;
     }
+  }
+}
+
+.body {
+  display: flex;
+  flex-direction: column;
+  padding: 0 20px;
+  border-top: 1px solid v.$gray-100;
+  border-bottom: 1px solid v.$gray-100;
+  flex: none;
+}
+
+.footer {
+  display: flex;
+  gap: 12px;
+  padding: 0 20px;
+  background: v.$gray-50;
+  flex-shrink: 0;
+  height: 56px;
+  align-items: center;
+}
+
+.buttonWrapper {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  height: 100%;
+
+  > div {
+    flex: 1;
+    display: flex;
+    align-items: center;
+  }
+
+  button {
+    flex: 1;
+    height: auto;
+    align-self: center;
+  }
+}
+
+.filterSection {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  box-sizing: border-box;
+  padding: 12px 0;
+
+  &:first-of-type {
+    height: 191px;
+  }
+
+  &:nth-of-type(2),
+  &:nth-of-type(3) {
+    height: 105px;
+  }
+
+  &:not(:last-child) {
+    border-bottom: 1px solid v.$gray-100;
+  }
+
+  .sectionTitle {
+    margin: 0 0 10px 0;
+    font-size: 14px;
+    font-weight: 600;
+    color: v.$gray-500;
+  }
+
+  .optionsContainer {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+  }
+}
+
+.optionItem {
+  display: flex;
+  align-items: center;
+  cursor: pointer;
+  font-size: 16px;
+  color: v.$gray-900;
+
+  input {
+    display: none;
+  }
+}
+
+.customCheckbox,
+.customRadio {
+  width: 20px;
+  height: 20px;
+  border: 1.5px solid v.$gray-300;
+  margin-right: 12px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  transition: all 0.2s ease;
+  background: v.$white;
+  flex-shrink: 0;
+}
+
+.customCheckbox {
+  border-radius: 4px;
+
+  &::after {
+    content: '✔';
+    font-size: 14px;
+    color: v.$white;
+    opacity: 0;
+    transform: scale(0.5);
+    transition: all 0.2s ease;
+  }
+}
+
+.customRadio {
+  border-radius: 50%;
+
+  &::after {
+    content: '';
+    width: 10px;
+    height: 10px;
+    background-color: v.$white;
+    border-radius: 50%;
+    opacity: 0;
+    transform: scale(0.5);
+    transition: all 0.2s ease;
+  }
+}
+
+.optionItem input:checked + .customCheckbox,
+.optionItem input:checked + .customRadio {
+  border-color: v.$brand-black;
+  background: v.$brand-black;
+}
+
+.optionItem input:checked + .customCheckbox::after,
+.optionItem input:checked + .customRadio::after {
+  opacity: 1;
+  transform: scale(1);
+}
+
+/* 모바일 전체 화면 & 간격 조정 */
+@include m.mobile {
+  .filterLayoutContainer {
+    position: static;
+    width: 100%;
   }
 
   .container {
-    position: absolute;
-    top: calc(100% + 8px);
-    left: 0;
-    z-index: 1000;
-    width: 343px;
-    max-height: 541px;
-    display: flex;
-    flex-direction: column;
-    border-radius: 16px;
-    border: 1px solid v.$gray-100;
+    position: fixed;
+    inset: 0;
+    width: 100vw;
+    height: 100vh;
+    max-height: none;
+    border: none;
+    border-radius: 0;
+    box-shadow: none;
     background: v.$white;
-    box-shadow: 0 18px 40px rgba(15, 23, 42, 0.18);
-    overflow: hidden;
+    overflow-y: auto;
+    padding-bottom: env(safe-area-inset-bottom, 0);
   }
 
   .header {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    padding: 10px 20px;
-    flex-shrink: 0;
+    padding: 16px 24px;
 
     h2 {
-      margin: 0;
-      font-size: 16px;
-      font-weight: 600;
-      color: v.$gray-900;
-    }
-
-    .closeButton {
-      @include m.reset-button;
-      color: v.$gray-500;
-      font-size: 22px;
-      line-height: 1;
-
-      &:hover {
-        color: v.$gray-900;
-      }
+      font-size: 18px;
+      letter-spacing: 0.01em;
     }
   }
 
   .body {
-    display: flex;
-    flex-direction: column;
-    padding: 0 20px;
-    border-top: 1px solid v.$gray-100;
-    border-bottom: 1px solid v.$gray-100;
-    flex: none;
-  }
-
-  .footer {
-    display: flex;
-    gap: 12px;
-    padding: 0 20px;
-    background: v.$gray-50;
-    flex-shrink: 0;
-    height: 56px;
-    align-items: center;
-  }
-
-  .buttonWrapper {
     flex: 1;
-    display: flex;
-    align-items: center;
-    height: 100%;
-
-    > div {
-      flex: 1;
-      display: flex;
-      align-items: center;
-    }
-
-    button {
-      flex: 1;
-      height: auto;
-      align-self: center;
-    }
+    padding: 12px 24px 24px;
+    border-top: none;
+    border-bottom: none;
+    gap: 16px;
   }
 
   .filterSection {
-    display: flex;
-    flex-direction: column;
-    width: 100%;
-    box-sizing: border-box;
-    padding: 12px 0;
-
-    &:first-of-type {
-      height: 191px;
-    }
-
-    &:nth-of-type(2),
-    &:nth-of-type(3) {
-      height: 105px;
-    }
+    padding: 20px 0 16px;
+    border-bottom: none !important;
 
     &:not(:last-child) {
-      border-bottom: 1px solid v.$gray-100;
+      border-bottom: none !important;
+      margin-bottom: 18px;
     }
 
     .sectionTitle {
-      margin: 0 0 10px 0;
-      font-size: 14px;
-      font-weight: 600;
-      color: v.$gray-500;
+      font-size: 15px;
+      margin-bottom: 14px;
+      letter-spacing: 0.01em;
     }
 
     .optionsContainer {
-      flex: 1;
-      display: flex;
-      flex-direction: column;
-      gap: 10px;
+      gap: 14px;
     }
   }
 
   .optionItem {
-    display: flex;
-    align-items: center;
-    cursor: pointer;
-    font-size: 16px;
-    color: v.$gray-900;
-
-    input {
-      display: none;
-    }
+    font-size: 17px;
+    line-height: 1.4;
   }
 
-  .customCheckbox,
-  .customRadio {
-    width: 20px;
-    height: 20px;
-    border: 1.5px solid v.$gray-300;
-    margin-right: 12px;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    transition: all 0.2s ease;
+  .footer {
+    position: sticky;
+    bottom: 0;
+    padding: 12px 24px 16px;
+    gap: 16px;
     background: v.$white;
-    flex-shrink: 0;
+    border-top: 1px solid v.$gray-100;
   }
 
-  .customCheckbox {
-    border-radius: 4px;
-
-    &::after {
-      content: '✔';
-      font-size: 14px;
-      color: v.$white;
-      opacity: 0;
-      transform: scale(0.5);
-      transition: all 0.2s ease;
-    }
+  .buttonWrapper button {
+    height: 48px;
   }
-
-  .customRadio {
-    border-radius: 50%;
-
-    &::after {
-      content: '';
-      width: 10px;
-      height: 10px;
-      background-color: v.$white;
-      border-radius: 50%;
-      opacity: 0;
-      transform: scale(0.5);
-      transition: all 0.2s ease;
-    }
-  }
-
-  .optionItem input:checked + .customCheckbox,
-  .optionItem input:checked + .customRadio {
-    border-color: v.$brand-black;
-    background: v.$brand-black;
-  }
-
-  .optionItem input:checked + .customCheckbox::after,
-  .optionItem input:checked + .customRadio::after {
-    opacity: 1;
-    transform: scale(1);
-  }
-
-  /* 모바일 전체 화면 & 간격 조정 */
-  @include m.mobile {
-    .filterLayoutContainer {
-      position: static;
-      width: 100%;
-    }
-
-    .container {
-      position: fixed;
-      inset: 0;
-      width: 100vw;
-      height: 100vh;
-      max-height: none;
-      border: none;
-      border-radius: 0;
-      box-shadow: none;
-      background: v.$white;
-      overflow-y: auto;
-      padding-bottom: env(safe-area-inset-bottom, 0);
-    }
-
-    .header {
-      padding: 16px 24px;
-
-      h2 {
-        font-size: 18px;
-        letter-spacing: 0.01em;
-      }
-    }
-
-    .body {
-      flex: 1;
-      padding: 12px 24px 24px;
-      border-top: none;
-      border-bottom: none;
-      gap: 16px;
-    }
-
-    .filterSection {
-      padding: 20px 0 16px;
-      border-bottom: none !important;
-
-      &:not(:last-child) {
-        border-bottom: none !important;
-        margin-bottom: 18px;
-      }
-
-      .sectionTitle {
-        font-size: 15px;
-        margin-bottom: 14px;
-        letter-spacing: 0.01em;
-      }
-
-      .optionsContainer {
-        gap: 14px;
-      }
-    }
-
-    .optionItem {
-      font-size: 17px;
-      line-height: 1.4;
-    }
-
-    .footer {
-      position: sticky;
-      bottom: 0;
-      padding: 12px 24px 16px;
-      gap: 16px;
-      background: v.$white;
-      border-top: 1px solid v.$gray-100;
-    }
-
-    .buttonWrapper button {
-      height: 48px;
-    }
-  }
+}
