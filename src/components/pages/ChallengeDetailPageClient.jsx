@@ -158,6 +158,7 @@ const ChallengeDetailPageClient = ({ isAdmin = false }) => {
   }
 
   const isClosed = Boolean(isClosedByStatus || isClosedByDeadline || isFull);
+  const isApplyDisabled = isAdmin || isClosed;
 
   const handlePrev = () => {
     if (canPrev) setPage((prev) => prev - 1);
@@ -237,8 +238,11 @@ const ChallengeDetailPageClient = ({ isAdmin = false }) => {
                   window.open(challenge.source, '_blank', 'noopener,noreferrer');
                 }
               }}
-              onApplyClick={() => router.push(`/user/${challengeId}/work/post`)}
-              isApplyDisabled={isClosed}
+              onApplyClick={() => {
+                if (isAdmin) return;
+                router.push(`/user/${challengeId}/work/post`);
+              }}
+              isApplyDisabled={isApplyDisabled}
             />
           </aside>
         </section>
