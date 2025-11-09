@@ -13,6 +13,7 @@ import List from '@/components/atoms/List/List';
 import TextModal from '@/components/molecules/Modal/TextModal';
 import ChallengeCardDetail from '@/components/molecules/ChallengeCard/ChallengeCardDetail';
 import ChallengeContainer from '@/components/molecules/ChallengeContainer/ChallengeContainer';
+import CardStatusChip from '@/components/atoms/Chips/CardStatusChip.jsx';
 import icArrowLeft from '/public/icon/pagination/ic_arrow_left.svg';
 import icArrowLeftDisabled from '/public/icon/pagination/ic_arrow_left_disabled.svg';
 import icArrowRight from '/public/icon/pagination/ic_arrow_right.svg';
@@ -130,6 +131,22 @@ const ChallengeDetailPageClient = ({ isAdmin = false }) => {
   const canPrev = page > 1;
   const canNext = page < inferredTotalPages;
 
+  const closedStatusSet = new Set(['DEADLINE', 'ISCLOSED', 'ISCOMPLETED', 'CANCELLED']);
+  const isClosedByStatus = closedStatusSet.has(challenge?.status);
+  const isClosedByDeadline =
+    challenge?.deadline && new Date(challenge.deadline).getTime() < Date.now();
+  const isFull =
+    Number.isFinite(challenge?.currentParticipants) &&
+    Number.isFinite(challenge?.maxParticipants) &&
+    challenge.currentParticipants >= challenge.maxParticipants;
+
+  const derivedCardStatus = useMemo(() => {
+    if (!challenge) return null;
+    if (isClosedByStatus || isClosedByDeadline) return 'ISCLOSED';
+    if (isFull) return 'ISCOMPLETED';
+    return null;
+  }, [challenge, isClosedByStatus, isClosedByDeadline, isFull]);
+
   if (!challengeId) {
     return <div className={styles.page}>잘못된 접근입니다.</div>;
   }
@@ -140,15 +157,7 @@ const ChallengeDetailPageClient = ({ isAdmin = false }) => {
     return <div className={styles.page}>챌린지 정보를 가져오지 못했습니다.</div>;
   }
 
-  const closedStatusSet = new Set(['DEADLINE', 'ISCLOSED', 'ISCOMPLETED', 'CANCELLED']);
-  const isClosedByStatus = closedStatusSet.has(challenge.status);
-  const isClosedByDeadline =
-    challenge.deadline && new Date(challenge.deadline).getTime() < Date.now();
-  const isFull =
-    Number.isFinite(challenge.currentParticipants) &&
-    Number.isFinite(challenge.maxParticipants) &&
-    challenge.currentParticipants >= challenge.maxParticipants;
-  const isClosed = isClosedByStatus || isClosedByDeadline || isFull;
+  const isClosed = Boolean(isClosedByStatus || isClosedByDeadline || isFull);
 
   const handlePrev = () => {
     if (canPrev) setPage((prev) => prev - 1);
@@ -174,21 +183,21 @@ const ChallengeDetailPageClient = ({ isAdmin = false }) => {
   };
 
   const authorName =
-    challenge?.submittedBy ??
+    challenge.submittedBy ??
     topParticipantNickname ??
-    challenge?.ownerNickName ??
-    challenge?.author ??
-    '유저';
+    challenge.ownerNickName ??
+    challenge.author ??
+    '익명';
 
   const roleLabel = (role) => {
     switch (role) {
       case 'ADMIN':
-        return '어드민';
+        return '관리자';
       case 'EXPERT':
         return '전문가';
       case 'USER':
       default:
-        return '유저';
+        return '사용자';
     }
   };
 
@@ -197,6 +206,12 @@ const ChallengeDetailPageClient = ({ isAdmin = false }) => {
       <div className={styles.inner}>
         <section className={styles.headerRow}>
           <div className={styles.detailCard}>
+            {derivedCardStatus && (
+              <div className={styles.closedTagWrapper}>
+                <CardStatusChip status={derivedCardStatus} />
+              </div>
+            )}
+
             <ChallengeCardDetail
               challengeName={challenge.title ?? ''}
               type={challenge.field ?? ''}
@@ -319,7 +334,7 @@ const ChallengeDetailPageClient = ({ isAdmin = false }) => {
         isOpen={isDeleteModalOpen}
         title="챌린지 삭제"
         value={deleteReason}
-        placeholder="삭제 이유를 입력해 주세요."
+        placeholder="삭제 이유를 입력해주세요"
         onChange={(event) => setDeleteReason(event.target.value)}
         onSubmit={handleDeleteSubmit}
         onClose={() => {
