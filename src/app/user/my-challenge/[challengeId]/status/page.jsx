@@ -1,21 +1,22 @@
 'use client';
 
+import Image from 'next/image';
+import { useState } from 'react';
+import { useParams, useRouter } from 'next/navigation';
 import {
   useGetChallengeDetail,
   useGetChallengeApprovalDetail,
 } from '@/hooks/queries/useChallengeQueries';
 import { useCancelChallengeMutation } from '@/hooks/mutations/useChallengeMutations';
-import { useState } from 'react';
-import { useParams, useRouter } from 'next/navigation';
-import Image from 'next/image';
+import { showToast } from '@/components/common/Sonner';
+import { formatToKoreanHyphenDate } from '@/libs/day';
 import ChallengeApprovalStatus from '@/components/atoms/ChallengeApprovalStatus/ChallengeApprovalStatus';
 import ChallengeCardDetail from '@/components/molecules/ChallengeCard/ChallengeCardDetail';
 import LinkPreview from '@/components/common/LinkPreview/LinkPreview';
-import { showToast } from '@/components/common/Sonner';
+import TwoButtonModal from '@/components/molecules/Modal/TwoButtonModal';
 
 import ic_stroke from '/public/stroke.svg';
 import styles from '@/styles/pages/my-challenge/ChallengeApprovalDetailPage.module.scss';
-import TwoButtonModal from '@/components/molecules/Modal/TwoButtonModal';
 
 const ChallengeApprovalDetailPage = () => {
   const router = useRouter();
@@ -39,6 +40,8 @@ const ChallengeApprovalDetailPage = () => {
     status = 'deleted';
   } else if (challengeApprovalDetail?.data?.isReject) {
     status = 'rejected';
+  } else if (challengeApprovalDetail?.data?.isApprove) {
+    status = 'approved';
   }
 
   let reason = '';
@@ -47,6 +50,8 @@ const ChallengeApprovalDetailPage = () => {
   } else if (challengeApprovalDetail?.data?.isReject) {
     reason = challengeApprovalDetail?.data?.rejectReason;
   }
+
+  const formattedDate = formatToKoreanHyphenDate(challengeApprovalDetail?.data?.updatedAt);
 
   const handlePendingChallengeCancel = () => {
     cancelChallengeMutation.mutate(
@@ -59,7 +64,7 @@ const ChallengeApprovalDetailPage = () => {
             kind: 'success',
             title: '챌린지를 취소 성공.',
           });
-          router.push('/my-challenge/apply');
+          router.push('/user/my-challenge/apply');
         },
         onError: () => {
           showToast({
@@ -83,7 +88,7 @@ const ChallengeApprovalDetailPage = () => {
           children="정말 취소하시겠어요?"
         />
       )}
-      <ChallengeApprovalStatus status={status} reason={reason} />
+      <ChallengeApprovalStatus status={status} reason={reason} createdAt={formattedDate} />
       <div className={styles.stroke}>
         <Image src={ic_stroke} alt="stroke" width={890} height={0} />
       </div>

@@ -1,6 +1,6 @@
 import { useState, useEffect, useRef } from 'react';
 import styles from '@/styles/components/organisms/ChallengeListToolbar.module.scss';
-import SearchInput from '@/components/atoms/input/SearchInput.jsx';
+import SearchInput from '@/components/atoms/Input/SearchInput';
 import FilterPopup from '@/components/molecules/Popup/FilterPopup.jsx';
 import { useRouter } from 'next/navigation';
 

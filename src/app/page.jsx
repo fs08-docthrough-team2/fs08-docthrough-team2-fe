@@ -1,13 +1,23 @@
 'use client';
 
 import Image from 'next/image';
-import Link from 'next/link';
 import styles from '@/styles/pages/LandingPage.module.scss';
 import Button from '@/components/atoms/Button/Button.jsx';
 import { useRouter } from 'next/navigation';
+import { useAuthStore } from '@/stores/useAuthStore';
+import { useEffect } from 'react';
 
 export default function LandingPage() {
   const router = useRouter();
+  const { user, isUserLoaded } = useAuthStore();
+
+  useEffect(() => {
+    if (isUserLoaded && user?.role === 'USER') {
+      router.replace('/user/challenge');
+    } else if (isUserLoaded && user?.role === 'ADMIN') {
+      router.replace('/admin');
+    }
+  }, [isUserLoaded, user, router]);
 
   return (
     <main>
@@ -33,7 +43,7 @@ export default function LandingPage() {
           </h1>
           {/* tonal | outline | transparent | solid | filled */}
           {/* CTA 버튼 */}
-          <Button variant="outline" size="pill" onClick={() => router.push('/challenge')}>
+          <Button variant="outline" size="pill" onClick={() => router.push('/user/challenge')}>
             번역 시작하기
           </Button>
         </div>
@@ -105,7 +115,7 @@ export default function LandingPage() {
       {/* ── Final CTA ──────────────────── */}
       <section className={styles.finalCTA}>
         <h2>함께 번역하고 성장하세요!</h2>
-        <Button variant="solid" size="lg" onClick={() => router.push('/challenge')}>
+        <Button variant="solid" size="lg" onClick={() => router.push('/user/challenge')}>
           번역 시작하기
         </Button>
       </section>

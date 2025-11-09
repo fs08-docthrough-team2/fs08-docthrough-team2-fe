@@ -87,7 +87,9 @@ export default function ChallengeEditPage() {
         kind: 'success',
         title: '챌린지를 수정했어요.',
       });
-      router.push(isAdmin ? `/admin/${challengeId}/status` : `/challenge/detail/${challengeId}`);
+      router.push(
+        isAdmin ? `/admin/${challengeId}/status` : `/user/challenge/detail/${challengeId}`,
+      );
     },
     onError: (error) => {
       const message = error.response?.data?.message;

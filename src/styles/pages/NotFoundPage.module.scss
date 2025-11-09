@@ -1,0 +1,129 @@
+@use '@/styles/variable' as v;
+@use '@/styles/mixin' as m;
+
+.container {
+  width: 100%;
+  min-height: 100vh;
+  background: v.$brand-white;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 24px 16px;
+  box-sizing: border-box;
+}
+
+.content {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  max-width: 600px;
+  width: 100%;
+}
+
+.errorCode {
+  font-family: 'Pretendard', sans-serif;
+  font-size: 120px;
+  font-weight: 800;
+  line-height: 1;
+  color: v.$brand-black;
+  margin-bottom: 24px;
+  letter-spacing: -2px;
+  opacity: 0.9;
+}
+
+.imageWrapper {
+  margin-bottom: 32px;
+  opacity: 0.6;
+}
+
+.emptyImage {
+  width: 100%;
+  max-width: 320px;
+  height: auto;
+}
+
+.title {
+  font-family: 'Pretendard', sans-serif;
+  font-size: 24px;
+  font-weight: 700;
+  line-height: 1.5;
+  color: v.$brand-black;
+  margin: 0 0 12px 0;
+  letter-spacing: -0.3px;
+}
+
+.description {
+  font-family: 'Pretendard', sans-serif;
+  font-size: 16px;
+  font-weight: 400;
+  line-height: 1.6;
+  color: v.$gray-600;
+  margin: 0 0 40px 0;
+  letter-spacing: -0.2px;
+}
+
+.buttonWrapper {
+  display: flex;
+  justify-content: center;
+  width: 100%;
+}
+
+// 태블릿 (≤768px)
+@include m.tablet {
+  .errorCode {
+    font-size: 96px;
+    margin-bottom: 20px;
+  }
+
+  .imageWrapper {
+    margin-bottom: 28px;
+  }
+
+  .emptyImage {
+    max-width: 280px;
+  }
+
+  .title {
+    font-size: 22px;
+    margin-bottom: 10px;
+  }
+
+  .description {
+    font-size: 15px;
+    margin-bottom: 36px;
+  }
+}
+
+// 모바일 (≤480px)
+@include m.mobile {
+  .container {
+    padding: 20px 16px;
+  }
+
+  .errorCode {
+    font-size: 72px;
+    margin-bottom: 16px;
+    letter-spacing: -1px;
+  }
+
+  .imageWrapper {
+    margin-bottom: 24px;
+  }
+
+  .emptyImage {
+    max-width: 240px;
+  }
+
+  .title {
+    font-size: 20px;
+    margin-bottom: 8px;
+  }
+
+  .description {
+    font-size: 14px;
+    margin-bottom: 32px;
+    line-height: 1.5;
+  }
+}

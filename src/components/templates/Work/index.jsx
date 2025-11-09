@@ -24,8 +24,8 @@ import styles from '@/styles/components/templates/Work/Work.module.scss';
 import { useRouter, useParams } from 'next/navigation';
 import { useLikeToggleMutation } from '@/hooks/mutations/useChallengeWorkMutations';
 import { showToast } from '@/components/common/Sonner';
-import TwoButtonModal from '@/components/molecules/Modal/TwoButtonModal';
-import { useDeleteChallengeWorkMutation } from '@/hooks/mutations/useChallengeWorkMutations';
+import { useDeleteChallengeWorkWithReasonMutation } from '@/hooks/mutations/useChallengeWorkMutations';
+import TextModal from '@/components/molecules/Modal/TextModal';
 
 const Work = ({
   isMyWork = false,
@@ -46,14 +46,13 @@ const Work = ({
   const [commentValue, setCommentValue] = useState('');
   const [isLiked, setIsLiked] = useState(likeByMe);
   const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
-  const [isDeleteConfirmModalOpen, setIsDeleteConfirmModalOpen] = useState(false);
   const [deleteReason, setDeleteReason] = useState('');
 
   const createFeedbackMutation = useCreateFeedbackMutation();
   const updateFeedbackMutation = useUpdateFeedbackMutation();
   const deleteFeedbackMutation = useDeleteFeedbackMutation();
   const likeToggleMutation = useLikeToggleMutation();
-  const deleteChallengeWorkMutation = useDeleteChallengeWorkMutation();
+  const deleteChallengeWorkWithReasonMutation = useDeleteChallengeWorkWithReasonMutation();
 
   const {
     data: feedbackList,
@@ -129,43 +128,27 @@ const Work = ({
     if (isAdmin) {
       router.push(`/admin/${challengeId}/work/edit/${workId}`);
     } else {
-      router.push(`/${challengeId}/work/edit/${workId}`);
+      router.push(`/user/${challengeId}/work/edit/${workId}`);
     }
   };
 
   const handleWorkDelete = () => {
-    if (!isAdmin) {
-      setIsDeleteConfirmModalOpen(true);
-    } else if (isAdmin) {
-      setIsDeleteModalOpen(true);
-    }
+    setIsDeleteModalOpen(true);
   };
 
-  /*
-  TODO 어드민 삭제 관련 로직 추가
-  const handleDeleteReasonChange = (e) => {
-    setDeleteReason(e.target.value);
-  };
-
-  const handleAdminDeleteWithReason = () => {
-    console.log('handleAdminDeleteWithReason', deleteReason);
-  }
-  */
-
-  const handleWorkDeleteConfirm = () => {
-    console.log('handleWorkDeleteConfirm');
-    setIsDeleteConfirmModalOpen(false);
-    deleteChallengeWorkMutation.mutate(
+  const handleDeleteWithReason = () => {
+    deleteChallengeWorkWithReasonMutation.mutate(
       {
-        attendId: workId,
+        attendId,
+        deleteReason,
       },
       {
         onSuccess: () => {
+          router.push(`/user/challenge/detail/${challengeId}`);
           showToast({
             kind: 'success',
             title: '작업물 삭제 성공',
           });
-          router.push(`/challenge/detail/${challengeId}`);
         },
         onError: () => {
           showToast({
@@ -230,12 +213,16 @@ const Work = ({
 
   return (
     <>
-      {isDeleteConfirmModalOpen && (
-        <TwoButtonModal
-          isOpen={isDeleteConfirmModalOpen}
-          onClose={() => setIsDeleteConfirmModalOpen(false)}
-          onConfirm={handleWorkDeleteConfirm}
-          children="정말 삭제하시겠어요?"
+      {isDeleteModalOpen && (
+        <TextModal
+          isOpen={isDeleteModalOpen}
+          title="삭제 사유"
+          value={deleteReason}
+          onChange={(e) => setDeleteReason(e.target.value)}
+          onClose={() => setIsDeleteModalOpen(false)}
+          placeholder="삭제 사유를 입력해주세요"
+          isSubmitting={false}
+          onSubmit={handleDeleteWithReason}
         />
       )}
       <div className={styles.titleHeader}>

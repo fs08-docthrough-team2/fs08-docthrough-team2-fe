@@ -7,7 +7,6 @@ import {
   useGetChallengeDetail,
   useChallengeParticipantsQuery,
 } from '@/hooks/queries/useChallengeQueries';
-import { useIsAdmin } from '@/hooks/useAuthStatus';
 import { useDeleteChallengeMutation } from '@/hooks/mutations/useChallengeMutations';
 import { showToast } from '@/components/common/Sonner';
 import List from '@/components/atoms/List/List';
@@ -22,10 +21,9 @@ import styles from '@/styles/pages/challenge/detail/ChallengeDetailPage.module.s
 
 const ITEMS_PER_PAGE = 5;
 
-const ChallengeDetailPage = () => {
+const ChallengeDetailPageClient = ({ isAdmin = false }) => {
   const router = useRouter();
   const { challengeId } = useParams();
-  const isAdmin = useIsAdmin();
   const [page, setPage] = useState(1);
   const [topParticipantNickname, setTopParticipantNickname] = useState(null);
   const [isDeleteModalOpen, setDeleteModalOpen] = useState(false);
@@ -46,7 +44,7 @@ const ChallengeDetailPage = () => {
   const deleteChallengeMutation = useDeleteChallengeMutation({
     onSuccess: () => {
       showToast({ kind: 'success', title: '챌린지를 삭제했어요.' });
-      router.push(isAdmin ? '/admin' : '/challenge');
+      router.push(isAdmin ? '/admin' : '/user/challenge');
     },
     onError: (error) => {
       showToast({
@@ -161,7 +159,8 @@ const ChallengeDetailPage = () => {
   };
 
   const handleEdit = () => {
-    router.push(isAdmin ? `/admin/${challengeId}/edit` : `/challenge/edit/${challengeId}`);
+    const editPath = isAdmin ? `/admin/${challengeId}/edit` : `/user/challenge/edit/${challengeId}`;
+    router.push(editPath);
   };
 
   const handleOpenDeleteModal = () => {
@@ -223,7 +222,7 @@ const ChallengeDetailPage = () => {
                   window.open(challenge.source, '_blank', 'noopener,noreferrer');
                 }
               }}
-              onApplyClick={() => router.push(`/${challengeId}/work/post`)}
+              onApplyClick={() => router.push(`/user/${challengeId}/work/post`)}
               isApplyDisabled={isClosed}
             />
           </aside>
@@ -290,7 +289,7 @@ const ChallengeDetailPage = () => {
 
                     const destination = isAdmin
                       ? `/admin/${challengeId}/work/${participant.attendId}`
-                      : `/${challengeId}/work/${participant.attendId}`;
+                      : `/user/${challengeId}/work/${participant.attendId}`;
 
                     return (
                       <List
@@ -333,4 +332,4 @@ const ChallengeDetailPage = () => {
   );
 };
 
-export default ChallengeDetailPage;
+export default ChallengeDetailPageClient;

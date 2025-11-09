@@ -3,6 +3,7 @@
 import { useState } from 'react';
 import { useChallenges } from '@/hooks/queries/useChallenge';
 import { useDebounce } from '@/hooks/useDebounce';
+import { useRouter } from 'next/navigation';
 import ChallengeListToolbar from '@/components/organisms/ChallengeListToolbar';
 import Pagination from '@/components/molecules/Pagination/Pagination.jsx';
 import ChallengeCard from '@/components/molecules/ChallengeCard/ChallengeCard.jsx';
@@ -10,6 +11,8 @@ import FilterPopup from '@/components/molecules/Popup/FilterPopup';
 import styles from '@/styles/pages/ChallengeList.module.scss';
 
 export default function ChallengeListPage() {
+  const router = useRouter();
+
   const [title, setTitle] = useState('');
   const [field, setField] = useState(''); // 문자열 | 객체 | 배열 OK
   const [type, setType] = useState(''); // 문자열 | 객체(단일 가정)
@@ -39,6 +42,7 @@ export default function ChallengeListPage() {
   //
   console.log('pagination => ', pagination);
 
+  // TODO: window.location.href 사용 금지
   return (
     <main className={styles.page}>
       <header className={styles.header}>
@@ -49,7 +53,7 @@ export default function ChallengeListPage() {
             setTitle(next);
             setPage(1);
           }}
-          onCreateClick={() => (window.location.href = '/challenge/post')}
+          onCreateClick={() => router.push('/user/challenge/post')}
           filterSlot={
             <FilterPopup
               value={{ field, type, status }}

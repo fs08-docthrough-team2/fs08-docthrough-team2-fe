@@ -88,7 +88,7 @@ export default function ChallengePostPage() {
           kind: 'success',
           title: '챌린지 등록 성공',
         });
-        router.push(`/my-challenge/${challengeId}/status`);
+        router.push(`/user/my-challenge/${challengeId}/status`);
       },
       onError: (error) => {
         const message = error.response?.data?.message ?? '챌린지 등록 실패';

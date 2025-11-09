@@ -67,7 +67,7 @@ export default function MyChallengeApplyPage() {
 
   const handleCreateChallenge = (e) => {
     e.preventDefault();
-    router.push('/challenge/post');
+    router.push('/user/challenge/post');
   };
 
   const handleSearch = (value) => {
@@ -79,13 +79,13 @@ export default function MyChallengeApplyPage() {
 
   const handleClickTitle = (challengeId) => {
     if (!challengeId) return;
-    router.push(`/my-challenge/${challengeId}/status`);
+    router.push(`/user/my-challenge/${challengeId}/status`);
   };
 
   const handleTabChange = (index) => {
     if (index === 2) return;
-    if (index === 0) router.push('/my-challenge');
-    if (index === 1) router.push('/my-challenge');
+    if (index === 0) router.push('/user/my-challenge');
+    if (index === 1) router.push('/user/my-challenge');
   };
 
   return (

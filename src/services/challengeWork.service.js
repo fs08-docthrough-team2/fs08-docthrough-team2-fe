@@ -35,7 +35,9 @@ export const LikeToggle = async ({ attendId }) => {
   return res.data;
 };
 
-export const deleteChallengeWork = async ({ attendId }) => {
-  const res = await api.delete(`/challenge/work/translated-detail/${attendId}`);
+export const deleteChallengeWorkWithReason = async ({ attendId, deleteReason }) => {
+  const res = await api.delete(`/challenge/work/translated-detail/${attendId}`, {
+    data: { deleteReason },
+  });
   return res.data;
 };
