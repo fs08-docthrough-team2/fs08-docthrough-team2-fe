@@ -3,14 +3,14 @@
 
 import { useMemo, useState } from 'react';
 import clsx from 'clsx';
-import { challengeSortOptions } from '@/constants/sortOptions.js';
+import { filterSortOptions } from '@/constants/sortOptions.js';
 import DropdownList from '../../atoms/Dropdown/DropdownList';
 import DropdownTrigger from '../../atoms/Dropdown/DropdownTrigger';
 import styles from '@/styles/components/molecules/Dropdown/DropdownSort.module.scss';
 
 function DropdownSort({
   className,
-  options = challengeSortOptions,
+  options = filterSortOptions,
   value = null,
   defaultLabel = '정렬',
   onChange,
