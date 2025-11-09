@@ -1,10 +1,11 @@
 'use client';
 
-import { useMemo, useState } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { useCreateChallengeMutation } from '@/hooks/mutations/useChallengeMutations';
 import { formatUTCDate } from '@/libs/day';
 import { showToast } from '@/components/common/Sonner';
+import Spinner from '@/components/common/Spinner';
 import BaseInput from '@/components/atoms/Input/BaseInput';
 import DateInput from '@/components/atoms/Input/DateInput';
 import TextBox from '@/components/atoms/Input/TextBox';
@@ -52,6 +53,15 @@ export default function ChallengePostPage() {
   );
 
   const createChallengeMutation = useCreateChallengeMutation();
+  const isSubmitting = createChallengeMutation.isPending;
+
+  const [isPageLoading, setIsPageLoading] = useState(true);
+  useEffect(() => {
+    const timer = setTimeout(() => setIsPageLoading(false), 0);
+    return () => clearTimeout(timer);
+  }, []);
+
+  const isBusy = isPageLoading || isSubmitting;
 
   const handleChange = (key) => (event) =>
     setForm((prev) => ({ ...prev, [key]: event.target.value }));
@@ -63,6 +73,7 @@ export default function ChallengePostPage() {
 
   const handleSubmit = (event) => {
     event.preventDefault();
+    if (isBusy) return;
 
     const isValid =
       requestBody.title &&
@@ -101,69 +112,81 @@ export default function ChallengePostPage() {
   };
 
   return (
-    <section className={styles.wrapper}>
-      <h1 className={styles.title}>신규 챌린지 신청</h1>
-      <form className={styles.form} onSubmit={handleSubmit}>
-        <BaseInput
-          name="title"
-          label="제목"
-          placeholder="제목을 입력해주세요"
-          value={form.title}
-          onChange={handleChange('title')}
-        />
-
-        <BaseInput
-          name="source"
-          type="url"
-          label="원문 링크"
-          placeholder="원문 링크를 입력해주세요"
-          value={form.source}
-          onChange={handleChange('source')}
-        />
-
-        <div className={styles.rowDropdown}>
-          <span className={styles.label}>분야</span>
-          <div className={styles.dropdown}>
-            <DropdownCategory onSelect={setFieldLabel} />
-          </div>
-        </div>
-
-        <div className={styles.rowDropdown}>
-          <span className={styles.label}>문서 타입</span>
-          <div className={styles.dropdown}>
-            <DropdownDocument onSelect={setTypeLabel} />
-          </div>
-        </div>
-
-        <DateInput label="마감일" value={form.deadline} onChange={handleChange('deadline')} />
-
-        <BaseInput
-          name="capacity"
-          type="number"
-          label="최대 인원"
-          placeholder="인원을 입력해주세요"
-          value={form.capacity}
-          onChange={handleCapacityChange}
-          inputProps={{ min: 1 }}
-        />
-
-        <div>
-          <span className={styles.label}>내용</span>
-          <TextBox
-            className={styles.textBox}
-            id="challenge-content"
-            name="content"
-            placeholder="내용을 입력해주세요"
-            value={form.content}
-            onChange={handleChange('content')}
+    <>
+      <Spinner isLoading={isBusy} />
+      <section className={styles.wrapper} aria-busy={isBusy}>
+        <h1 className={styles.title}>신규 챌린지 신청</h1>
+        <form className={styles.form} onSubmit={handleSubmit}>
+          <BaseInput
+            name="title"
+            label="제목"
+            placeholder="제목을 입력해주세요"
+            value={form.title}
+            onChange={handleChange('title')}
+            disabled={isBusy}
           />
-        </div>
-        <div>
-          <Button variant="solid" size="lg" disabled={createChallengeMutation.isPending}>
-            {createChallengeMutation.isPending ? '등록 중…' : '신청하기'}
-          </Button>
-        </div>
-      </form>
-    </section>
+
+          <BaseInput
+            name="source"
+            type="url"
+            label="원문 링크"
+            placeholder="원문 링크를 입력해주세요"
+            value={form.source}
+            onChange={handleChange('source')}
+          />
+
+          <div className={styles.rowDropdown}>
+            <span className={styles.label}>분야</span>
+            <div className={styles.dropdown}>
+              <DropdownCategory onSelect={setFieldLabel} disabled={isBusy} />
+            </div>
+          </div>
+
+          <div className={styles.rowDropdown}>
+            <span className={styles.label}>문서 종류</span>
+            <div className={styles.dropdown}>
+              <DropdownDocument onSelect={setTypeLabel} disabled={isBusy} />
+            </div>
+          </div>
+
+          <DateInput
+            label="마감일"
+            value={form.deadline}
+            onChange={handleChange('deadline')}
+            disabled={isBusy}
+          />
+
+          <BaseInput
+            name="capacity"
+            type="number"
+            label="최대 참여 인원"
+            placeholder="인원을 입력해주세요"
+            value={form.capacity}
+            onChange={handleCapacityChange}
+            inputProps={{ min: 1 }}
+            disabled={isBusy}
+          />
+
+          <div>
+            <span className={styles.label}>내용</span>
+            <TextBox
+              className={styles.textBox}
+              id="challenge-content"
+              name="content"
+              placeholder="내용을 입력해주세요"
+              value={form.content}
+              onChange={handleChange('content')}
+              disabled={isBusy}
+            />
+          </div>
+
+          <div>
+            <Button variant="solid" size="lg" disabled={isBusy}>
+              {isBusy ? '처리 중...' : '신청하기'}
+            </Button>
+          </div>
+        </form>
+      </section>
+    </>
   );
 }
