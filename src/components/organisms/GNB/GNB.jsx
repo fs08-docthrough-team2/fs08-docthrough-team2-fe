@@ -40,8 +40,8 @@ const GNB = ({ notifications = [] }) => {
   const normalizedPath = (pathname ?? '').replace(/\/+$/, '');
   const isHiddenRoute =
     HIDDEN_ROUTES.has(normalizedPath) ||
-    /^\/[^/]+\/work\/post$/.test(normalizedPath) ||
-    /^\/[^/]+\/work\/edit\/[^/]+$/.test(normalizedPath) ||
+    /^\/user\/[^/]+\/work\/post$/.test(normalizedPath) ||
+    /^\/user\/[^/]+\/work\/edit\/[^/]+$/.test(normalizedPath) ||
     /^\/admin\/[^/]+\/work\/edit\/[^/]+$/.test(normalizedPath);
   if (isHiddenRoute) {
     return null;
