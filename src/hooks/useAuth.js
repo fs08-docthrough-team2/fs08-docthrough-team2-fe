@@ -27,7 +27,7 @@ export const useLogin = () => {
         kind: 'success',
         title: '로그인 성공',
       });
-      router.push('/');
+      router.push('/user/challenge');
     } catch (error) {
       showToast({
         kind: 'error',
@@ -61,7 +61,7 @@ export const useSignup = () => {
         kind: 'success',
         title: '회원가입 성공',
       });
-      router.push('/');
+      router.push('/user/challenge');
     } catch (error) {
       showToast({
         kind: 'error',

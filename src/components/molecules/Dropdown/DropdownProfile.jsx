@@ -41,7 +41,7 @@ const ROLE_LABEL_BY_TYPE = {
 };
 
 const OPTION_ROUTE_MAP = {
-  '나의 챌린지': '/my-challenge',
+  '나의 챌린지': '/user/my-challenge',
 };
 
 function DropdownProfile({ userType = 'user', options, userInfo, onSelect }) {

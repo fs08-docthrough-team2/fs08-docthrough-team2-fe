@@ -4,12 +4,12 @@ import { useAuthStore } from '@/stores/useAuthStore';
 import { useRouter } from 'next/navigation';
 import { useEffect } from 'react';
 
-const AuthLayout = ({ children }) => {
+const UserLayout = ({ children }) => {
   const { user, isUserLoaded } = useAuthStore();
   const router = useRouter();
 
   useEffect(() => {
-    if (isUserLoaded && user) {
+    if (isUserLoaded && user?.role !== 'USER') {
       router.replace('/');
     }
   }, [isUserLoaded, user, router]);
@@ -17,4 +17,4 @@ const AuthLayout = ({ children }) => {
   return <>{children}</>;
 };
 
-export default AuthLayout;
+export default UserLayout;

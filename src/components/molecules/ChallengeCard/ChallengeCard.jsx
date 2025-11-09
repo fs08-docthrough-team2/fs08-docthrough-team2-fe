@@ -48,7 +48,7 @@ const ChallengeCard = ({
   const formattedDueDate = formatKoreanDate(dueDate);
 
   const handleClick = () => {
-    router.push(`/challenge/detail/${challengeId}`);
+    router.push(`/user/challenge/detail/${challengeId}`);
   };
 
   return (
