@@ -97,3 +97,13 @@ export const useLogout = () => {
 
   return { logout };
 };
+
+export const useGoogleLogin = () => {
+  const API_URL = 'https://fs08-docthrough.onrender.com/api';
+
+  const googleOAuth = () => {
+    window.location.href = `${API_URL}/auth/google/login`;
+  };
+
+  return { googleOAuth };
+};
