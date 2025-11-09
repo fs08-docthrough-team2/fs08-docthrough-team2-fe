@@ -17,14 +17,17 @@ import TwoButtonModal from '@/components/molecules/Modal/TwoButtonModal';
 
 import ic_stroke from '/public/stroke.svg';
 import styles from '@/styles/pages/my-challenge/ChallengeApprovalDetailPage.module.scss';
+import Spinner from '@/components/common/Spinner';
 
 const ChallengeApprovalDetailPage = () => {
   const router = useRouter();
   const { challengeId } = useParams();
   const [isCancelModalOpen, setIsCancelModalOpen] = useState(false);
 
-  const { data: challengeDetail } = useGetChallengeDetail(challengeId);
-  const { data: challengeApprovalDetail } = useGetChallengeApprovalDetail(challengeId);
+  const { data: challengeDetail, isLoading: isChallengeDetailLoading } =
+    useGetChallengeDetail(challengeId);
+  const { data: challengeApprovalDetail, isLoading: isChallengeApprovalDetailLoading } =
+    useGetChallengeApprovalDetail(challengeId);
 
   const cancelChallengeMutation = useCancelChallengeMutation();
 
@@ -77,40 +80,43 @@ const ChallengeApprovalDetailPage = () => {
   };
 
   return (
-    <div className={styles.page}>
-      {isCancelModalOpen && (
-        <TwoButtonModal
-          isOpen={isCancelModalOpen}
-          onClose={() => setIsCancelModalOpen(false)}
-          onConfirm={handlePendingChallengeCancel}
-          confirmText="네"
-          cancelText="아니오"
-          children="정말 취소하시겠어요?"
-        />
-      )}
-      <ChallengeApprovalStatus status={status} reason={reason} createdAt={formattedDate} />
-      <div className={styles.stroke}>
-        <Image src={ic_stroke} alt="stroke" width={890} height={0} />
-      </div>
-      <div className={styles.content}>
-        <ChallengeCardDetail
-          isMyChallenge={true}
-          challengeName={challengeDetail?.data?.title}
-          type={challengeDetail?.data?.field}
-          category={challengeDetail?.data?.type}
-          description={challengeDetail?.data?.content}
-          dueDate={challengeDetail?.data?.deadline}
-          total={challengeDetail?.data?.maxParticipants}
-          isPending={isPending}
-          onCancel={() => setIsCancelModalOpen(true)}
-        />
-        <Image src={ic_stroke} alt="stroke" width={890} height={0} />
-        <div className={styles.description}>
-          <div className={styles.title}>원문 링크</div>
-          <LinkPreview url={challengeDetail?.data?.source} />
+    <>
+      <Spinner isLoading={isChallengeDetailLoading || isChallengeApprovalDetailLoading} />
+      <div className={styles.page}>
+        {isCancelModalOpen && (
+          <TwoButtonModal
+            isOpen={isCancelModalOpen}
+            onClose={() => setIsCancelModalOpen(false)}
+            onConfirm={handlePendingChallengeCancel}
+            confirmText="네"
+            cancelText="아니오"
+            children="정말 취소하시겠어요?"
+          />
+        )}
+        <ChallengeApprovalStatus status={status} reason={reason} createdAt={formattedDate} />
+        <div className={styles.stroke}>
+          <Image src={ic_stroke} alt="stroke" width={890} height={0} />
+        </div>
+        <div className={styles.content}>
+          <ChallengeCardDetail
+            isMyChallenge={true}
+            challengeName={challengeDetail?.data?.title}
+            type={challengeDetail?.data?.field}
+            category={challengeDetail?.data?.type}
+            description={challengeDetail?.data?.content}
+            dueDate={challengeDetail?.data?.deadline}
+            total={challengeDetail?.data?.maxParticipants}
+            isPending={isPending}
+            onCancel={() => setIsCancelModalOpen(true)}
+          />
+          <Image src={ic_stroke} alt="stroke" width={890} height={0} />
+          <div className={styles.description}>
+            <div className={styles.title}>원문 링크</div>
+            <LinkPreview url={challengeDetail?.data?.source} />
+          </div>
         </div>
       </div>
-    </div>
+    </>
   );
 };
 

@@ -14,17 +14,19 @@ import {
 
 const challengeDetailKey = (challengeId) => ['challenge-detail', challengeId];
 
-export const useGetIndividualParticipateChallengeList = ({ searchValue = '' }) => {
+export const useGetIndividualParticipateChallengeList = ({ searchValue = '', enabled = true }) => {
   return useQuery({
     queryKey: ['individual-participate-challenge-list', searchValue],
     queryFn: ({ signal }) => getIndividualParticipateChallengeList({ searchValue, signal }),
+    enabled,
   });
 };
 
-export const useGetIndividualCompleteChallengeList = ({ searchValue = '' }) => {
+export const useGetIndividualCompleteChallengeList = ({ searchValue = '', enabled = true }) => {
   return useQuery({
     queryKey: ['individual-complete-challenge-list', searchValue],
     queryFn: ({ signal }) => getIndividualCompleteChallengeList({ searchValue, signal }),
+    enabled,
   });
 };
 
