@@ -94,6 +94,8 @@ export default function ChallengeListPage() {
             ) : (
               items.map((item) => (
                 <ChallengeCard
+                  key={item.challengeId} // ✅ key 추가
+                  challengeId={item.challengeId}
                   challengeName={item.title}
                   type={item.field}
                   category={item.type}

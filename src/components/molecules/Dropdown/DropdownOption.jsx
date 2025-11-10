@@ -11,6 +11,7 @@ const DROPDOWN_OPTIONS = [
   { key: 'edit', label: '수정하기' },
   { key: 'delete', label: '삭제하기' },
 ];
+
 const CANCEL_OPTION = [{ key: 'cancel', label: '취소하기' }];
 
 function DropdownOption({
@@ -54,11 +55,9 @@ function DropdownOption({
   }, [isOpen]);
   return (
     <div className={styles.dropdown} ref={dropdownRef}>
-      {' '}
       <button type="button" className={styles.optionTriggerButton} onClick={handleToggle}>
-        {' '}
-        <Image src={optionTriggerIcon} alt="option button" width={16} height={16} priority />{' '}
-      </button>{' '}
+        <Image src={optionTriggerIcon} alt="option button" width={16} height={16} />
+      </button>
       <DropdownList
         options={optionLabels}
         isOpen={isOpen}
@@ -68,7 +67,8 @@ function DropdownOption({
         optionClassName={styles.optionButton}
         placement="right"
         onClickOutside={() => setIsOpen(false)}
-      />{' '}
+        className={styles.dropdownList}
+      />
     </div>
   );
 }
