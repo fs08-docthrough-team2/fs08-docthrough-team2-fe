@@ -1,6 +1,6 @@
 'use client';
 
-import { useMemo, useState } from 'react';
+import { useState } from 'react';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { useRouter } from 'next/navigation';
 import { useDebounce } from '@/hooks/useDebounce';
@@ -13,6 +13,7 @@ import styles from '@/styles/pages/ChallengeList.module.scss';
 import TextModal from '@/components/molecules/Modal/TextModal.jsx';
 import { showToast } from '@/components/common/Sonner';
 import { deleteAdminChallenge } from '@/services/admin.challenge.service.js';
+import Spinner from '@/components/common/Spinner';
 
 const PAGE_SIZE = 10;
 
@@ -29,37 +30,22 @@ export default function AdminChallengeListPage() {
 
   const dTitle = useDebounce(title, 300);
 
-  const params = useMemo(
-    () => ({
-      page,
-      pageSize: PAGE_SIZE,
-      searchKeyword: dTitle || undefined,
-      status: status || undefined,
-      // field, type은 어드민 API에 없으므로 훅에서 무시됨(유지해도 무방)
-      field,
-      type,
-    }),
-    [page, dTitle, status, field, type],
-  );
+  const params = {
+    title: dTitle,
+    field,
+    type,
+    status,
+    page,
+    pageSize: PAGE_SIZE,
+  };
 
   const { data, isLoading, isFetching, isError, error } = useAdminChallengeListQuery(params);
 
-  // 응답 정규화
-  const items = useMemo(() => {
-    const raw = data?.data ?? data?.items ?? [];
-    return Array.isArray(raw) ? raw : [];
-  }, [data]);
-
-  const pagination = useMemo(() => {
-    const p = data?.pagination;
-    if (p) {
-      return {
-        page: Math.max(1, Number(p.page ?? page)),
-        totalPages: Math.max(1, Number(p.totalPages ?? 1)),
-      };
-    }
-    return { page, totalPages: Math.max(1, Math.ceil((items.length || 0) / PAGE_SIZE)) };
-  }, [data?.pagination, items.length, page]);
+  const items = data?.items ?? [];
+  const pagination = data?.pagination ?? {
+    page,
+    totalPages: Math.max(1, Math.ceil((items.length || 0) / PAGE_SIZE)),
+  };
 
   // 삭제 모달
   const [isDeleteOpen, setIsDeleteOpen] = useState(false);
@@ -145,7 +131,7 @@ export default function AdminChallengeListPage() {
         />
       </header>
 
-      {(isLoading || isFetching) && <section className={styles.list}>불러오는 중…</section>}
+      {<Spinner isLoading={isLoading || isFetching} />}
       {isError && (
         <section className={styles.list}>
           에러: {error?.response?.data?.message || error?.message || '요청 실패'}
@@ -183,7 +169,7 @@ export default function AdminChallengeListPage() {
                     }}
                   >
                     <ChallengeCard
-                      isAdmin
+                      isAdmin={true}
                       challengeId={id}
                       challengeName={item.title}
                       type={item.field}
