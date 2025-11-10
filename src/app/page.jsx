@@ -43,7 +43,7 @@ export default function LandingPage() {
           </h1>
           {/* tonal | outline | transparent | solid | filled */}
           {/* CTA 버튼 */}
-          <Button variant="outline" size="pill" onClick={() => router.push('/user/challenge')}>
+          <Button variant="outline" size="pill" onClick={() => router.push('/auth/login')}>
             번역 시작하기
           </Button>
         </div>
