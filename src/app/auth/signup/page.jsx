@@ -14,8 +14,8 @@ import EmailInput from '@/components/atoms/Input/EmailInput.jsx';
 import PasswordInput from '@/components/atoms/Input/PasswordInput.jsx';
 import Button from '@/components/atoms/Button/Button.jsx';
 import AuthEntry from '@/components/atoms/AuthEntry/AuthEntry.jsx';
-import GoogleLoginButton from '@/components/common/OAuth/GoogleLoginButton.jsx';
 import BaseInput from '@/components/atoms/Input/BaseInput.jsx';
+import OAuthWrapper from '@/components/common/OAuth/OAuthWrapper';
 
 import img_logo from '/public/image/img_logo.svg';
 import styles from '@/styles/pages/auth/SignupPage.module.scss';
@@ -99,7 +99,7 @@ const SignupPage = () => {
             onClick={handleSubmit}
             disabled={!isValidate || isLoading}
           />
-          <GoogleLoginButton disabled={isLoading} />
+          <OAuthWrapper disabled={isLoading} />
         </div>
         <AuthEntry type="login" />
       </form>
