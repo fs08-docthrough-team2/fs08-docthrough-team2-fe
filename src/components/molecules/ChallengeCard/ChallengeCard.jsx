@@ -10,6 +10,7 @@ import CategoryChip from '@/components/atoms/Chips/CategoryChip.jsx';
 import DropdownOption from '@/components/molecules/Dropdown/DropdownOption.jsx';
 import CardStatusChip from '@/components/atoms/Chips/CardStatusChip.jsx';
 import { useRouter } from 'next/navigation';
+import { deriveCardStatus } from '@/utils/deriveCardStatus.js';
 
 const CARD_DATA = {
   challengeName: 'Next.js - App Router: Routing Fundamentals',
@@ -36,6 +37,7 @@ const ChallengeCard = ({
 }) => {
   const router = useRouter();
   const formattedDueDate = formatKoreanDate(dueDate);
+  const derivedCardStatus = deriveCardStatus({ status, dueDate, total, capacity });
 
   const handleClick = () => {
     if (!challengeId) return; // 안전장치
@@ -50,9 +52,7 @@ const ChallengeCard = ({
       <div className={styles.contentWrapper}>
         <div className={styles.titleWrapper}>
           <div className={styles.statusWrapper}>
-            {(status === 'ISCOMPLETED' || status === 'ISCLOSED') && (
-              <CardStatusChip status={status} />
-            )}
+            {derivedCardStatus && <CardStatusChip status={derivedCardStatus} />}
             {isAdmin && <DropdownOption onEdit={onEdit} onDelete={onDelete} />}
           </div>
           <div className={styles.title}>{challengeName}</div>

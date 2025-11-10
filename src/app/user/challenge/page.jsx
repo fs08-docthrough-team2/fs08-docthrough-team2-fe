@@ -8,6 +8,7 @@ import ChallengeListToolbar from '@/components/organisms/ChallengeListToolbar';
 import Pagination from '@/components/molecules/Pagination/Pagination.jsx';
 import ChallengeCard from '@/components/molecules/ChallengeCard/ChallengeCard.jsx';
 import FilterPopup from '@/components/molecules/Popup/FilterPopup';
+import Spinner from '@/components/common/Spinner';
 import styles from '@/styles/pages/ChallengeList.module.scss';
 
 export default function ChallengeListPage() {
@@ -79,7 +80,8 @@ export default function ChallengeListPage() {
         />
       </header>
 
-      {(isLoading || isFetching) && <section className={styles.list}>불러오는 중…</section>}
+      {/* {(isLoading || isFetching) && <section className={styles.list}>불러오는 중…</section>} */}
+      {<Spinner isLoading={isLoading || isFetching} />}
       {isError && (
         <section className={styles.list}>
           에러: {error?.response?.data?.message || error?.message || '요청 실패'}

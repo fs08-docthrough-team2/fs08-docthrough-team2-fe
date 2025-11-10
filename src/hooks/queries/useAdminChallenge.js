@@ -1,38 +1,25 @@
 'use client';
 
 import { useQuery } from '@tanstack/react-query';
-import api from '@/libs/api';
+import { fetchChallenges } from '@/services/challenge.service';
 
-const ADMIN_LIST_ENDPOINT = '/challenge/admin/inquiry/challenge-list';
-
-// 문서 그대로 쓰니 굳이 변환 안 해도 됨(남겨둠)
-const STATUS_MAP = {
-  신청승인: '신청승인',
-  신청거절: '신청거절',
-  신청취소: '신청취소',
-  신청대기: '신청대기',
-};
+const keyify = (v) => (Array.isArray(v) || typeof v === 'object' ? JSON.stringify(v) : (v ?? ''));
 
 export function useAdminChallengeListQuery(params = {}) {
-  const { page = 1, pageSize = 10, searchKeyword = '', status = '' } = params;
-
-  const p = Math.max(1, Number(page) || 1); // ✅ 1-based
-  const size = Math.max(1, Number(pageSize) || 10);
-  const kw = (searchKeyword || '').trim();
-  const st = STATUS_MAP[status] ?? status;
+  const { title = '', field = '', type = '', status = '', page = 1, pageSize = 10 } = params;
 
   return useQuery({
-    queryKey: ['admin-challenge-list', p, size, kw, st],
-    queryFn: async ({ signal }) => {
-      const query = {
-        page: p, // ✅ 1-based
-        size, // ✅ key는 size
-        ...(kw ? { searchKeyword: kw } : {}),
-        ...(st ? { status: st } : {}),
-      };
-      const { data } = await api.get(ADMIN_LIST_ENDPOINT, { params: query, signal });
-      return data; // { data/items, pagination{ page,totalPages,totalCount } }
-    },
+    queryKey: [
+      'admin-challenge-list',
+      keyify(title),
+      keyify(field),
+      keyify(type),
+      keyify(status),
+      Number(page) || 1,
+      Number(pageSize) || 10,
+    ],
+    queryFn: ({ signal }) =>
+      fetchChallenges({ title, field, type, status, page, pageSize, signal }),
     keepPreviousData: true,
     staleTime: 30_000,
   });
