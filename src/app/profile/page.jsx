@@ -2,16 +2,18 @@
 
 import { useState } from 'react';
 import Image from 'next/image';
-import styles from '@/styles/pages/auth/ProfilePage.module.scss';
+import { useRouter } from 'next/navigation';
 import { useGetProfile } from '@/hooks/queries/useProfileQueries';
-import Spinner from '@/components/common/Spinner';
 import { useUpdateProfileMutation } from '@/hooks/mutations/useProfileMutations';
+import Spinner from '@/components/common/Spinner';
 import { showToast } from '@/components/common/Sonner';
+
+import styles from '@/styles/pages/auth/ProfilePage.module.scss';
 
 const ProfilePage = () => {
   const [isEditing, setIsEditing] = useState(false);
   const [editName, setEditName] = useState('');
-
+  const router = useRouter();
   const { data: myProfile, isLoading: isMyProfileLoading } = useGetProfile();
   const updateProfileMutation = useUpdateProfileMutation();
 
@@ -61,6 +63,14 @@ const ProfilePage = () => {
         },
       },
     );
+  };
+
+  const handleMyChallengesClick = () => {
+    router.push('/user/my-challenge');
+  };
+
+  const handleTotalWorksClick = () => {
+    router.push('/user/my-challenge');
   };
 
   return (
@@ -114,17 +124,19 @@ const ProfilePage = () => {
           </div>
 
           {/* 통계 섹션 */}
-          <div className={styles.statsSection}>
-            <div className={styles.statCard}>
-              <div className={styles.statNumber}>{USER_DATA.stats.myChallenges}</div>
-              <div className={styles.statLabel}>참여 중인 챌린지</div>
+          {(role === 'USER' || role === 'EXPERT') && (
+            <div className={styles.statsSection}>
+              <div className={styles.statCard} onClick={handleMyChallengesClick}>
+                <div className={styles.statNumber}>{USER_DATA.stats.myChallenges}</div>
+                <div className={styles.statLabel}>참여 중인 챌린지</div>
+              </div>
+              <div className={styles.statDivider}></div>
+              <div className={styles.statCard} onClick={handleTotalWorksClick}>
+                <div className={styles.statNumber}>{USER_DATA.stats.totalWorks}</div>
+                <div className={styles.statLabel}>작성한 작업물</div>
+              </div>
             </div>
-            <div className={styles.statDivider}></div>
-            <div className={styles.statCard}>
-              <div className={styles.statNumber}>{USER_DATA.stats.totalWorks}</div>
-              <div className={styles.statLabel}>작성한 작업물</div>
-            </div>
-          </div>
+          )}
         </div>
       </div>
     </>
