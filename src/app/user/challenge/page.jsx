@@ -9,7 +9,7 @@ import Pagination from '@/components/molecules/Pagination/Pagination.jsx';
 import ChallengeCard from '@/components/molecules/ChallengeCard/ChallengeCard.jsx';
 import FilterPopup from '@/components/molecules/Popup/FilterPopup';
 import Spinner from '@/components/common/Spinner';
-import styles from '@/styles/pages/ChallengeList.module.scss';
+import styles from '@/styles/pages/ChallengeListPage.module.scss';
 
 export default function ChallengeListPage() {
   const router = useRouter();

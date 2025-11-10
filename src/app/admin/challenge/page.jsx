@@ -9,11 +9,11 @@ import ChallengeListToolbar from '@/components/organisms/ChallengeListToolbar';
 import Pagination from '@/components/molecules/Pagination/Pagination.jsx';
 import ChallengeCard from '@/components/molecules/ChallengeCard/ChallengeCard.jsx';
 import FilterPopup from '@/components/molecules/Popup/FilterPopup';
-import styles from '@/styles/pages/ChallengeList.module.scss';
 import TextModal from '@/components/molecules/Modal/TextModal.jsx';
 import { showToast } from '@/components/common/Sonner';
 import { deleteAdminChallenge } from '@/services/admin.challenge.service.js';
 import Spinner from '@/components/common/Spinner';
+import styles from '@/styles/pages/ChallengeListPage.module.scss';
 
 const PAGE_SIZE = 10;
 

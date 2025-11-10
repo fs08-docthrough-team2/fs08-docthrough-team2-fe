@@ -2,6 +2,7 @@ import Image from 'next/image';
 import { useRouter } from 'next/navigation';
 import { deriveCardStatus } from '@/utils/deriveCardStatus.js';
 import { formatKoreanDate } from '@/libs/day.js';
+import clsx from 'clsx';
 import Button from '@/components/atoms/Button/Button.jsx';
 import TypeChip from '@/components/atoms/Chips/TypeChip.jsx';
 import CategoryChip from '@/components/atoms/Chips/CategoryChip.jsx';
@@ -64,12 +65,21 @@ const ChallengeCard = ({
   return (
     <div className={styles.card}>
       <div className={styles.contentWrapper}>
-        <div className={styles.titleWrapper}>
+        <div
+          className={clsx(styles.titleWrapper, {
+            [styles.titleWrapperWithStatus]: derivedCardStatus,
+          })}
+        >
           <div className={styles.statusWrapper}>
             {derivedCardStatus && <CardStatusChip status={derivedCardStatus} />}
-            {isAdmin && <DropdownOption onEdit={onEdit} onDelete={onDelete} />}
+            {isAdmin && derivedCardStatus && <DropdownOption onEdit={onEdit} onDelete={onDelete} />}
           </div>
-          <div className={styles.title}>{challengeName}</div>
+          <div className={styles.titleWrapperInner}>
+            <div className={styles.title}>{challengeName}</div>
+            {isAdmin && !derivedCardStatus && (
+              <DropdownOption onEdit={onEdit} onDelete={onDelete} />
+            )}
+          </div>
         </div>
 
         <div className={styles.chipWrapper}>
