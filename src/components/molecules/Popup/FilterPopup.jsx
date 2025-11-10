@@ -50,7 +50,7 @@ const createInitialFilters = () => ({
   status: 'inProgress',
 });
 
-function FilterPopup({ onApply, onReset, onClose }) {
+function FilterPopup({ onApply = () => {}, onReset = () => {}, onClose = () => {} }) {
   const [isOpen, setIsOpen] = useState(false);
   const [selectedFilters, setSelectedFilters] = useState(createInitialFilters);
   const wrapperRef = useRef(null);

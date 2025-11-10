@@ -65,7 +65,9 @@ export default function ChallengeListPage() {
                 );
                 setField(selectedFields.length > 0 ? selectedFields : '');
                 setType(f?.type ?? f?.docType ?? f?.documentType ?? '');
-                setStatus(f?.status ?? f?.state ?? '');
+                // 진행중(inProgress)을 선택하면 API에 APPROVED 전송하도록 로직 수정
+                const statusValue = f?.status ?? f?.state ?? '';
+                setStatus(statusValue === 'inProgress' ? 'APPROVED' : statusValue);
                 setPage(1);
               }}
               onReset={() => {
@@ -97,6 +99,8 @@ export default function ChallengeListPage() {
               items.map((item) => (
                 <ChallengeCard
                   key={item.challengeId} // ✅ key 추가
+                  page="challenge"
+                  isAdmin={false}
                   challengeId={item.challengeId}
                   challengeName={item.title}
                   type={item.field}

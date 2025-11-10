@@ -117,7 +117,9 @@ export default function AdminChallengeListPage() {
                 const selectedFields = Object.keys(f?.fields || {}).filter((k) => f.fields[k]);
                 setField(selectedFields.length ? selectedFields : '');
                 setType(f?.type ?? f?.docType ?? f?.documentType ?? '');
-                setStatus(f?.status ?? f?.state ?? '');
+                // 진행중(inProgress)을 선택하면 API에 APPROVED 전송하도록 로직 수정
+                const statusValue = f?.status ?? f?.state ?? '';
+                setStatus(statusValue === 'inProgress' ? 'APPROVED' : statusValue);
                 setPage(1);
               }}
               onReset={() => {
@@ -169,6 +171,7 @@ export default function AdminChallengeListPage() {
                     }}
                   >
                     <ChallengeCard
+                      page="challenge"
                       isAdmin={true}
                       challengeId={id}
                       challengeName={item.title}

@@ -1,37 +1,55 @@
-import styles from '@/styles/components/molecules/ChallengeCard/ChallengeCard.module.scss';
 import Image from 'next/image';
-import stroke from '/public/stroke.svg';
-import ic_deadline from '/public/icon/ic_deadline.svg';
-import ic_person from '/public/icon/ic_person.svg';
-import Button from '@/components/atoms/Button/Button.jsx';
+import { useRouter } from 'next/navigation';
+import { deriveCardStatus } from '@/utils/deriveCardStatus.js';
 import { formatKoreanDate } from '@/libs/day.js';
+import Button from '@/components/atoms/Button/Button.jsx';
 import TypeChip from '@/components/atoms/Chips/TypeChip.jsx';
 import CategoryChip from '@/components/atoms/Chips/CategoryChip.jsx';
 import DropdownOption from '@/components/molecules/Dropdown/DropdownOption.jsx';
 import CardStatusChip from '@/components/atoms/Chips/CardStatusChip.jsx';
-import { useRouter } from 'next/navigation';
-import { deriveCardStatus } from '@/utils/deriveCardStatus.js';
 
-const CARD_DATA = {
-  challengeName: 'Next.js - App Router: Routing Fundamentals',
-  type: 'Next.js',
-  category: '공식문서',
-  status: 'ISCOMPLETED',
-  dueDate: '2025-10-22T08:30:00.000Z',
-  total: 15,
-  capacity: 15,
+import stroke from '/public/stroke.svg';
+import ic_deadline from '/public/icon/ic_deadline.svg';
+import ic_person from '/public/icon/ic_person.svg';
+import styles from '@/styles/components/molecules/ChallengeCard/ChallengeCard.module.scss';
+
+const TYPE_CHIP_MAP = {
+  NEXT: {
+    label: 'Next.js',
+    color: 'green',
+  },
+  API: {
+    label: 'API',
+    color: 'orange',
+  },
+  CAREER: {
+    label: 'Career',
+    color: 'blue',
+  },
+  MODERN: {
+    label: 'Modern JS',
+    color: 'red',
+  },
+  WEB: {
+    label: 'Web',
+    color: 'yellow',
+  },
 };
 
+/*
+  page: challenge | my-challenge
+*/
 const ChallengeCard = ({
+  page = '',
   isAdmin,
   challengeId = '',
-  challengeName = CARD_DATA.challengeName,
-  type = CARD_DATA.type,
-  category = CARD_DATA.category,
-  status = CARD_DATA.status,
-  dueDate = CARD_DATA.dueDate,
-  total = CARD_DATA.total,
-  capacity = CARD_DATA.capacity,
+  challengeName = '',
+  type = '',
+  category = '',
+  status = '',
+  dueDate = '',
+  total = '',
+  capacity = '',
   onEdit = () => {},
   onDelete = () => {},
 }) => {
@@ -40,11 +58,7 @@ const ChallengeCard = ({
   const derivedCardStatus = deriveCardStatus({ status, dueDate, total, capacity });
 
   const handleClick = () => {
-    if (!challengeId) return; // 안전장치
-    // 요구사항: 어드민 상세로 이동
     router.push(`/user/challenge/detail/${challengeId}`);
-    // 유저 상세로 보내려면 아래 주석 사용
-    // router.push(`/user/challenge/detail/${challengeId}`);
   };
 
   return (
@@ -59,12 +73,11 @@ const ChallengeCard = ({
         </div>
 
         <div className={styles.chipWrapper}>
-          <TypeChip label={type} color="green" />
+          <TypeChip label={TYPE_CHIP_MAP[type].label} color={TYPE_CHIP_MAP[type].color} />
           <CategoryChip label={category} />
         </div>
       </div>
 
-      {/* 버튼 클릭 가림 방지: CSS에서 pointer-events: none; 권장 */}
       <Image className={styles.stroke} src={stroke} alt="stroke" />
 
       <div className={styles.footerWrapper}>
@@ -81,9 +94,11 @@ const ChallengeCard = ({
           </div>
         </div>
 
-        <Button variant="outline" size="pill" icon="challenge" onClick={handleClick}>
-          도전 계속하기
-        </Button>
+        {page === 'my-challenge' && (
+          <Button variant="outline" size="pill" icon="challenge" onClick={handleClick}>
+            도전 계속하기
+          </Button>
+        )}
       </div>
     </div>
   );
