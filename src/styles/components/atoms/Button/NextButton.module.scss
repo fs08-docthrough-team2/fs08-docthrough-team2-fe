@@ -1,0 +1,14 @@
+@use '@/styles/mixin' as m;
+@use '@/styles/variable' as v;
+
+.nextButton {
+  @include m.reset-button;
+  width: 40px;
+  height: 40px;
+  position: relative;
+
+  @include m.mobile {
+    width: 24px;
+    height: 24px;
+  }
+}

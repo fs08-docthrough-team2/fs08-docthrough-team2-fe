@@ -1,14 +1,18 @@
 @font-face {
   font-family: 'Pretendard';
-  src: url('/fonts/Pretendard-Regular.woff2') format('woff2-variations');
+  src: url('/fonts/PretendardVariable.woff2') format('woff2-variations');
   font-weight: 100 900;
   font-display: swap;
   font-style: normal;
 }
+@import '@uiw/react-md-editor/markdown-editor.css';
+@import '@uiw/react-markdown-preview/markdown.css';
 
 html,
 body {
   font-family: 'Pretendard', system-ui, sans-serif;
+  margin: 0;
+  padding: 0;
 }
 
 html,
@@ -133,4 +137,35 @@ q:after {
 table {
   border-collapse: collapse;
   border-spacing: 0;
+}
+
+/* Global box-sizing */
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+html,
+body,
+#__next {
+  margin: 0;
+  padding: 0;
+  width: 100%;
+}
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+img,
+video,
+iframe {
+  max-width: 100%;
+  height: auto;
+  display: block;
+}
+html,
+body {
+  overflow-x: hidden;
 }

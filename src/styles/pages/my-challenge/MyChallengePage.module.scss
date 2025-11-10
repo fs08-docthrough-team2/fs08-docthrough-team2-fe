@@ -1,0 +1,69 @@
+@use '@/styles/mixin' as m;
+@use '@/styles/variable' as v;
+
+.page {
+  @include m.center-container(996px);
+  padding: 24px 0 48px 0;
+
+  @include m.tablet {
+    @include m.center-container(696px);
+  }
+
+  @include m.mobile {
+    @include m.center-container(343px);
+  }
+}
+
+.header {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+
+  @include m.mobile {
+    gap: 16px;
+  }
+}
+
+.headerContent {
+  width: 100%;
+}
+
+.headerTitleWrapper {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+
+  .title {
+    color: v.$gray-800;
+    font-size: 20px;
+    font-weight: 600;
+    line-height: normal;
+  }
+}
+
+.challengeListWrapper {
+  margin-top: 24px;
+  width: 100%;
+
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+  min-height: 200px;
+  justify-content: flex-start;
+  align-items: center;
+
+  @include m.mobile {
+    margin-top: 16px;
+  }
+}
+
+.empty {
+  color: v.$gray-500;
+  text-align: center;
+  font-size: 16px;
+  font-weight: 400;
+  line-height: normal;
+  margin-top: auto;
+  margin-bottom: auto;
+}

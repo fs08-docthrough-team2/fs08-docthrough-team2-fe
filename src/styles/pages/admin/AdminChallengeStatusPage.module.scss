@@ -1,0 +1,122 @@
+@use '@/styles/mixin' as m;
+@use '@/styles/variable' as v;
+
+.page {
+  padding: 24px 0 68px;
+  @include m.center-container(890px);
+
+  @include m.tablet {
+    padding-bottom: 209px;
+    @include m.center-container(696px);
+  }
+
+  @include m.mobile {
+    padding-bottom: 171px;
+    @include m.center-container(375px);
+  }
+}
+
+.content {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.stroke {
+  margin: 16px 0;
+}
+
+.description {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+
+  @include m.mobile {
+    align-items: center;
+  }
+
+  .title {
+    color: v.$gray-800;
+    font-size: 18px;
+    font-weight: 600;
+
+    @include m.mobile {
+      font-size: 16px;
+    }
+  }
+
+  .actions {
+    display: flex;
+    justify-content: flex-end;
+    gap: 12px;
+    margin-top: 16px;
+  }
+}
+
+.emptyLink {
+  border: 1px dashed v.$gray-300;
+  border-radius: 8px;
+  padding: 24px;
+  text-align: center;
+  color: v.$gray-500;
+}
+
+.rejectButtonWrapper {
+  background: #ffe7e7;
+  min-width: 153px;
+  padding: 0 24px;
+  border-radius: 12px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  white-space: nowrap;
+
+  .btnContent {
+    color: #f24744;
+    font-size: 16px;
+    font-weight: 600;
+  }
+}
+
+.approveButtonWrapper {
+  background: v.$brand-black;
+  min-width: 153px;
+  padding: 0 24px;
+  border-radius: 12px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  white-space: nowrap;
+
+  .btnContent {
+    color: v.$white;
+    font-size: 16px;
+    font-weight: 600;
+  }
+}
+
+.stateWrapper {
+  min-height: 320px;
+  @include m.center-container(520px);
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  justify-content: center;
+  align-items: center;
+  text-align: center;
+}
+
+.stateMessage {
+  color: v.$gray-700;
+  font-size: 16px;
+  line-height: 1.4;
+}
+
+.stateActions {
+  display: flex;
+  gap: 12px;
+
+  @include m.mobile {
+    flex-direction: column;
+  }
+}

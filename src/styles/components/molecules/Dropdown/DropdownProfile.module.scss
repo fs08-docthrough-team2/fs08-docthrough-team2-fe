@@ -1,0 +1,112 @@
+@use '../../../variable' as v;
+@use '../../../mixin' as m;
+
+.dropdown {
+  position: relative;
+  display: inline-flex;
+  flex-direction: column;
+  align-items: flex-start;
+  width: 100%;
+  max-width: 152px;
+}
+
+.optionTriggerButton {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0;
+  border: none;
+  background: transparent;
+  cursor: pointer;
+}
+
+.profileImage {
+  border-radius: 50%;
+}
+
+.profileMenu {
+  position: absolute;
+  top: calc(100% + 0.4rem);
+  left: auto;
+  right: 0;
+  z-index: 10;
+  display: flex;
+  flex-direction: column;
+  align-items: stretch;
+  width: 152px;
+  margin: 0;
+  padding: 0;
+  background: v.$white;
+  border: 1px solid v.$gray-200;
+  border-radius: 4px;
+  box-shadow: 0 10px 25px rgba(15, 23, 42, 0.12);
+  overflow: hidden;
+}
+
+.profileHeader {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  width: 100%;
+  padding: 0.55rem 0.85rem;
+  box-sizing: border-box;
+  border-bottom: 1px solid v.$gray-100;
+}
+
+.headerText {
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 4px;
+  flex: 1;
+}
+
+.headerName {
+  display: block;
+  color: v.$gray-800;
+  font-size: 14px;
+  font-weight: 500;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  max-width: 100%;
+}
+
+.headerRole {
+  color: v.$gray-500;
+  font-size: 12px;
+  font-weight: 500;
+  white-space: nowrap;
+}
+
+.optionList {
+  display: flex;
+  flex-direction: column;
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+.profileListItem {
+  width: 100%;
+}
+
+.profileOption {
+  display: flex;
+  width: 100%;
+  justify-content: flex-start;
+  color: v.$gray-600;
+  text-align: left;
+  white-space: nowrap;
+  font-size: 16px;
+  font-weight: 500;
+}
+
+.profileOptionPrimary {
+  color: v.$gray-600;
+}
+
+.profileOptionLogout {
+  color: v.$gray-400;
+}

@@ -1,0 +1,176 @@
+.card {
+  width: 100%;
+  min-height: 100px; /* 네 값 유지 */
+  align-self: stretch;
+  border-radius: 12px;
+  border: 1px solid var(--gray-200, #e5e5e5);
+  background: #fafafa; /* 기본은 살짝 회색 */
+  box-sizing: border-box;
+
+  display: flex;
+  flex-direction: column;
+}
+
+/* 편집 중(어드민) : 카드/에디터 배경을 하얗게 */
+.editing {
+  background: #fff;
+  border-color: #e0e0e0;
+}
+
+/* 헤더 */
+.header {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  padding: 8px 12px 0 12px;
+}
+
+.meta {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+.avatar {
+  border-radius: 999px;
+}
+
+.nameDate {
+  display: flex;
+  flex-direction: column; /* 이름/날짜 세로 정렬 */
+  gap: 4px;
+}
+.name {
+  font-size: 14px;
+  font-weight: 500;
+  color: #262626;
+  line-height: 1.2;
+}
+.date {
+  font-size: 12px;
+  font-weight: 500;
+  color: #a3a3a3;
+  line-height: 1.2;
+}
+
+.actions {
+  position: relative;
+}
+
+/* 세로 케밥 버튼 (점 3개) */
+.kebab {
+  border: 0;
+  background: none;
+  padding: 6px;
+  border-radius: 8px;
+  cursor: pointer;
+  line-height: 0;
+
+  &:hover {
+    background: rgba(0, 0, 0, 0.05);
+  }
+}
+.dot {
+  display: block;
+  width: 1.8px;
+  height: 1.8px;
+  background: #a3a3a3;
+  border-radius: 1.8px;
+  border: 1px solid var(--gray-gray400, #a3a3a3);
+  margin: 2px 0;
+}
+
+/* ── 헤더 우측 버튼(편집 중: 취소 / 수정 완료) ────── */
+.headerButtons {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+.ghostBtn {
+  border: none;
+  background: #fff;
+  color: #737373;
+  border-radius: 10px;
+  padding: 6px 10px;
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+}
+.primaryBtn {
+  border: 0;
+  background: #262626;
+  color: #fff;
+  border-radius: 10px;
+  padding: 6px 12px;
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+/* ── 본문 ─────────────────────────────────────────── */
+.body {
+  padding: 8px 12px 12px 12px; /* 네 값 유지 */
+  flex: 1 1 auto;
+}
+
+.text {
+  white-space: pre-wrap;
+  word-break: break-word;
+  color: #333;
+  font-size: 14px;
+  line-height: 1.6;
+}
+
+/* 에디터: 기본은 투명, 편집중에는 흰 배경으로 전환 */
+.editor {
+  width: 100%;
+  min-height: 60px;
+  border: 0;
+  outline: 0;
+  resize: none;
+  background: #fafafa;
+  color: var(--text, #404040);
+  font-family:
+    Pretendard,
+    system-ui,
+    -apple-system,
+    'Segoe UI',
+    Roboto,
+    'Noto Sans KR',
+    sans-serif;
+  font-size: 16px;
+  font-weight: 400;
+  line-height: 20px;
+  box-sizing: border-box;
+  padding: 8px 4px 0 4px;
+  overflow-y: auto;
+  overflow-x: hidden;
+  white-space: pre-wrap;
+  word-break: break-word;
+  overflow-wrap: anywhere;
+
+  &::placeholder {
+    color: rgba(0, 0, 0, 0.35);
+  }
+}
+
+.card.editing {
+  background: #fff;
+  border-color: #e0e0e0;
+}
+.card.editing .editor {
+  background: #fff;
+}
+/* ── 반응형 ───────────────────────────────────────── */
+@media (max-width: 744px) {
+  .card {
+    width: 100%;
+  }
+}
+@media (max-width: 375px) {
+  .body {
+    padding: 8px 10px 10px 10px;
+  }
+  .editor {
+    min-height: 56px;
+  }
+}

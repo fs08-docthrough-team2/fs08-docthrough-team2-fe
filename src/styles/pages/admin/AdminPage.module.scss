@@ -1,0 +1,77 @@
+@use '@/styles/variable' as v;
+@use '@/styles/mixin' as m;
+
+.adminPage {
+  width: 100%;
+  max-width: 1920px;
+  margin-inline: auto;
+  padding-inline: clamp(16px, calc((100vw - 996px) / 2), 462px);
+  box-sizing: border-box;
+}
+
+.pageTitle {
+  width: 131px;
+  height: 24px;
+  margin: 34px 0 16px 0;
+  color: v.$gray-800;
+  font-size: 20px;
+  font-weight: 600;
+}
+
+.filters {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 24px;
+  width: 100%;
+  gap: 12px;
+}
+
+.searchInput {
+  height: 40px;
+  width: min(100%, 844px);
+}
+
+.listHeader {
+  display: flex;
+  align-items: center;
+  width: 100%;
+  background: v.$gray-800;
+  border-bottom: none;
+  border-radius: 8px;
+}
+
+.headerCell {
+  color: v.$white;
+  font-weight: 600;
+  background: transparent;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.tableScrollArea {
+  width: 100%;
+  overflow-x: visible;
+}
+
+.tableInner {
+  min-width: 100%;
+}
+
+@include m.mobile {
+  .tableScrollArea {
+    overflow-x: auto;
+  }
+
+  .tableInner {
+    min-width: 844px;
+  }
+}
+
+.paginationWrapper {
+  display: flex;
+  justify-content: center;
+  margin-top: 24px;
+  width: 100%;
+}

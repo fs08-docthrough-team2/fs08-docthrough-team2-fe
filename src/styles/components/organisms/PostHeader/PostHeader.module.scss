@@ -1,0 +1,40 @@
+@use '@/styles/variable' as v;
+@use '@/styles/mixin' as m;
+
+.postHeader {
+  @include m.center-container(890px);
+
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+
+  padding: 24px 0;
+
+  @include m.tablet {
+    @include m.center-container(696px);
+  }
+
+  @include m.mobile {
+    padding: 24px 16px;
+  }
+}
+
+.buttonWrapper {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+
+  @include m.mobile {
+    display: none;
+  }
+}
+
+.mobileButtonWrapper {
+  display: none;
+
+  @include m.mobile {
+    display: flex;
+    align-items: center;
+    gap: 4px;
+  }
+}

@@ -1,0 +1,107 @@
+@use '@/styles/mixin' as m;
+@use '@/styles/variable' as v;
+
+.statusWrapper {
+  width: 100%;
+
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.statusBar {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 100%;
+  height: 35px;
+  border-radius: 17.5px;
+
+  font-size: 16px;
+  font-weight: 600;
+  line-height: normal;
+
+  &.approved,
+  &.inprogress {
+    background: #dff0ff;
+    color: #1b7fc6;
+  }
+
+  &.canceled {
+    background: #9b9b9b;
+    color: v.$gray-700;
+  }
+
+  &.deleted,
+  &.deadline,
+  &.cancelled {
+    background: v.$gray-500;
+    color: v.$gray-50;
+  }
+
+  &.pending {
+    background: #fffde7;
+    color: #f2bc00;
+  }
+
+  &.rejected {
+    background: #fff0f0;
+    color: #e54946;
+  }
+}
+
+.description {
+  width: 100%;
+
+  border-radius: 16px;
+  border: 1px solid v.$gray-200;
+  background: v.$gray-50;
+
+  padding: 16px 20px;
+}
+
+.title {
+  color: v.$gray-800;
+  text-align: center;
+  font-size: 14px;
+  font-weight: 600;
+  line-height: normal;
+}
+
+.reason {
+  color: v.$gray-700;
+  text-align: center;
+  font-size: 16px;
+  font-weight: 500;
+  line-height: normal;
+
+  margin: 12px 0 18px 0;
+}
+
+.footer {
+  display: flex;
+  justify-content: flex-end;
+  align-items: center;
+  gap: 8px;
+}
+
+.userName {
+  color: v.$gray-500;
+  font-size: 14px;
+  font-weight: 400;
+  line-height: normal;
+}
+
+.separator {
+  color: v.$gray-200;
+  font-size: 16px;
+  font-weight: 400;
+  line-height: normal;
+}
+
+.createdAt {
+  color: v.$gray-500;
+  font-size: 14px;
+  font-weight: 400;
+  line-height: normal;
+}

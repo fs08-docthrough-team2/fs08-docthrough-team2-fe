@@ -1,0 +1,35 @@
+.chip {
+  display: inline-flex;
+  padding: 4px 8px;
+  justify-content: center;
+  align-items: center;
+  gap: 10px;
+  border-radius: 4px;
+  font-family: Pretendard;
+  font-size: 13px;
+  font-style: normal;
+  font-weight: 600;
+  line-height: normal;
+  align-self: flex-start;
+  white-space: nowrap;
+}
+
+.pending {
+  background: #fffde7; /* 연노랑 */
+  color: #f2bc00; /* 노랑 텍스트 */
+}
+
+.rejected {
+  background: #fff0f0; /* 연분홍 */
+  color: #e54946; /* 빨강 텍스트 */
+}
+
+.approved {
+  background: #dff0ff; /* 연하늘 */
+  color: #4095de; /* 파랑 텍스트 */
+}
+
+.deleted {
+  background: #e5e5e5; /* 연회색 */
+  color: #737373; /* 회색 텍스트 */
+}

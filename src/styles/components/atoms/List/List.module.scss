@@ -1,0 +1,136 @@
+@use '../../../variable' as v;
+@use '../../../mixin' as m;
+
+.listItem {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  width: 100%;
+  padding: 12px 0;
+  border-bottom: 1px solid v.$gray-600;
+}
+
+.left {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  min-width: 0;
+}
+
+.rank {
+  display: flex;
+  width: 51px;
+  height: 21px;
+  padding: 2px 11px 2px 7px;
+  align-items: center;
+  flex-shrink: 0;
+  border-radius: 16px;
+  background-color: v.$gray-800;
+  color: v.$brand-yellow;
+  font-size: 14px;
+  font-weight: 700;
+}
+
+.rankNumber {
+  flex: 1 0 0;
+  color: v.$brand-yellow;
+  text-align: center;
+  font-feature-settings:
+    'liga' off,
+    'clig' off;
+  font-size: 14px;
+  font-weight: 500;
+}
+
+.icon {
+  display: grid;
+  place-items: center;
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  overflow: hidden;
+  background-color: v.$gray-200;
+  flex: 0 0 auto;
+  :global(span),
+  :global(img) {
+    width: 100%;
+    height: 100%;
+  }
+  :global(img) {
+    object-fit: cover;
+  }
+}
+
+.user {
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+}
+
+.name {
+  color: v.$gray-800;
+  font-size: 14px;
+  font-weight: 500;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.type {
+  color: v.$gray-800;
+  font-size: 12px;
+  font-weight: 500;
+  white-space: nowrap;
+}
+
+.right {
+  display: flex;
+  align-items: center;
+  gap: 20px;
+  margin-left: auto;
+  white-space: nowrap;
+}
+
+.likes {
+  display: flex;
+  align-items: flex-end;
+  color: v.$gray-800;
+  font-size: 14px;
+  font-weight: 500;
+  line-height: normal;
+}
+
+.likesValue {
+  display: inline-block;
+  width: 49px;
+  text-align: left;
+  // 5개 넘어가면 ...으로 표시
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.btn {
+  @include m.reset-button;
+  display: inline-flex;
+  align-items: center;
+  gap: 5.6px;
+  padding: 4px 8px;
+  border-radius: 6px;
+  background: transparent;
+  color: v.$gray-800;
+  font-size: 14px;
+  transition:
+    border-color 0.2s ease,
+    color 0.2s ease;
+}
+
+.rankIcon,
+.likesIcon,
+.btnIcon {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 16px;
+  height: 16px;
+}

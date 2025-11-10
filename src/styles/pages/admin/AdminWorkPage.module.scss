@@ -1,0 +1,17 @@
+@use '@/styles/variable' as v;
+@use '@/styles/mixin' as m;
+
+.page {
+  padding: 40px 0 163px 0;
+  @include m.center-container(890px);
+
+  @include m.tablet {
+    padding: 20px 0 167px 0;
+    @include m.center-container(696px);
+  }
+
+  @include m.mobile {
+    padding: 24px 0 101px 0;
+    @include m.center-container(343px);
+  }
+}

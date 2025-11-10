@@ -1,0 +1,212 @@
+@use '@/styles/mixin' as m;
+@use '@/styles/variable' as v;
+@mixin lgFont {
+  font-size: 16px;
+  font-weight: 600;
+  line-height: normal;
+}
+@mixin smFont {
+  font-size: 14px;
+  font-style: normal;
+  font-weight: 600;
+}
+@mixin defaultBtn {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.button {
+  @include m.reset-button;
+  @include defaultBtn;
+  gap: 8px;
+}
+
+.solid {
+  @include defaultBtn;
+  border-radius: 12px;
+  background: v.$brand-black;
+
+  .btnContent {
+    color: v.$white;
+    @include lgFont;
+  }
+
+  &.pill {
+    width: 154px;
+    height: 39px;
+    border-radius: 19.5px;
+    gap: 8px;
+  }
+
+  &.lg {
+    width: 100%;
+    height: 48px;
+    padding: 14.5px 33px;
+    @include m.mobile {
+      padding: 7px 22.5px 7px 21.5px;
+    }
+  }
+
+  &.md {
+    width: 100%;
+    height: 40px;
+    padding: 7px 0;
+  }
+
+  &.sm {
+    width: 90px;
+    height: 32px;
+    padding: 2px 16px 3px 16px;
+    border-radius: 10px;
+  }
+
+  &.post {
+    display: flex;
+    width: 90px;
+    height: 40px;
+    padding: 2px 16px 3px 16px;
+    justify-content: center;
+    align-items: center;
+    gap: 4px;
+
+    @include m.mobile {
+      display: flex;
+      width: 90px;
+      height: 32px;
+      padding: 2px 16px 3px 16px;
+      justify-content: center;
+      align-items: center;
+      gap: 4px;
+      color: v.$white;
+      font-size: 14px;
+      font-weight: 600;
+      line-height: normal;
+    }
+  }
+}
+
+.disabled {
+  @include defaultBtn;
+  border-radius: 12px;
+  background: v.$gray-200;
+
+  .btnContent {
+    color: v.$gray-500;
+    @include lgFont;
+  }
+}
+
+.tonal {
+  @include defaultBtn;
+  border-radius: 12px;
+  background: #ffe7e7;
+
+  .btnContent {
+    color: #f24744;
+    @include lgFont;
+  }
+
+  &.sm {
+    padding: 8px 12px;
+    gap: 5px;
+
+    @include m.mobile {
+      padding: 8px 10px;
+      .btnContent {
+        display: none;
+      }
+    }
+  }
+
+  &.md {
+    padding: 11px 48.5px;
+    @include m.mobile {
+      padding: 7px 55.5px 7px 54.5px;
+    }
+  }
+
+  &.xs {
+    padding: 8px 10px;
+    .btnContent {
+      display: none;
+    }
+  }
+}
+
+.outline {
+  @include defaultBtn;
+  border-radius: 12px;
+  border: 1px solid v.$gray-800;
+  background: v.$white;
+
+  .btnContent {
+    color: v.$gray-800;
+    @include lgFont;
+  }
+
+  &.md {
+    height: 40px;
+    padding: 2px 16px 3px 16px;
+    @include m.mobile {
+      height: 32px;
+    }
+  }
+
+  &.pill {
+    width: 132px;
+    height: 40px;
+    border-radius: 30.5px;
+  }
+
+  &.postMobile {
+    display: flex;
+    width: 80px;
+    height: 32px;
+    justify-content: center;
+    align-items: center;
+    gap: 4px;
+
+    color: v.$gray-800;
+    font-size: 14px;
+    font-weight: 600;
+    line-height: normal;
+  }
+}
+
+.transparent {
+  @include defaultBtn;
+  border-radius: 10px;
+  background: rgba(246, 248, 250, 0.5);
+
+  .btnContent {
+    color: v.$gray-700;
+    @include lgFont;
+  }
+
+  &.md {
+    width: 96px;
+    height: 32px;
+    gap: 2px;
+    @include m.tablet {
+      width: 110px;
+    }
+  }
+}
+
+.filled {
+  @include defaultBtn;
+  width: 100%;
+  border-radius: 12px;
+  border: 2px solid v.$brand-black;
+  background: v.$brand-yellow;
+  height: 40px;
+  padding: 7px 0;
+
+  .btnContent {
+    color: v.$brand-black;
+    font-size: 14px;
+    font-weight: 700;
+    line-height: 26px;
+  }
+}
