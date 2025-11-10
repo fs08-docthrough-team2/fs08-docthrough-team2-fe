@@ -60,14 +60,12 @@ const GNB = ({ notifications: notificationsProp = [] }) => {
     refetch: refetchNotifications,
   } = useMyNotifications();
 
-  if (isHiddenRoute) return null;
-
   const { mutateAsync: markAsRead } = useMarkNoticeAsRead();
+  if (isHiddenRoute) return null;
 
   const handleNotificationClick = async (notification) => {
     try {
       await markAsRead(notification.id);
-      // TODO: 이동이 필요하다면 여기서 router.push(...) 등으로 처리
     } catch (error) {
       console.error('알림 읽음 처리 실패', error);
     }
