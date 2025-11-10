@@ -8,6 +8,7 @@
 
 .triggerWrapper {
   width: 112px;
+
   > button {
     border-radius: 32px;
   }
@@ -18,12 +19,8 @@
   top: calc(100% + 8px);
   left: 0;
   z-index: 1000;
-
   width: 343px;
-  height: auto;
   max-height: 541px;
-  flex-shrink: 0;
-
   display: flex;
   flex-direction: column;
   border-radius: 16px;
@@ -162,7 +159,7 @@
   border-radius: 4px;
 
   &::after {
-    content: '✓';
+    content: '✔';
     font-size: 14px;
     color: v.$white;
     opacity: 0;
@@ -196,4 +193,81 @@
 .optionItem input:checked + .customRadio::after {
   opacity: 1;
   transform: scale(1);
+}
+
+/* 모바일 전체 화면 & 간격 조정 */
+@include m.mobile {
+  .filterLayoutContainer {
+    position: static;
+    width: 100%;
+  }
+
+  .container {
+    position: fixed;
+    inset: 0;
+    width: 100vw;
+    height: 100vh;
+    max-height: none;
+    border: none;
+    border-radius: 0;
+    box-shadow: none;
+    background: v.$white;
+    overflow-y: auto;
+    padding-bottom: env(safe-area-inset-bottom, 0);
+  }
+
+  .header {
+    padding: 16px 24px;
+
+    h2 {
+      font-size: 18px;
+      letter-spacing: 0.01em;
+    }
+  }
+
+  .body {
+    flex: 1;
+    padding: 12px 24px 24px;
+    border-top: none;
+    border-bottom: none;
+    gap: 16px;
+  }
+
+  .filterSection {
+    padding: 20px 0 16px;
+    border-bottom: none !important;
+
+    &:not(:last-child) {
+      border-bottom: none !important;
+      margin-bottom: 18px;
+    }
+
+    .sectionTitle {
+      font-size: 15px;
+      margin-bottom: 14px;
+      letter-spacing: 0.01em;
+    }
+
+    .optionsContainer {
+      gap: 14px;
+    }
+  }
+
+  .optionItem {
+    font-size: 17px;
+    line-height: 1.4;
+  }
+
+  .footer {
+    position: sticky;
+    bottom: 0;
+    padding: 12px 24px 16px;
+    gap: 16px;
+    background: v.$white;
+    border-top: 1px solid v.$gray-100;
+  }
+
+  .buttonWrapper button {
+    height: 48px;
+  }
 }
