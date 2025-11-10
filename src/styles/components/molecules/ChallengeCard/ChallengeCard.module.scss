@@ -12,6 +12,21 @@
   flex-direction: column;
   gap: 16px;
 
+  cursor: pointer;
+  transition:
+    transform 0.2s ease,
+    box-shadow 0.2s ease;
+
+  &:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+  }
+
+  &:active {
+    transform: translateY(0);
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+  }
+
   @include m.mobile {
     gap: 0px;
     padding: 24px 20px;
@@ -41,7 +56,10 @@
 .titleWrapper {
   display: flex;
   flex-direction: column;
-  gap: 16px;
+
+  &.titleWrapperWithStatus {
+    gap: 16px;
+  }
 
   @include m.tablet {
     gap: 14px;
@@ -70,6 +88,12 @@
   align-items: center;
 }
 
+.titleWrapperInner {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
 .chipWrapper {
   display: flex;
   align-items: center;
@@ -77,12 +101,6 @@
 }
 
 .footerWrapper {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-}
-
-.footerLeft {
   display: flex;
   gap: 12px;
 
