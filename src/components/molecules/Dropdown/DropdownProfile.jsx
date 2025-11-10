@@ -18,7 +18,7 @@ const PROFILE_CONFIG = {
     userInfo: {
       name: '체다치즈',
     },
-    options: ['나의 챌린지', '로그아웃'],
+    options: ['마이페이지', '나의 챌린지', '로그아웃'],
   },
   admin: {
     image: {
@@ -41,6 +41,7 @@ const ROLE_LABEL_BY_TYPE = {
 };
 
 const OPTION_ROUTE_MAP = {
+  마이페이지: '/profile',
   '나의 챌린지': '/user/my-challenge',
 };
 

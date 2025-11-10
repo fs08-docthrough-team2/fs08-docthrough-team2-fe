@@ -18,6 +18,7 @@ import WorkPost from '@/components/templates/WorkPost';
 import Button from '@/components/atoms/Button/Button';
 import DraftModal from '@/components/molecules/Modal/DraftModal';
 import TwoButtonModal from '@/components/molecules/Modal/TwoButtonModal';
+import Spinner from '@/components/common/Spinner';
 
 import styles from '@/styles/pages/work/WorkPostPage.module.scss';
 import ic_cancel from '/public/icon/ic_cancel.svg';
@@ -34,11 +35,15 @@ const WorkPostPage = () => {
   const queryClient = useQueryClient();
   const createChallengeWorkMutation = useCreateChallengeWorkMutation();
   const createChallengeWorkDraftMutation = useCreateChallengeWorkDraftMutation();
-  const { data: challengeDetail } = useGetChallengeDetail(challengeId);
-  const { data: challengeWorkDraftList } = useGetChallengeWorkDraftList();
-  const { data: challengeWorkDraftDetail } = useGetChallengeWorkDraftDetail(selectedAttendId);
+  const { data: challengeDetail, isLoading: isChallengeDetailLoading } =
+    useGetChallengeDetail(challengeId);
+  const { data: challengeWorkDraftList, isLoading: isChallengeWorkDraftListLoading } =
+    useGetChallengeWorkDraftList();
+  const { data: challengeWorkDraftDetail, isLoading: isChallengeWorkDraftDetailLoading } =
+    useGetChallengeWorkDraftDetail(selectedAttendId);
 
   const isHasDraft = challengeWorkDraftList?.data?.items?.length > 0;
+  const challengeTitle = challengeDetail?.data?.title;
 
   const handleContentChange = (value) => {
     setContent(value);
@@ -97,6 +102,7 @@ const WorkPostPage = () => {
       {
         challengeId: challengeId,
         workItem: content,
+        title: challengeTitle,
       },
       {
         onSuccess: (data) => {
@@ -124,6 +130,7 @@ const WorkPostPage = () => {
       {
         challengeId: challengeId,
         workItem: content,
+        title: challengeTitle,
       },
       {
         onSuccess: () => {
@@ -148,45 +155,56 @@ const WorkPostPage = () => {
   };
 
   return (
-    <div className={styles.page}>
-      <WorkPost
-        content={content}
-        onContentChange={handleContentChange}
-        onSubmitClick={handleSubmit}
-        onDraftSaveClick={handleDraftSave}
-        onQuitClick={handleQuit}
-        title={challengeDetail?.data?.title}
-      />
-      {isHasDraft && isDraftOpen && (
-        <div className={styles.draft}>
-          <div className={styles.left}>
-            <button className={styles.cancelButton} onClick={handleDraftOpen}>
-              <Image src={ic_cancel} alt="cancel" width={24} height={24} />
-            </button>
-            <div className={styles.description}>
-              임시 저장된 작업물이 있어요. 저장된 작업물을 불러오시겠어요??
+    <>
+      {
+        <Spinner
+          isLoading={
+            isChallengeDetailLoading ||
+            isChallengeWorkDraftListLoading ||
+            isChallengeWorkDraftDetailLoading
+          }
+        />
+      }
+      <div className={styles.page}>
+        <WorkPost
+          content={content}
+          onContentChange={handleContentChange}
+          onSubmitClick={handleSubmit}
+          onDraftSaveClick={handleDraftSave}
+          onQuitClick={handleQuit}
+          title={challengeTitle}
+        />
+        {isHasDraft && isDraftOpen && (
+          <div className={styles.draft}>
+            <div className={styles.left}>
+              <button className={styles.cancelButton} onClick={handleDraftOpen}>
+                <Image src={ic_cancel} alt="cancel" width={24} height={24} />
+              </button>
+              <div className={styles.description}>
+                임시 저장된 작업물이 있어요. 저장된 작업물을 불러오시겠어요??
+              </div>
             </div>
+            <Button variant="solid" size="sm" children="불러오기" onClick={handleDraftListOpen} />
           </div>
-          <Button variant="solid" size="sm" children="불러오기" onClick={handleDraftListOpen} />
-        </div>
-      )}
-      {isDraftListOpen && (
-        <DraftModal
-          isOpen={isDraftListOpen}
-          onClose={handleDraftListClose}
-          drafts={challengeWorkDraftList?.data?.items}
-          onLoadDraft={handleLoadDraft}
-        />
-      )}
-      {loadDraftConfirmModalOpen && (
-        <TwoButtonModal
-          isOpen={loadDraftConfirmModalOpen}
-          onClose={handleLoadDraftCancel}
-          onConfirm={handleLoadDraftConfirm}
-          children="이전 작업물을 불러오시겠어요?"
-        />
-      )}
-    </div>
+        )}
+        {isDraftListOpen && (
+          <DraftModal
+            isOpen={isDraftListOpen}
+            onClose={handleDraftListClose}
+            drafts={challengeWorkDraftList?.data?.items}
+            onLoadDraft={handleLoadDraft}
+          />
+        )}
+        {loadDraftConfirmModalOpen && (
+          <TwoButtonModal
+            isOpen={loadDraftConfirmModalOpen}
+            onClose={handleLoadDraftCancel}
+            onConfirm={handleLoadDraftConfirm}
+            children="이전 작업물을 불러오시겠어요?"
+          />
+        )}
+      </div>
+    </>
   );
 };
 

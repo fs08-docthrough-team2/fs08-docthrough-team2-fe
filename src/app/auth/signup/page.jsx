@@ -14,7 +14,7 @@ import EmailInput from '@/components/atoms/Input/EmailInput.jsx';
 import PasswordInput from '@/components/atoms/Input/PasswordInput.jsx';
 import Button from '@/components/atoms/Button/Button.jsx';
 import AuthEntry from '@/components/atoms/AuthEntry/AuthEntry.jsx';
-import GoogleButton from '@/components/atoms/Button/GoogleButton.jsx';
+import GoogleLoginButton from '@/components/atoms/Button/GoogleLoginButton.jsx';
 import BaseInput from '@/components/atoms/Input/BaseInput.jsx';
 
 import img_logo from '/public/image/img_logo.svg';
@@ -99,7 +99,7 @@ const SignupPage = () => {
             onClick={handleSubmit}
             disabled={!isValidate || isLoading}
           />
-          <GoogleButton disabled={isLoading} />
+          <GoogleLoginButton disabled={isLoading} />
         </div>
         <AuthEntry type="login" />
       </form>
