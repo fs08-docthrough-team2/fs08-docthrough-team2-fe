@@ -129,7 +129,7 @@ export const updateChallenge = async ({ challengeId, payload }) => {
 
 export const deleteAdminChallenge = async ({ id, reason }) => {
   const { data } = await api.patch(`/challenge/delete/${id}`, {
-    delete_reason: reason
+    delete_reason: reason,
   });
   return data;
 };

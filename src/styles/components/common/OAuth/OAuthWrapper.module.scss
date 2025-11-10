@@ -1,0 +1,31 @@
+@use '@/styles/mixin' as m;
+@use '@/styles/variable' as v;
+
+.OAuthWrapper {
+  width: 100%;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 16px 23px;
+  gap: 10px;
+
+  border-radius: 8px;
+  background: v.$gray-50;
+}
+
+.title {
+  color: v.$gray-900;
+  font-size: 16px;
+  font-weight: 500;
+  line-height: 26px;
+}
+
+.iconWrapper {
+  display: flex;
+  gap: 16px;
+  align-items: center;
+}
+
+.socialButton {
+  @include m.reset-button;
+}

@@ -107,3 +107,11 @@ export const useGoogleLogin = () => {
 
   return { googleOAuth };
 };
+
+export const useKakaoLogin = () => {
+  const kakaoOAuth = () => {
+    window.location.href = `${API_URL}/auth/kakao/login`;
+  };
+
+  return { kakaoOAuth };
+};

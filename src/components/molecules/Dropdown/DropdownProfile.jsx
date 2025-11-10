@@ -30,7 +30,7 @@ const PROFILE_CONFIG = {
     userInfo: {
       name: '어드민 체다asdfasdfasd치즈',
     },
-    options: ['로그아웃'],
+    options: ['마이페이지', '로그아웃'],
   },
 };
 
