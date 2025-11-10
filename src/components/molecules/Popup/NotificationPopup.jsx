@@ -43,7 +43,6 @@ const NotificationPopup = ({
 
   const handleItemClick = (notification) => {
     onClickNotification?.(notification);
-    closePopup();
   };
 
   return (
