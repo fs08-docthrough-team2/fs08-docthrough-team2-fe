@@ -188,7 +188,7 @@ const ChallengeDetailPageClient = ({ isAdmin = false }) => {
     topParticipantNickname ??
     challenge.ownerNickName ??
     challenge.author ??
-    '익명';
+    '유저';
 
   const roleLabel = (role) => {
     switch (role) {

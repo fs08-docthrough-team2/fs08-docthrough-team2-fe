@@ -1,6 +1,6 @@
 'use client';
 
-import { useEffect, useMemo, useState } from 'react';
+import { useEffect, useMemo, useRef, useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { useCreateChallengeMutation } from '@/hooks/mutations/useChallengeMutations';
 import { formatUTCDate } from '@/libs/day';
@@ -26,6 +26,8 @@ const DOCUMENT_LABEL_TO_CODE = {
   공식문서: 'OFFICIAL',
   블로그: 'BLOG',
 };
+
+const COOLDOWN_DURATION_MS = 3000;
 
 export default function ChallengePostPage() {
   const router = useRouter();
@@ -61,7 +63,54 @@ export default function ChallengePostPage() {
     return () => clearTimeout(timer);
   }, []);
 
-  const isBusy = isPageLoading || isSubmitting;
+  const [isCooldown, setIsCooldown] = useState(false);
+  const cooldownTimerRef = useRef(null);
+
+  useEffect(
+    () => () => {
+      if (cooldownTimerRef.current) {
+        clearTimeout(cooldownTimerRef.current);
+      }
+    },
+    [],
+  );
+
+  const startCooldown = () => {
+    if (cooldownTimerRef.current) {
+      clearTimeout(cooldownTimerRef.current);
+    }
+    setIsCooldown(true);
+    cooldownTimerRef.current = setTimeout(() => {
+      setIsCooldown(false);
+      cooldownTimerRef.current = null;
+    }, COOLDOWN_DURATION_MS);
+  };
+
+  const resetCooldown = () => {
+    if (cooldownTimerRef.current) {
+      clearTimeout(cooldownTimerRef.current);
+      cooldownTimerRef.current = null;
+    }
+    setIsCooldown(false);
+  };
+
+  const isBusy = isPageLoading || isSubmitting || isCooldown;
+
+  const isFormValid = useMemo(
+    () =>
+      Boolean(
+        requestBody.title &&
+          requestBody.source &&
+          requestBody.field &&
+          requestBody.type &&
+          requestBody.deadline &&
+          requestBody.capacity &&
+          requestBody.content,
+      ),
+    [requestBody],
+  );
+
+  const isSubmitDisabled = isBusy || !isFormValid;
 
   const handleChange = (key) => (event) =>
     setForm((prev) => ({ ...prev, [key]: event.target.value }));
@@ -75,38 +124,26 @@ export default function ChallengePostPage() {
     event.preventDefault();
     if (isBusy) return;
 
-    const isValid =
-      requestBody.title &&
-      requestBody.source &&
-      requestBody.field &&
-      requestBody.type &&
-      requestBody.deadline &&
-      requestBody.capacity &&
-      requestBody.content;
-
-    if (!isValid) {
-      showToast({
-        kind: 'warning',
-        title: '필수 항목을 모두 입력하세요',
-      });
-      return;
-    }
+    startCooldown();
 
     createChallengeMutation.mutate(requestBody, {
       onSuccess: (data) => {
         const challengeId = data?.data?.createChallenge?.challenge_id;
         showToast({
           kind: 'success',
-          title: '챌린지 등록 성공',
+          title: '챌린지 등록에 성공했어요',
         });
         router.push(`/user/my-challenge/${challengeId}/status`);
       },
       onError: (error) => {
-        const message = error.response?.data?.message ?? '챌린지 등록 실패';
+        const message = error.response?.data?.message ?? '챌린지 등록에 실패했어요';
         showToast({
           kind: 'error',
           title: message,
         });
+      },
+      onSettled: () => {
+        resetCooldown();
       },
     });
   };
@@ -133,6 +170,7 @@ export default function ChallengePostPage() {
             placeholder="원문 링크를 입력해주세요"
             value={form.source}
             onChange={handleChange('source')}
+            disabled={isBusy}
           />
 
           <div className={styles.rowDropdown}>
@@ -181,8 +219,8 @@ export default function ChallengePostPage() {
           </div>
 
           <div>
-            <Button variant="solid" size="lg" disabled={isBusy}>
-              {isBusy ? '처리 중...' : '신청하기'}
+            <Button variant="solid" size="lg" disabled={isSubmitDisabled}>
+              {isBusy ? '처리 중…' : '신청하기'}
             </Button>
           </div>
         </form>
