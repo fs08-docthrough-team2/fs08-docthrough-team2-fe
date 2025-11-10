@@ -21,16 +21,6 @@ const CARD_DATA = {
   capacity: 15,
 };
 
-/*
-isAdmin: 어드민 여부
-dueDate: 챌린지 마감일
-total: 챌린지 총 인원
-capacity: 챌린지 참여 가능 인원
-challengeName: 챌린지 이름
-type: 챌린지 타입
-category: 챌린지 카테고리
-status: 챌린지 상태
-*/
 const ChallengeCard = ({
   isAdmin,
   challengeId = '',
@@ -48,7 +38,11 @@ const ChallengeCard = ({
   const formattedDueDate = formatKoreanDate(dueDate);
 
   const handleClick = () => {
+    if (!challengeId) return; // 안전장치
+    // 요구사항: 어드민 상세로 이동
     router.push(`/user/challenge/detail/${challengeId}`);
+    // 유저 상세로 보내려면 아래 주석 사용
+    // router.push(`/user/challenge/detail/${challengeId}`);
   };
 
   return (
@@ -56,19 +50,23 @@ const ChallengeCard = ({
       <div className={styles.contentWrapper}>
         <div className={styles.titleWrapper}>
           <div className={styles.statusWrapper}>
-            {status === 'ISCOMPLETED' || status === 'ISCLOSED' ? (
+            {(status === 'ISCOMPLETED' || status === 'ISCLOSED') && (
               <CardStatusChip status={status} />
-            ) : null}
+            )}
             {isAdmin && <DropdownOption onEdit={onEdit} onDelete={onDelete} />}
           </div>
           <div className={styles.title}>{challengeName}</div>
         </div>
+
         <div className={styles.chipWrapper}>
           <TypeChip label={type} color="green" />
           <CategoryChip label={category} />
         </div>
       </div>
+
+      {/* 버튼 클릭 가림 방지: CSS에서 pointer-events: none; 권장 */}
       <Image className={styles.stroke} src={stroke} alt="stroke" />
+
       <div className={styles.footerWrapper}>
         <div className={styles.footerLeft}>
           <div className={styles.dueDateWrapper}>
@@ -82,13 +80,10 @@ const ChallengeCard = ({
             </div>
           </div>
         </div>
-        <Button
-          variant="outline"
-          size="pill"
-          children="도전 계속하기"
-          icon="challenge"
-          onClick={handleClick}
-        />
+
+        <Button variant="outline" size="pill" icon="challenge" onClick={handleClick}>
+          도전 계속하기
+        </Button>
       </div>
     </div>
   );
