@@ -1,9 +1,8 @@
 import Image from 'next/image';
 import { useRouter } from 'next/navigation';
+import clsx from 'clsx';
 import { deriveCardStatus } from '@/utils/deriveCardStatus.js';
 import { formatKoreanDate } from '@/libs/day.js';
-import clsx from 'clsx';
-import Button from '@/components/atoms/Button/Button.jsx';
 import TypeChip from '@/components/atoms/Chips/TypeChip.jsx';
 import CategoryChip from '@/components/atoms/Chips/CategoryChip.jsx';
 import DropdownOption from '@/components/molecules/Dropdown/DropdownOption.jsx';
@@ -37,11 +36,7 @@ const TYPE_CHIP_MAP = {
   },
 };
 
-/*
-  page: challenge | my-challenge
-*/
 const ChallengeCard = ({
-  page = '',
   isAdmin,
   challengeId = '',
   challengeName = '',
@@ -59,11 +54,21 @@ const ChallengeCard = ({
   const derivedCardStatus = deriveCardStatus({ status, dueDate, total, capacity });
 
   const handleClick = () => {
-    router.push(`/user/challenge/detail/${challengeId}`);
+    isAdmin
+      ? router.push(`/admin/challenge/detail/${challengeId}`)
+      : router.push(`/user/challenge/detail/${challengeId}`);
+  };
+
+  const handleCardClick = (e) => {
+    // 버튼이나 드롭다운 클릭 시에는 카드 클릭 이벤트 방지
+    if (e.target.closest('button, a, [role="button"]')) {
+      return;
+    }
+    handleClick();
   };
 
   return (
-    <div className={styles.card}>
+    <div className={styles.card} onClick={handleCardClick}>
       <div className={styles.contentWrapper}>
         <div
           className={clsx(styles.titleWrapper, {
@@ -91,24 +96,16 @@ const ChallengeCard = ({
       <Image className={styles.stroke} src={stroke} alt="stroke" />
 
       <div className={styles.footerWrapper}>
-        <div className={styles.footerLeft}>
-          <div className={styles.dueDateWrapper}>
-            <Image src={ic_deadline} alt="deadline" width={24} height={24} />
-            <div className={styles.dueDate}>{formattedDueDate} 마감</div>
-          </div>
-          <div className={styles.peopleWrapper}>
-            <Image src={ic_person} alt="person" width={24} height={24} />
-            <div className={styles.people}>
-              {capacity}/{total} 참여완료
-            </div>
+        <div className={styles.dueDateWrapper}>
+          <Image src={ic_deadline} alt="deadline" width={24} height={24} />
+          <div className={styles.dueDate}>{formattedDueDate} 마감</div>
+        </div>
+        <div className={styles.peopleWrapper}>
+          <Image src={ic_person} alt="person" width={24} height={24} />
+          <div className={styles.people}>
+            {capacity}/{total} 참여완료
           </div>
         </div>
-
-        {page === 'my-challenge' && (
-          <Button variant="outline" size="pill" icon="challenge" onClick={handleClick}>
-            도전 계속하기
-          </Button>
-        )}
       </div>
     </div>
   );

@@ -171,7 +171,6 @@ export default function AdminChallengeListPage() {
                     }}
                   >
                     <ChallengeCard
-                      page="challenge"
                       isAdmin={true}
                       challengeId={id}
                       challengeName={item.title}

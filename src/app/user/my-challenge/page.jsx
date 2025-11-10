@@ -84,7 +84,6 @@ const MyChallengePage = () => {
                 participateChallengeData.map((challenge) => (
                   <ChallengeCard
                     key={challenge.challengeId}
-                    page="my-challenge"
                     challengeId={challenge.challengeId}
                     challengeName={challenge.title}
                     type={challenge.field}

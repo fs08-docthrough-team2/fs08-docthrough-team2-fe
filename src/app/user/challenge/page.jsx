@@ -82,7 +82,6 @@ export default function ChallengeListPage() {
         />
       </header>
 
-      {/* {(isLoading || isFetching) && <section className={styles.list}>불러오는 중…</section>} */}
       {<Spinner isLoading={isLoading || isFetching} />}
       {isError && (
         <section className={styles.list}>
@@ -99,7 +98,6 @@ export default function ChallengeListPage() {
               items.map((item) => (
                 <ChallengeCard
                   key={item.challengeId} // ✅ key 추가
-                  page="challenge"
                   isAdmin={false}
                   challengeId={item.challengeId}
                   challengeName={item.title}
