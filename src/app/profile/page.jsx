@@ -1,12 +1,19 @@
 'use client';
 
+import { useState } from 'react';
 import Image from 'next/image';
 import styles from '@/styles/pages/auth/ProfilePage.module.scss';
 import { useGetProfile } from '@/hooks/queries/useProfileQueries';
 import Spinner from '@/components/common/Spinner';
+import { useUpdateProfileMutation } from '@/hooks/mutations/useProfileMutations';
+import { showToast } from '@/components/common/Sonner';
 
 const ProfilePage = () => {
+  const [isEditing, setIsEditing] = useState(false);
+  const [editName, setEditName] = useState('');
+
   const { data: myProfile, isLoading: isMyProfileLoading } = useGetProfile();
+  const updateProfileMutation = useUpdateProfileMutation();
 
   const role = myProfile?.data?.user?.role;
   const profileImage =
@@ -21,6 +28,39 @@ const ProfilePage = () => {
       myChallenges: 12,
       totalWorks: 45,
     },
+  };
+
+  const handleEditClick = () => {
+    setEditName(USER_DATA.name || '');
+    setIsEditing(true);
+  };
+
+  const handleCancel = () => {
+    setIsEditing(false);
+    setEditName('');
+  };
+
+  const handleSave = () => {
+    setIsEditing(false);
+    updateProfileMutation.mutate(
+      {
+        nickName: editName,
+      },
+      {
+        onSuccess: () => {
+          showToast({
+            kind: 'success',
+            title: '닉네임 수정 성공',
+          });
+        },
+        onError: () => {
+          showToast({
+            kind: 'error',
+            title: '닉네임 수정 실패',
+          });
+        },
+      },
+    );
   };
 
   return (
@@ -40,8 +80,36 @@ const ProfilePage = () => {
               />
             </div>
             <div className={styles.profileInfo}>
-              <h1 className={styles.userName}>{USER_DATA.name}</h1>
+              {isEditing ? (
+                <input
+                  type="text"
+                  value={editName}
+                  onChange={(e) => setEditName(e.target.value)}
+                  className={styles.nameInput}
+                  autoFocus
+                />
+              ) : (
+                <h1 className={styles.userName}>{USER_DATA.name}</h1>
+              )}
               <p className={styles.userEmail}>{USER_DATA.email}</p>
+              {isEditing ? (
+                <div className={styles.editActionButtons}>
+                  <button type="button" className={styles.cancelButton} onClick={handleCancel}>
+                    취소
+                  </button>
+                  <button type="button" className={styles.saveButton} onClick={handleSave}>
+                    완료
+                  </button>
+                </div>
+              ) : (
+                <button
+                  type="button"
+                  className={styles.profileEditButton}
+                  onClick={handleEditClick}
+                >
+                  프로필 편집
+                </button>
+              )}
             </div>
           </div>
 
