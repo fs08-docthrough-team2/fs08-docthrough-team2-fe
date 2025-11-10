@@ -1,6 +1,7 @@
 'use client';
 
 import { useMemo, useState } from 'react';
+import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { useRouter } from 'next/navigation';
 import { useDebounce } from '@/hooks/useDebounce';
 import { useAdminChallengeListQuery } from '@/hooks/queries/useAdminChallenge';
@@ -10,11 +11,14 @@ import ChallengeCard from '@/components/molecules/ChallengeCard/ChallengeCard.js
 import FilterPopup from '@/components/molecules/Popup/FilterPopup';
 import styles from '@/styles/pages/ChallengeList.module.scss';
 import TextModal from '@/components/molecules/Modal/TextModal.jsx';
+import { showToast } from '@/components/common/Sonner';
+import { deleteAdminChallenge } from '@/services/admin.challenge.service.js';
 
 const PAGE_SIZE = 10;
 
 export default function AdminChallengeListPage() {
   const router = useRouter();
+  const queryClient = useQueryClient();
 
   // 검색/필터/페이지
   const [title, setTitle] = useState('');
@@ -74,26 +78,29 @@ export default function AdminChallengeListPage() {
     setDeleteTarget({ id: null, title: '' });
   };
 
+  const deleteMutation = useMutation({
+    mutationFn: ({ id, reason }) => deleteAdminChallenge({ id, reason }),
+    onSuccess: () => {
+      showToast({ kind: 'success', title: '챌린지를 삭제했어요.' });
+      queryClient.invalidateQueries({ queryKey: ['admin-challenge-list'] });
+      closeDeleteModal();
+    },
+    onError: (err) => {
+      showToast({
+        kind: 'error',
+        title: '삭제에 실패했어요.',
+        description: err?.response?.data?.message || err?.message || '잠시 후 다시 시도해주세요.',
+      });
+    },
+  });
+
   // ✅ 삭제 모달 제출
-  const submitDelete = async () => {
-    if (!deleteTarget.id) return;
-
-    try {
-      // TODO: 실제 삭제 API 연동 (예시)
-      // await deleteChallengeMutation.mutateAsync({
-      //   id: deleteTarget.id,
-      //   reason: deleteReason.trim(),
-      // });
-
-      // 성공 후 목록 갱신이 필요하면 invalidate
-      // await queryClient.invalidateQueries({ queryKey: ['admin-challenge-list'] });
-
-      closeDeleteModal(); // 모달 닫기
-      setDeleteReason(''); // 입력값 초기화
-    } catch (err) {
-      // TODO: 에러 토스트 등
-      console.error(err);
-    }
+  const submitDelete = (inputReason) => {
+    if (!deleteTarget.id || deleteMutation.isPending) return;
+    const trimmedReason =
+      typeof inputReason === 'string' ? inputReason.trim() : deleteReason.trim();
+    if (!trimmedReason) return;
+    deleteMutation.mutate({ id: deleteTarget.id, reason: trimmedReason });
   };
 
   // 액션
@@ -101,12 +108,9 @@ export default function AdminChallengeListPage() {
     if (!challengeId) return;
     router.push(`/admin/${challengeId}/edit`);
   };
-  const handleDelete = (challengeId) => {
+  const handleDelete = (challengeId, title) => {
     if (!challengeId) return;
-    if (window.confirm('정말 삭제하시겠어요?')) {
-      // TODO: 실제 삭제 mutation 연결
-      router.push(`/admin/${challengeId}/delete`);
-    }
+    openDeleteModal(challengeId, title);
   };
 
   return (
@@ -180,6 +184,7 @@ export default function AdminChallengeListPage() {
                   >
                     <ChallengeCard
                       isAdmin
+                      challengeId={id}
                       challengeName={item.title}
                       type={item.field}
                       category={item.type}
@@ -188,7 +193,7 @@ export default function AdminChallengeListPage() {
                       total={item.maxParticipants}
                       capacity={item.currentParticipants}
                       onEdit={() => handleEdit(id)}
-                      onDelete={() => handleDelete(id)}
+                      onDelete={() => handleDelete(id, item.title)}
                     />
                   </div>
                 );
@@ -209,20 +214,13 @@ export default function AdminChallengeListPage() {
           {isDeleteOpen && (
             <TextModal
               title="삭제 사유"
-              label="내용"
               placeholder="삭제 사유를 입력해주세요"
               value={deleteReason}
               onChange={(e) => setDeleteReason(e?.target ? e.target.value : String(e))}
               isOpen={isDeleteOpen}
               onClose={closeDeleteModal}
-              onCancel={closeDeleteModal}
-              onConfirm={submitDelete}
-              confirmText="전송"
-              cancelText="취소"
-              // 필요시 추가 prop(TextModal 인터페이스에 따라)
-              // maxLength={500}
-              // required
-              // description={`[${deleteTarget.title}]을(를) 삭제합니다.`}
+              onSubmit={submitDelete}
+              isSubmitting={deleteMutation.isPending}
             />
           )}
         </>
