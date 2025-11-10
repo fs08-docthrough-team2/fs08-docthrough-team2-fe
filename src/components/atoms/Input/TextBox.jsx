@@ -10,6 +10,7 @@ export default function TextBox({
   readOnly = false,
   name,
   id,
+  onKeyDown = () => {},
 }) {
   return (
     <label className={clsx(styles.textBox, className)}>
@@ -23,6 +24,7 @@ export default function TextBox({
         disabled={disabled}
         readOnly={readOnly}
         rows={3}
+        onKeyDown={onKeyDown}
       />
     </label>
   );
