@@ -14,7 +14,7 @@ import EmailInput from '@/components/atoms/Input/EmailInput.jsx';
 import PasswordInput from '@/components/atoms/Input/PasswordInput.jsx';
 import Button from '@/components/atoms/Button/Button.jsx';
 import AuthEntry from '@/components/atoms/AuthEntry/AuthEntry.jsx';
-import GoogleLoginButton from '@/components/atoms/Button/GoogleLoginButton.jsx';
+import GoogleLoginButton from '@/components/common/OAuth/GoogleLoginButton.jsx';
 import BaseInput from '@/components/atoms/Input/BaseInput.jsx';
 
 import img_logo from '/public/image/img_logo.svg';
