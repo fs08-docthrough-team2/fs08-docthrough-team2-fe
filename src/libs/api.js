@@ -2,7 +2,7 @@ import axios from 'axios';
 import { getAccessToken, isBrowser, clearAccessToken, setAccessToken } from './token.js';
 import { useAuthStore } from '@/stores/useAuthStore.js';
 
-const BASE_URL = 'https://fs08-docthrough.onrender.com/api';
+const BASE_URL = process.env.NEXT_PUBLIC_API_URL;
 
 const api = axios.create({
   baseURL: BASE_URL,

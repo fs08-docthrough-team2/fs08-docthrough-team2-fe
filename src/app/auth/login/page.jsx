@@ -9,14 +9,13 @@ import EmailInput from '@/components/atoms/Input/EmailInput';
 import PasswordInput from '@/components/atoms/Input/PasswordInput';
 import Button from '@/components/atoms/Button/Button';
 import AuthEntry from '@/components/atoms/AuthEntry/AuthEntry';
-import GoogleButton from '@/components/atoms/Button/GoogleButton';
+import GoogleLoginButton from '@/components/atoms/Button/GoogleLoginButton.jsx';
 
 import img_logo from '/public/image/img_logo.svg';
 import styles from '@/styles/pages/auth/LoginPage.module.scss';
 
 const LoginPage = () => {
   const { login } = useLogin();
-
   const [form, setForm] = useState({
     email: '',
     password: '',
@@ -69,7 +68,7 @@ const LoginPage = () => {
               disabled={!isValidate || isLoading}
               onClick={handleSubmit}
             />
-            <GoogleButton disabled={isLoading} />
+            <GoogleLoginButton disabled={isLoading} />
           </div>
           <AuthEntry type="signup" />
         </form>

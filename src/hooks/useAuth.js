@@ -6,6 +6,8 @@ import { showToast } from '@/components/common/Sonner';
 import { setAccessToken, clearAccessToken } from '@/libs/token.js';
 import api from '@/libs/api.js';
 
+const API_URL = process.env.NEXT_PUBLIC_API_URL;
+
 export const useLogin = () => {
   const setUser = useAuthStore((state) => state.setUser);
   const router = useRouter();
@@ -96,4 +98,12 @@ export const useLogout = () => {
   };
 
   return { logout };
+};
+
+export const useGoogleLogin = () => {
+  const googleOAuth = () => {
+    window.location.href = `${API_URL}/auth/google/login`;
+  };
+
+  return { googleOAuth };
 };
