@@ -13,11 +13,11 @@ import {
 } from '@/hooks/mutations/useChallengeMutations';
 import { showToast } from '@/components/common/Sonner';
 import { formatYYMMDD } from '@/libs/day';
+import Spinner from '@/components/common/Spinner';
 import ChallengeApprovalStatus from '@/components/atoms/ChallengeApprovalStatus/ChallengeApprovalStatus';
 import ChallengeCardDetail from '@/components/molecules/ChallengeCard/ChallengeCardDetail';
 import LinkPreview from '@/components/common/LinkPreview/LinkPreview';
 import Button from '@/components/atoms/Button/Button';
-import LoadingSpinner from '@/components/organisms/Loading/LoadingSpinner';
 import TextModal from '@/components/molecules/Modal/TextModal';
 import styles from '@/styles/pages/admin/AdminChallengeStatusPage.module.scss';
 
@@ -120,6 +120,7 @@ export default function AdminChallengeStatusPage() {
   const challenge = detail?.data;
   const adminData = adminDetail?.data;
   const isMutating = approveMutation.isPending || rejectMutation.isPending;
+  const isPageLoading = isLoading || isMutating || deleteMutation.isPending;
 
   const approvalStatus = useMemo(() => {
     if (!challenge?.status) return 'pending';
@@ -172,12 +173,7 @@ export default function AdminChallengeStatusPage() {
   }
 
   if (isLoading) {
-    return (
-      <section className={styles.stateWrapper}>
-        <LoadingSpinner loading />
-        <p className={styles.stateMessage}>챌린지 정보를 불러오는 중입니다.</p>
-      </section>
-    );
+    return <Spinner isLoading />;
   }
 
   if (isError || !challenge) {
@@ -198,6 +194,7 @@ export default function AdminChallengeStatusPage() {
 
   return (
     <>
+      <Spinner isLoading={isPageLoading} />
       <div className={styles.page}>
         <ChallengeApprovalStatus
           status={approvalStatus}

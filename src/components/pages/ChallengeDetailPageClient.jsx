@@ -9,6 +9,7 @@ import {
 } from '@/hooks/queries/useChallengeQueries';
 import { useDeleteChallengeMutation } from '@/hooks/mutations/useChallengeMutations';
 import { showToast } from '@/components/common/Sonner';
+import Spinner from '@/components/common/Spinner';
 import List from '@/components/atoms/List/List';
 import TextModal from '@/components/molecules/Modal/TextModal';
 import ChallengeCardDetail from '@/components/molecules/ChallengeCard/ChallengeCardDetail';
@@ -60,7 +61,9 @@ const ChallengeDetailPageClient = ({ isAdmin = false }) => {
     },
   });
 
-  const challenge = challengeDetailRes?.data;
+  const isPageLoading =
+    isChallengeLoading || isParticipantsLoading || deleteChallengeMutation.isPending;
+  const challenge = challengeDetailRes?.data ?? {};
   const participantsResponse = participantsRes ?? null;
   const participants = participantsResponse?.data?.participates ?? [];
   const pagination = participantsResponse?.pagination ?? {
@@ -150,9 +153,6 @@ const ChallengeDetailPageClient = ({ isAdmin = false }) => {
   if (!challengeId) {
     return <div className={styles.page}>잘못된 접근입니다.</div>;
   }
-  if (isChallengeLoading) {
-    return <div className={styles.page}>챌린지 정보를 불러오는 중입니다…</div>;
-  }
   if (isChallengeError || !challenge) {
     return <div className={styles.page}>챌린지 정보를 가져오지 못했습니다.</div>;
   }
@@ -188,7 +188,7 @@ const ChallengeDetailPageClient = ({ isAdmin = false }) => {
     topParticipantNickname ??
     challenge.ownerNickName ??
     challenge.author ??
-    '익명';
+    '유저';
 
   const roleLabel = (role) => {
     switch (role) {
@@ -203,151 +203,153 @@ const ChallengeDetailPageClient = ({ isAdmin = false }) => {
   };
 
   return (
-    <div className={styles.page}>
-      <div className={styles.inner}>
-        <section className={styles.headerRow}>
-          <div className={styles.detailCard}>
-            {derivedCardStatus && (
-              <div className={styles.closedTagWrapper}>
-                <CardStatusChip status={derivedCardStatus} />
-              </div>
-            )}
+    <>
+      <Spinner isLoading={isPageLoading} />
+      <div className={styles.page}>
+        <div className={styles.inner}>
+          <section className={styles.headerRow}>
+            <div className={styles.detailCard}>
+              {derivedCardStatus && (
+                <div className={styles.closedTagWrapper}>
+                  <CardStatusChip status={derivedCardStatus} />
+                </div>
+              )}
 
-            <ChallengeCardDetail
-              challengeName={challenge.title ?? ''}
-              type={challenge.field ?? ''}
-              category={challenge.type ?? ''}
-              description={challenge.content ?? ''}
-              user={authorName}
-              dueDate={challenge.deadline}
-              total={challenge.maxParticipants}
-              isMyChallenge={challenge.isMine}
-              onEdit={handleEdit}
-              onDelete={handleOpenDeleteModal}
-            />
-          </div>
-
-          <aside className={styles.sideCard}>
-            <ChallengeContainer
-              dueDate={challenge.deadline}
-              total={challenge.maxParticipants}
-              capacity={challenge.currentParticipants}
-              sourceUrl={challenge.source}
-              onSourceClick={() => {
-                if (challenge.source) {
-                  window.open(challenge.source, '_blank', 'noopener,noreferrer');
-                }
-              }}
-              onApplyClick={() => {
-                if (isAdmin) return;
-                router.push(`/user/${challengeId}/work/post`);
-              }}
-              isApplyDisabled={isApplyDisabled}
-            />
-          </aside>
-        </section>
-
-        <section className={styles.participantSection}>
-          <div className={styles.participantWrapper}>
-            <div className={styles.participantHeader}>
-              <div className={styles.participantInfo}>
-                <h2>참여 현황</h2>
-              </div>
-              <div className={styles.paginationControls}>
-                <button
-                  type="button"
-                  className={styles.paginationButton}
-                  onClick={handlePrev}
-                  disabled={!canPrev}
-                >
-                  <Image
-                    src={canPrev ? icArrowLeft : icArrowLeftDisabled}
-                    alt="이전 페이지"
-                    width={24}
-                    height={24}
-                  />
-                </button>
-                <span className={styles.paginationStatus}>
-                  {page} / {inferredTotalPages}
-                </span>
-                <button
-                  type="button"
-                  className={styles.paginationButton}
-                  onClick={handleNext}
-                  disabled={!canNext}
-                >
-                  <Image
-                    src={canNext ? icArrowRight : icArrowRightDisabled}
-                    alt="다음 페이지"
-                    width={24}
-                    height={24}
-                  />
-                </button>
-              </div>
+              <ChallengeCardDetail
+                challengeName={challenge.title ?? ''}
+                type={challenge.field ?? ''}
+                category={challenge.type ?? ''}
+                description={challenge.content ?? ''}
+                user={authorName}
+                dueDate={challenge.deadline}
+                total={challenge.maxParticipants}
+                isMyChallenge={challenge.isMine}
+                onEdit={handleEdit}
+                onDelete={handleOpenDeleteModal}
+              />
             </div>
 
-            {isParticipantsLoading && <div>참여 현황을 불러오는 중입니다…</div>}
-            {isParticipantsError && <div>참여 현황을 가져오지 못했습니다.</div>}
+            <aside className={styles.sideCard}>
+              <ChallengeContainer
+                dueDate={challenge.deadline}
+                total={challenge.maxParticipants}
+                capacity={challenge.currentParticipants}
+                sourceUrl={challenge.source}
+                onSourceClick={() => {
+                  if (challenge.source) {
+                    window.open(challenge.source, '_blank', 'noopener,noreferrer');
+                  }
+                }}
+                onApplyClick={() => {
+                  if (isAdmin) return;
+                  router.push(`/user/${challengeId}/work/post`);
+                }}
+                isApplyDisabled={isApplyDisabled}
+              />
+            </aside>
+          </section>
 
-            {!isParticipantsLoading && !isParticipantsError && (
-              <ul className={styles.participantList}>
-                {participants.length > 0 ? (
-                  participants.map((participant, index) => {
-                    const currentPage = pagination.page ?? page;
-                    const apiRank = Number(participant.rank);
-                    const expectedMinRank = (currentPage - 1) * pageSize + 1;
-                    const expectedMaxRank = currentPage * pageSize;
-                    const hasValidApiRank =
-                      Number.isFinite(apiRank) &&
-                      apiRank >= expectedMinRank &&
-                      apiRank <= expectedMaxRank;
+          <section className={styles.participantSection}>
+            <div className={styles.participantWrapper}>
+              <div className={styles.participantHeader}>
+                <div className={styles.participantInfo}>
+                  <h2>참여 현황</h2>
+                </div>
+                <div className={styles.paginationControls}>
+                  <button
+                    type="button"
+                    className={styles.paginationButton}
+                    onClick={handlePrev}
+                    disabled={!canPrev}
+                  >
+                    <Image
+                      src={canPrev ? icArrowLeft : icArrowLeftDisabled}
+                      alt="이전 페이지"
+                      width={24}
+                      height={24}
+                    />
+                  </button>
+                  <span className={styles.paginationStatus}>
+                    {page} / {inferredTotalPages}
+                  </span>
+                  <button
+                    type="button"
+                    className={styles.paginationButton}
+                    onClick={handleNext}
+                    disabled={!canNext}
+                  >
+                    <Image
+                      src={canNext ? icArrowRight : icArrowRightDisabled}
+                      alt="다음 페이지"
+                      width={24}
+                      height={24}
+                    />
+                  </button>
+                </div>
+              </div>
 
-                    const displayRank = hasValidApiRank
-                      ? apiRank
-                      : (currentPage - 1) * pageSize + (index + 1);
+              {isParticipantsError && <div>참여 현황을 가져오지 못했습니다.</div>}
 
-                    const destination = isAdmin
-                      ? `/admin/${challengeId}/work/${participant.attendId}`
-                      : `/user/${challengeId}/work/${participant.attendId}`;
+              {!isParticipantsLoading && !isParticipantsError && (
+                <ul className={styles.participantList}>
+                  {participants.length > 0 ? (
+                    participants.map((participant, index) => {
+                      const currentPage = pagination.page ?? page;
+                      const apiRank = Number(participant.rank);
+                      const expectedMinRank = (currentPage - 1) * pageSize + 1;
+                      const expectedMaxRank = currentPage * pageSize;
+                      const hasValidApiRank =
+                        Number.isFinite(apiRank) &&
+                        apiRank >= expectedMinRank &&
+                        apiRank <= expectedMaxRank;
 
-                    return (
-                      <List
-                        key={participant.attendId}
-                        rank={displayRank}
-                        name={participant.nickName}
-                        user_type={roleLabel(participant.role)}
-                        likes={participant.hearts}
-                        onWorkClick={() => router.push(destination)}
-                      />
-                    );
-                  })
-                ) : (
-                  <li className={styles.participantEmpty}>
-                    아직 참여자가 없습니다.
-                    <br />
-                    지금 바로 참여해보세요!
-                  </li>
-                )}
-              </ul>
-            )}
-          </div>
-        </section>
+                      const displayRank = hasValidApiRank
+                        ? apiRank
+                        : (currentPage - 1) * pageSize + (index + 1);
+
+                      const destination = isAdmin
+                        ? `/admin/${challengeId}/work/${participant.attendId}`
+                        : `/user/${challengeId}/work/${participant.attendId}`;
+
+                      return (
+                        <List
+                          key={participant.attendId}
+                          rank={displayRank}
+                          name={participant.nickName}
+                          user_type={roleLabel(participant.role)}
+                          likes={participant.hearts}
+                          onWorkClick={() => router.push(destination)}
+                        />
+                      );
+                    })
+                  ) : (
+                    <li className={styles.participantEmpty}>
+                      아직 참여자가 없습니다.
+                      <br />
+                      지금 바로 참여해보세요!
+                    </li>
+                  )}
+                </ul>
+              )}
+            </div>
+          </section>
+        </div>
+
+        <TextModal
+          isOpen={isDeleteModalOpen}
+          title="챌린지 삭제"
+          value={deleteReason}
+          placeholder="삭제 이유를 입력해주세요"
+          onChange={(event) => setDeleteReason(event.target.value)}
+          onSubmit={handleDeleteSubmit}
+          onClose={() => {
+            setDeleteModalOpen(false);
+            setDeleteReason('');
+          }}
+          isSubmitting={deleteChallengeMutation.isPending}
+        />
       </div>
-
-      <TextModal
-        isOpen={isDeleteModalOpen}
-        title="챌린지 삭제"
-        value={deleteReason}
-        placeholder="삭제 이유를 입력해주세요"
-        onChange={(event) => setDeleteReason(event.target.value)}
-        onSubmit={handleDeleteSubmit}
-        onClose={() => {
-          setDeleteModalOpen(false);
-          setDeleteReason('');
-        }}
-        isSubmitting={deleteChallengeMutation.isPending}
-      />
-    </div>
+    </>
   );
 };
 
