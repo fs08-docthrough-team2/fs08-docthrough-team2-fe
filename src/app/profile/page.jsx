@@ -15,18 +15,18 @@ const ProfilePage = () => {
   const { data: myProfile, isLoading: isMyProfileLoading } = useGetProfile();
   const updateProfileMutation = useUpdateProfileMutation();
 
-  const role = myProfile?.data?.user?.role;
+  const role = myProfile?.data?.role;
   const profileImage =
     role === 'ADMIN' ? '/image/img_profile_admin.svg' : '/image/img_profile_user.svg';
 
   const USER_DATA = {
-    name: myProfile?.data?.user?.nickName,
-    email: myProfile?.data?.user?.email,
+    name: myProfile?.data?.nickName,
+    email: myProfile?.data?.email,
     role: role,
     profileImage: profileImage,
     stats: {
-      myChallenges: 12,
-      totalWorks: 45,
+      myChallenges: myProfile?.data?.challengeCount,
+      totalWorks: myProfile?.data?.workCount,
     },
   };
 
