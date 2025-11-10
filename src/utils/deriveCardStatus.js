@@ -30,12 +30,9 @@ export const deriveCardStatus = ({
     return 'ISCLOSED';
   }
 
-  const totalCount =
-    toNumber(total) ??
-    toNumber(maxParticipants);
+  const totalCount = toNumber(total) ?? toNumber(maxParticipants);
   const currentCount = toNumber(capacity) ?? toNumber(currentParticipants);
-  const isFull =
-    totalCount != null && currentCount != null && currentCount >= totalCount;
+  const isFull = totalCount != null && currentCount != null && currentCount >= totalCount;
   const isCompletedByStatus = canonicalStatus && COMPLETED_STATUSES.has(canonicalStatus);
 
   if (isCompletedByStatus || isFull) {

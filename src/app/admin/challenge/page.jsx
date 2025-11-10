@@ -9,11 +9,11 @@ import ChallengeListToolbar from '@/components/organisms/ChallengeListToolbar';
 import Pagination from '@/components/molecules/Pagination/Pagination.jsx';
 import ChallengeCard from '@/components/molecules/ChallengeCard/ChallengeCard.jsx';
 import FilterPopup from '@/components/molecules/Popup/FilterPopup';
-import styles from '@/styles/pages/ChallengeList.module.scss';
 import TextModal from '@/components/molecules/Modal/TextModal.jsx';
 import { showToast } from '@/components/common/Sonner';
 import { deleteAdminChallenge } from '@/services/admin.challenge.service.js';
 import Spinner from '@/components/common/Spinner';
+import styles from '@/styles/pages/ChallengeListPage.module.scss';
 
 const PAGE_SIZE = 10;
 
@@ -117,7 +117,9 @@ export default function AdminChallengeListPage() {
                 const selectedFields = Object.keys(f?.fields || {}).filter((k) => f.fields[k]);
                 setField(selectedFields.length ? selectedFields : '');
                 setType(f?.type ?? f?.docType ?? f?.documentType ?? '');
-                setStatus(f?.status ?? f?.state ?? '');
+                // 진행중(inProgress)을 선택하면 API에 APPROVED 전송하도록 로직 수정
+                const statusValue = f?.status ?? f?.state ?? '';
+                setStatus(statusValue === 'inProgress' ? 'APPROVED' : statusValue);
                 setPage(1);
               }}
               onReset={() => {
