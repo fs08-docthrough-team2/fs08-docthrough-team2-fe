@@ -31,6 +31,7 @@ const WorkPostPage = () => {
   const [isDraftListOpen, setIsDraftListOpen] = useState(false);
   const [selectedAttendId, setSelectedAttendId] = useState(null);
   const [loadDraftConfirmModalOpen, setLoadDraftConfirmModalOpen] = useState(false);
+  const [isQuitModalOpen, setIsQuitModalOpen] = useState(false);
 
   const queryClient = useQueryClient();
   const createChallengeWorkMutation = useCreateChallengeWorkMutation();
@@ -151,7 +152,12 @@ const WorkPostPage = () => {
   };
 
   const handleQuit = () => {
+    setIsQuitModalOpen(true);
+  };
+
+  const handleQuitConfirm = () => {
     router.replace(`/user/challenge/detail/${challengeId}`);
+    setIsQuitModalOpen(false);
   };
 
   return (
@@ -201,6 +207,14 @@ const WorkPostPage = () => {
             onClose={handleLoadDraftCancel}
             onConfirm={handleLoadDraftConfirm}
             children="이전 작업물을 불러오시겠어요?"
+          />
+        )}
+        {isQuitModalOpen && (
+          <TwoButtonModal
+            isOpen={isQuitModalOpen}
+            onClose={() => setIsQuitModalOpen((prev) => !prev)}
+            onConfirm={handleQuitConfirm}
+            children="정말 포기하시겠어요?"
           />
         )}
       </div>

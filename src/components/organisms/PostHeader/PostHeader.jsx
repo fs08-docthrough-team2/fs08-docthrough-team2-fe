@@ -1,9 +1,9 @@
-import styles from '@/styles/components/organisms/PostHeader/PostHeader.module.scss';
 import Image from 'next/image';
+import Link from 'next/link';
+import Button from '@/components/atoms/Button/Button';
 
 import img_logo from '/public/image/img_logo.svg';
-import Button from '@/components/atoms/Button/Button';
-import Link from 'next/link';
+import styles from '@/styles/components/organisms/PostHeader/PostHeader.module.scss';
 
 const PostHeader = ({
   onQuitClick = () => {},
