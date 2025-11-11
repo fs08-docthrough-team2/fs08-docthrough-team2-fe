@@ -1,5 +1,5 @@
 import { test, expect } from '@playwright/test';
-import { testUsers } from '../helpers/auth.js';
+import { testUsers } from './helpers/auth.js';
 
 test.describe('유저 인증', () => {
   test.describe('회원가입', () => {

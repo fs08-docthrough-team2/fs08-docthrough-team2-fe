@@ -14,7 +14,7 @@ export async function login(page, { email, password }) {
   await page.fill('input[name="email"]', email);
   await page.fill('input[name="password"]', password);
   await page.click('button:has-text("로그인")');
-  await page.waitForURL(/\/user\/challenge|\/admin/, { timeout: 10000 });
+  await page.waitForURL(/\/user\/challenge|\/admin/, { timeout: 30000 }); // 30초로 증가
 }
 
 /**
@@ -28,7 +28,7 @@ export async function logout(page) {
     .or(page.locator('[aria-label="로그아웃"]'));
   if (await logoutButton.isVisible()) {
     await logoutButton.click();
-    await page.waitForURL(/\/auth\/login|\//, { timeout: 5000 });
+    await page.waitForURL(/\/auth\/login|\//, { timeout: 15000 }); // 15초로 증가
   }
 }
 

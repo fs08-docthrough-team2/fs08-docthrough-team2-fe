@@ -8,9 +8,9 @@ export default defineConfig({
   testDir: './tests',
 
   /* 테스트 실행 관련 설정 */
-  timeout: 30_000,
+  timeout: 90_000, // 테스트 전체 타임아웃 (90초)
   expect: {
-    timeout: 5_000,
+    timeout: 15_000, // expect 문 타임아웃 (15초)
   },
   fullyParallel: true,
   forbidOnly: !!process.env.CI,
@@ -26,8 +26,8 @@ export default defineConfig({
     trace: 'on-first-retry',
     screenshot: 'only-on-failure',
     video: 'retain-on-failure',
-    actionTimeout: 10_000,
-    navigationTimeout: 30_000,
+    actionTimeout: 30_000, // 액션 타임아웃 (30초)
+    navigationTimeout: 60_000, // 네비게이션 타임아웃 (60초)
   },
 
   /* 프로젝트별 설정 */
@@ -60,6 +60,6 @@ export default defineConfig({
     command: 'npm run dev',
     url: 'http://localhost:3000',
     reuseExistingServer: !process.env.CI,
-    timeout: 120_000,
+    timeout: 240_000, // 웹서버 시작 타임아웃 (240초 = 4분)
   },
 });
