@@ -16,6 +16,18 @@ import { deleteAdminChallenge } from '@/services/admin.challenge.service.js';
 import Spinner from '@/components/common/Spinner';
 
 const PAGE_SIZE = 10;
+const EMPTY_SECTION_STYLE = {
+  display: 'flex',
+  alignItems: 'center',
+  justifyContent: 'center',
+  minHeight: '50vh',
+};
+const EMPTY_TEXT_STYLE = {
+  textAlign: 'center',
+  color: '#9fa4a9',
+  fontSize: '16px',
+  fontWeight: 500,
+};
 
 export default function AdminChallengeListPage() {
   const router = useRouter();
@@ -140,9 +152,11 @@ export default function AdminChallengeListPage() {
 
       {!isLoading && !isError && (
         <>
-          <section className={styles.list}>
+          <section className={styles.list} style={items.length === 0 ? EMPTY_SECTION_STYLE : undefined}>
             {items.length === 0 ? (
-              <div className={styles.empty}>조건에 맞는 챌린지가 없어요.</div>
+              <div className={styles.empty} style={EMPTY_TEXT_STYLE}>
+                조건에 맞는 챌린지가 없어요.
+              </div>
             ) : (
               items.map((item) => {
                 const id = item.challenge_id ?? item.challengeId ?? item.id ?? null;
