@@ -240,6 +240,8 @@ const ChallengeDetailPageClient = ({ isAdmin = false }) => {
     }
   };
 
+  const hasParticipants = (pagination?.totalCount ?? participants.length) > 0;
+
   return (
     <>
       <Spinner isLoading={isPageLoading} />
@@ -296,37 +298,39 @@ const ChallengeDetailPageClient = ({ isAdmin = false }) => {
                 <div className={styles.participantInfo}>
                   <h2>참여 현황</h2>
                 </div>
-                <div className={styles.paginationControls}>
-                  <button
-                    type="button"
-                    className={styles.paginationButton}
-                    onClick={handlePrev}
-                    disabled={!canPrev}
-                  >
-                    <Image
-                      src={canPrev ? icArrowLeft : icArrowLeftDisabled}
-                      alt="이전 페이지"
-                      width={24}
-                      height={24}
-                    />
-                  </button>
-                  <span className={styles.paginationStatus}>
-                    {page} / {inferredTotalPages}
-                  </span>
-                  <button
-                    type="button"
-                    className={styles.paginationButton}
-                    onClick={handleNext}
-                    disabled={!canNext}
-                  >
-                    <Image
-                      src={canNext ? icArrowRight : icArrowRightDisabled}
-                      alt="다음 페이지"
-                      width={24}
-                      height={24}
-                    />
-                  </button>
-                </div>
+                {hasParticipants && (
+                  <div className={styles.paginationControls}>
+                    <button
+                      type="button"
+                      className={styles.paginationButton}
+                      onClick={handlePrev}
+                      disabled={!canPrev}
+                    >
+                      <Image
+                        src={canPrev ? icArrowLeft : icArrowLeftDisabled}
+                        alt="이전 페이지"
+                        width={24}
+                        height={24}
+                      />
+                    </button>
+                    <span className={styles.paginationStatus}>
+                      {page} / {inferredTotalPages}
+                    </span>
+                    <button
+                      type="button"
+                      className={styles.paginationButton}
+                      onClick={handleNext}
+                      disabled={!canNext}
+                    >
+                      <Image
+                        src={canNext ? icArrowRight : icArrowRightDisabled}
+                        alt="다음 페이지"
+                        width={24}
+                        height={24}
+                      />
+                    </button>
+                  </div>
+                )}
               </div>
 
               {isParticipantsError && <div>참여 현황을 가져오지 못했습니다.</div>}
