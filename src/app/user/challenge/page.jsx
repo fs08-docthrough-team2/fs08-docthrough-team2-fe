@@ -9,6 +9,7 @@ import Pagination from '@/components/molecules/Pagination/Pagination.jsx';
 import ChallengeCard from '@/components/molecules/ChallengeCard/ChallengeCard.jsx';
 import FilterPopup from '@/components/molecules/Popup/FilterPopup';
 import Spinner from '@/components/common/Spinner';
+import ScrollToTop from '@/components/common/ScrollToTop/ScrollToTop';
 import styles from '@/styles/pages/ChallengeListPage.module.scss';
 
 const EMPTY_SECTION_STYLE = {
@@ -144,6 +145,7 @@ export default function ChallengeListPage() {
           )}
         </>
       )}
+      <ScrollToTop />
     </main>
   );
 }

@@ -23,7 +23,15 @@ export default function LandingPage() {
     <main>
       {/* ── Hero ───────────────────────── */}
       <section className={styles.hero}>
-        <Image src="/image/Bg.svg" alt="" fill priority sizes="100vw" className={styles.heroBg} draggable={false} />
+        <Image
+          src="/image/Bg.svg"
+          alt=""
+          fill
+          priority
+          sizes="100vw"
+          className={styles.heroBg}
+          draggable={false}
+        />
         <div className={styles.heroInner}>
           {/* 로고 이미지 */}
           <div className={styles.logoWrap}>
@@ -68,7 +76,13 @@ export default function LandingPage() {
             </p>
           </div>
           <div className={styles.image}>
-            <img src="/image/card1.png" alt="번역 리스트 카드" width={570} height={411} draggable={false} />
+            <img
+              src="/image/card1.png"
+              alt="번역 리스트 카드"
+              width={570}
+              height={411}
+              draggable={false}
+            />
           </div>
         </div>
 
@@ -90,7 +104,12 @@ export default function LandingPage() {
             </p>
           </div>
           <div className={styles.image}>
-            <img src="/image/card2.png" alt="기술/미션 UI" className={styles.card} draggable={false} />
+            <img
+              src="/image/card2.png"
+              alt="기술/미션 UI"
+              className={styles.card}
+              draggable={false}
+            />
           </div>
         </div>
 

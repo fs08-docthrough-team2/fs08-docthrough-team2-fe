@@ -11,6 +11,7 @@ import ChallengeCard from '@/components/molecules/ChallengeCard/ChallengeCard.js
 import FilterPopup from '@/components/molecules/Popup/FilterPopup';
 import TextModal from '@/components/molecules/Modal/TextModal.jsx';
 import { showToast } from '@/components/common/Sonner';
+import ScrollToTop from '@/components/common/ScrollToTop/ScrollToTop';
 import { deleteAdminChallenge } from '@/services/admin.challenge.service.js';
 import Spinner from '@/components/common/Spinner';
 import styles from '@/styles/pages/ChallengeListPage.module.scss';
@@ -232,6 +233,7 @@ export default function AdminChallengeListPage() {
           )}
         </>
       )}
+      <ScrollToTop />
     </main>
   );
 }
