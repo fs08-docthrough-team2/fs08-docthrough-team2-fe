@@ -1,10 +1,11 @@
 'use client';
 
+import { useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 import { useAuthStore } from '@/stores/useAuthStore';
-import { useEffect } from 'react';
-import api from '@/libs/api';
 import { setAccessToken } from '@/libs/token';
+import api from '@/libs/api';
+import Spinner from '@/components/common/Spinner';
 
 const CallbackPage = () => {
   const router = useRouter();
@@ -29,7 +30,7 @@ const CallbackPage = () => {
     init();
   }, [router, setUser]);
 
-  return null;
+  return <Spinner isLoading={true} />;
 };
 
 export default CallbackPage;

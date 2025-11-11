@@ -31,6 +31,8 @@ const STATUS_MAP = {
   closed: 'DEADLINE',
   deadline: 'DEADLINE',
   완료: 'DEADLINE',
+  APPROVED: 'APPROVED',
+  approved: 'APPROVED',
 };
 
 const CANONICALS = new Set([

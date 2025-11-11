@@ -34,6 +34,8 @@
   margin-top: 8px;
   display: grid;
   gap: 24px;
+  align-content: start;
+  align-self: start;
 }
 
 .pagination {
@@ -49,15 +51,6 @@
   :global([class*='footerWrapper']) button {
     display: none !important;
   }
-
-  /* ② 점 3개 옵션 트리거를 우측 상단으로 밀기 */
-  :global([class*='statusWrapper']) {
-    display: flex;
-    align-items: center;
-  }
-  :global([class*='statusWrapper'] > *:last-child) {
-    margin-left: auto; /* 오른쪽 끝으로 */
-  }
 }
 
 /* 반응형 (iPad mini ~ 모바일) */
@@ -67,4 +60,8 @@
   .pagination {
     width: min(640px, 92vw);
   }
+}
+
+.paginationWrapper {
+  margin-top: 40px;
 }

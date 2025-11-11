@@ -298,9 +298,24 @@
   align-items: center;
   gap: 8px;
   flex: 1;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  border-radius: 8px;
+  padding: 8px;
+
+  &:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+  }
+
+  &:active {
+    transform: translateY(0);
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+  }
 
   @include m.mobile {
     gap: 4px;
+    padding: 6px;
   }
 }
 

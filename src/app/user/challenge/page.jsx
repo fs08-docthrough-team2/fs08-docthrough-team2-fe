@@ -8,7 +8,8 @@ import ChallengeListToolbar from '@/components/organisms/ChallengeListToolbar';
 import Pagination from '@/components/molecules/Pagination/Pagination.jsx';
 import ChallengeCard from '@/components/molecules/ChallengeCard/ChallengeCard.jsx';
 import FilterPopup from '@/components/molecules/Popup/FilterPopup';
-import styles from '@/styles/pages/ChallengeList.module.scss';
+import Spinner from '@/components/common/Spinner';
+import styles from '@/styles/pages/ChallengeListPage.module.scss';
 
 export default function ChallengeListPage() {
   const router = useRouter();
@@ -64,7 +65,9 @@ export default function ChallengeListPage() {
                 );
                 setField(selectedFields.length > 0 ? selectedFields : '');
                 setType(f?.type ?? f?.docType ?? f?.documentType ?? '');
-                setStatus(f?.status ?? f?.state ?? '');
+                // 진행중(inProgress)을 선택하면 API에 APPROVED 전송하도록 로직 수정
+                const statusValue = f?.status ?? f?.state ?? '';
+                setStatus(statusValue === 'inProgress' ? 'APPROVED' : statusValue);
                 setPage(1);
               }}
               onReset={() => {
@@ -79,7 +82,7 @@ export default function ChallengeListPage() {
         />
       </header>
 
-      {(isLoading || isFetching) && <section className={styles.list}>불러오는 중…</section>}
+      {<Spinner isLoading={isLoading || isFetching} />}
       {isError && (
         <section className={styles.list}>
           에러: {error?.response?.data?.message || error?.message || '요청 실패'}
@@ -94,6 +97,9 @@ export default function ChallengeListPage() {
             ) : (
               items.map((item) => (
                 <ChallengeCard
+                  key={item.challengeId} // ✅ key 추가
+                  isAdmin={false}
+                  challengeId={item.challengeId}
                   challengeName={item.title}
                   type={item.field}
                   category={item.type}
