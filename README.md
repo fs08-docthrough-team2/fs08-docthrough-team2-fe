@@ -21,10 +21,10 @@
 
 ## ⚙️ 기술 스택
 
-Frontend: Next.js (App Router), SCSS, Tanstack-Query  
-Backend: Express, Prisma ORM  
-Database: Postgresql,  
-Deploy: Vercel, Render, Neon DB
+|Frontend: |Next.js (App Router), SCSS, Tanstack-Query|
+|Backend: |Express, Prisma ORM|
+|Database: |Postgresql|
+|Deploy: |Vercel, Render, Neon DB|
 
 ---
 
