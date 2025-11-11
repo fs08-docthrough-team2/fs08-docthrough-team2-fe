@@ -21,9 +21,9 @@
 
 ## ⚙️ 기술 스택
 
-Frontend: Next.js (App Router), SCSS, Tanstack-Query
-Backend: Express, Prisma ORM
-Database: Postgresql,
+Frontend: Next.js (App Router), SCSS, Tanstack-Query  
+Backend: Express, Prisma ORM  
+Database: Postgresql,  
 Deploy: Vercel, Render, Neon DB
 
 ---
@@ -76,10 +76,10 @@ src
 
 ## 🚀 배포
 
-FE:
+**FE**:  
 https://fs08-docthrough-team2-fe.vercel.app
 
-BE (Swagger API Docs):
+**BE (Swagger API Docs)**:  
 https://fs08-docthrough.onrender.com/api-docs
 
 ---
@@ -109,4 +109,4 @@ npm install
 
 ---
 
-© 2025 Docthrough Team 2
+© 2025 Docthrough Team 2 All rights reserved.
