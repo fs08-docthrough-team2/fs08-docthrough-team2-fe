@@ -11,6 +11,20 @@ import FilterPopup from '@/components/molecules/Popup/FilterPopup';
 import Spinner from '@/components/common/Spinner';
 import styles from '@/styles/pages/ChallengeListPage.module.scss';
 
+const EMPTY_SECTION_STYLE = {
+  display: 'flex',
+  alignItems: 'center',
+  justifyContent: 'center',
+  minHeight: '50vh',
+};
+
+const EMPTY_TEXT_STYLE = {
+  textAlign: 'center',
+  color: '#9fa4a9',
+  fontSize: '16px',
+  fontWeight: 500,
+};
+
 export default function ChallengeListPage() {
   const router = useRouter();
 
@@ -91,9 +105,14 @@ export default function ChallengeListPage() {
 
       {!isLoading && !isError && (
         <>
-          <section className={styles.list}>
+          <section
+            className={styles.list}
+            style={items.length === 0 ? EMPTY_SECTION_STYLE : undefined}
+          >
             {items.length === 0 ? (
-              <div className={styles.empty}>조건에 맞는 챌린지가 없어요.</div>
+              <div className={styles.empty} style={EMPTY_TEXT_STYLE}>
+                조건에 맞는 챌린지가 없어요.
+              </div>
             ) : (
               items.map((item) => (
                 <ChallengeCard

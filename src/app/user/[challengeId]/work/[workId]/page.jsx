@@ -18,6 +18,7 @@ const WorkPage = () => {
 
   const { data: challengeDetail, isLoading: isChallengeDetailLoading } =
     useGetChallengeDetail(challengeId);
+
   const {
     data: challengeWorkDetail,
     isSuccess: isWorkDetailLoaded,

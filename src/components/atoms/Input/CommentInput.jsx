@@ -21,13 +21,6 @@ export default function CommentInput({
     onSubmit(value);
   };
 
-  const handleKeyDown = (e) => {
-    if (e.key === 'Enter' && !e.shiftKey) {
-      e.preventDefault();
-      handleSubmit();
-    }
-  };
-
   return (
     <div className={clsx(styles.form, className)}>
       <div className={styles.row}>
@@ -37,7 +30,6 @@ export default function CommentInput({
             onChange={onChange}
             placeholder={placeholder}
             disabled={disabled || loading}
-            onKeyDown={handleKeyDown}
           />
         </div>
 
