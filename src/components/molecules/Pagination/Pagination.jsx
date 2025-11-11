@@ -26,6 +26,9 @@ const Pagination = ({ currentPage = 1, totalPages = 5, onPageChange = () => {}, 
   const moveToPage = (nextPage) => {
     if (nextPage < 1 || nextPage > totalPages || nextPage === currentPage) return;
     onPageChange(nextPage);
+    if (typeof window !== 'undefined') {
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    }
   };
 
   return (
