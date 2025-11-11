@@ -19,11 +19,13 @@
   align-items: center;
 
   .title {
+    flex: 1;
+    min-width: 0;
     color: v.$gray-800;
     font-size: 24px;
     font-weight: 600;
-    line-height: normal;
     align-self: stretch;
+    word-break: break-word;
   }
 }
 

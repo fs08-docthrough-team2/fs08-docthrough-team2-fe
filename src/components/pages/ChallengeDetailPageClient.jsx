@@ -8,6 +8,7 @@ import {
   useChallengeParticipantsQuery,
 } from '@/hooks/queries/useChallengeQueries';
 import { useDeleteChallengeMutation } from '@/hooks/mutations/useChallengeMutations';
+import { useAuthStore } from '@/stores/useAuthStore';
 import { showToast } from '@/components/common/Sonner';
 import Spinner from '@/components/common/Spinner';
 import List from '@/components/atoms/List/List';
@@ -70,6 +71,15 @@ const ChallengeDetailPageClient = ({ isAdmin = false }) => {
     page,
     pageSize: ITEMS_PER_PAGE,
   };
+
+  const currentUserId = useAuthStore((state) => state.user?.userId);
+  const ownerId = challenge?.userId;
+
+  const isOwner = useMemo(() => {
+    if (!ownerId || !currentUserId) return false;
+    return String(ownerId) === String(currentUserId);
+  }, [ownerId, currentUserId]);
+  const canManageChallenge = isAdmin || isOwner;
 
   const pageSize = pagination.pageSize ?? ITEMS_PER_PAGE;
   const apiTotalPages = pagination.totalPages;
@@ -169,16 +179,19 @@ const ChallengeDetailPageClient = ({ isAdmin = false }) => {
   };
 
   const handleEdit = () => {
+    if (!canManageChallenge) return;
     const editPath = isAdmin ? `/admin/${challengeId}/edit` : `/user/challenge/edit/${challengeId}`;
     router.push(editPath);
   };
 
   const handleOpenDeleteModal = () => {
+    if (!canManageChallenge) return;
     if (!challengeId || deleteChallengeMutation.isPending) return;
     setDeleteModalOpen(true);
   };
 
   const handleDeleteSubmit = (trimmedReason) => {
+    if (!canManageChallenge) return;
     if (!challengeId || deleteChallengeMutation.isPending) return;
     deleteChallengeMutation.mutate({ challengeId, reason: trimmedReason });
   };
@@ -223,7 +236,8 @@ const ChallengeDetailPageClient = ({ isAdmin = false }) => {
                 user={authorName}
                 dueDate={challenge.deadline}
                 total={challenge.maxParticipants}
-                isMyChallenge={challenge.isMine}
+                isMyChallenge={canManageChallenge}
+                isPending={challenge.isMine && challenge.status === 'PENDING'}
                 onEdit={handleEdit}
                 onDelete={handleOpenDeleteModal}
               />

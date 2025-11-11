@@ -32,11 +32,12 @@ const ChallengeCardDetail = ({
       <div className={styles.header}>
         <div className={styles.headerTop}>
           <div className={styles.title}>{challengeName}</div>
-          {isMyChallenge && isPending ? (
-            <DropdownOption showCancelOnly={true} onCancel={onCancel} />
-          ) : isMyChallenge ? null : (
-            <DropdownOption onEdit={onEdit} onDelete={onDelete} />
-          )}
+          {isMyChallenge &&
+            (isPending ? (
+              <DropdownOption showCancelOnly onCancel={onCancel} />
+            ) : (
+              <DropdownOption onEdit={onEdit} onDelete={onDelete} />
+            ))}
         </div>
         <div className={styles.headerBottom}>
           <TypeChip label={type} color="green" />
