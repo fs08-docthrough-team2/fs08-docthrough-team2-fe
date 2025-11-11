@@ -35,31 +35,94 @@
 **FE**
 
 ```bash
-src
-├── app/                  # Next.js App Router
-├── components/           # UI 컴포넌트
-├── hooks/                # TanStack Query 훅
-├── libs/
-│   ├── api/              # Axios 인스턴스
-│   └── utils/            # 유틸 함수
-├── stores/               # Zustand 등 전역 상태
-├── styles/               # SCSS Modules, 변수/믹스인
-└── ...
+.
+├── .husky
+│   ├── _
+│   └── pre-commit
+├── public
+├── src
+│   ├── app
+│   │   ├── admin
+│   │   ├── api
+│   │   ├── auth
+│   │   ├── profile
+│   │   ├── user
+│   │   ├── layout.jsx
+│   │   ├── not-found.jsx
+│   │   ├── page.jsx
+│   │   └── providers.jsx
+│   ├── components
+│   │   ├── atoms
+│   │   ├── common
+│   │   ├── molecules
+│   │   ├── organisms
+│   │   ├── pages
+│   │   └── templates
+│   ├── constants
+│   ├── hooks
+│   │   ├── mutations
+│   │   ├── queries
+│   │   ├── useAuth.js
+│   │   ├── useAuthStatus.js
+│   │   └── useDebounce.js
+│   ├── libs
+│   ├── services
+│   ├── stores
+│   │   └── useAuthStore.js
+│   ├── styles
+│   │   ├── components
+│   │   ├── pages
+│   │   ├── _mixin.scss
+│   │   ├── _variable.scss
+│   │   └── globals.scss
+│   └── utils
+├── .example.env
+├── .gitignore
+├── .prettierrc.json
+├── eslint.config.mjs
+├── jsconfig.json
+├── next.config.mjs
+├── package-lock.json
+├── package.json
+└── README.md
 ```
 
 **BE**
 
 ```bash
-src
-├── app/                  # Next.js App Router
-├── components/           # UI 컴포넌트
-├── hooks/                # TanStack Query 훅
-├── libs/
-│   ├── api/              # Axios 인스턴스
-│   └── utils/            # 유틸 함수
-├── stores/               # Zustand 등 전역 상태
-├── styles/               # SCSS Modules, 변수/믹스인
-└── ...
+.
+├── .husky
+├── prisma
+│   ├── migrations
+│   ├── reset.js
+│   ├── schema.prisma
+│   └── seed.js
+├── src
+│   ├── api
+│   │   ├── controllers
+│   │   ├── repositories
+│   │   ├── routes
+│   │   └── services
+│   ├── config
+│   ├── constants
+│   ├── middleware
+│   ├── swagger
+│   ├── utils
+│   ├── validators
+│   └── app.js
+├── test
+│   ├── http
+│   ├── unit
+│   ├── README.md
+│   └── setup.js
+├── .env.example
+├── .gitignore
+├── .prettierignore
+├── .prettierrc.json
+├── jest.config.js
+├── package-lock.json
+├── package.json
+└── README.md
 ```
 
 ---
