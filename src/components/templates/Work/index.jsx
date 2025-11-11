@@ -38,7 +38,7 @@ const Work = ({
   likeCount = 0,
   workItem = '',
   attendId = '',
-  likeByMe = false,
+  likeByMe = null,
 }) => {
   const queryClient = useQueryClient();
   const router = useRouter();
@@ -60,6 +60,12 @@ const Work = ({
     hasNextPage,
     isFetchingNextPage,
   } = useGetFeedbackListInfinite(attendId);
+
+  useEffect(() => {
+    if (likeByMe !== null && likeByMe !== undefined) {
+      setIsLiked(likeByMe);
+    }
+  }, [likeByMe]);
 
   const formattedCreatedAt = formatKoreanDate(createdAt);
 
@@ -105,6 +111,7 @@ const Work = ({
   };
 
   const handleLike = () => {
+    const previousLiked = isLiked;
     setIsLiked((prev) => !prev);
     likeToggleMutation.mutate(
       {
@@ -115,6 +122,7 @@ const Work = ({
           queryClient.invalidateQueries({ queryKey: ['challenge-work-detail', attendId] });
         },
         onError: () => {
+          setIsLiked(previousLiked);
           showToast({
             kind: 'error',
             title: '좋아요 실패',
@@ -208,8 +216,6 @@ const Work = ({
       },
     );
   };
-
-  // TODO 어드민 삭제 사유 모달 추가
 
   return (
     <>

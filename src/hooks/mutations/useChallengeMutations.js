@@ -11,6 +11,7 @@ import {
 const CHALLENGE_LIST_KEY = ['challenge-list'];
 const ADMIN_CHALLENGE_LIST_KEY = ['admin-challenge-list'];
 const challengeDetailKey = (challengeId) => ['challenge-detail', challengeId];
+const adminChallengeDetailKey = (challengeId) => ['admin-challenge-detail', challengeId];
 
 // 챌린지 생성
 export const useCreateChallengeMutation = (options = {}) => {
@@ -39,8 +40,10 @@ export const useUpdateChallengeMutation = (options = {}) => {
     onSuccess: (data, variables, context) => {
       if (variables?.challengeId) {
         queryClient.invalidateQueries({ queryKey: challengeDetailKey(variables.challengeId) });
+        queryClient.invalidateQueries({ queryKey: adminChallengeDetailKey(variables.challengeId) });
       }
       queryClient.invalidateQueries({ queryKey: CHALLENGE_LIST_KEY });
+      queryClient.invalidateQueries({ queryKey: ADMIN_CHALLENGE_LIST_KEY });
 
       if (typeof onSuccess === 'function') {
         onSuccess(data, variables, context);
@@ -60,6 +63,7 @@ export const useApproveChallengeMutation = (options = {}) => {
     onSuccess: (data, challengeId, context) => {
       if (challengeId) {
         queryClient.invalidateQueries({ queryKey: challengeDetailKey(challengeId) });
+        queryClient.invalidateQueries({ queryKey: adminChallengeDetailKey(challengeId) });
       }
       queryClient.invalidateQueries({ queryKey: CHALLENGE_LIST_KEY });
       queryClient.invalidateQueries({ queryKey: ADMIN_CHALLENGE_LIST_KEY });
@@ -80,6 +84,7 @@ export const useRejectChallengeMutation = (options = {}) => {
       const challengeId = variables?.challengeId;
       if (challengeId) {
         queryClient.invalidateQueries({ queryKey: challengeDetailKey(challengeId) });
+        queryClient.invalidateQueries({ queryKey: adminChallengeDetailKey(challengeId) });
       }
       queryClient.invalidateQueries({ queryKey: CHALLENGE_LIST_KEY });
       queryClient.invalidateQueries({ queryKey: ADMIN_CHALLENGE_LIST_KEY });
@@ -90,7 +95,6 @@ export const useRejectChallengeMutation = (options = {}) => {
 };
 
 // 챌린지 논리적 삭제
-
 export const useDeleteChallengeMutation = (options = {}) => {
   const queryClient = useQueryClient();
   const { onSuccess, ...restOptions } = options;
@@ -103,7 +107,6 @@ export const useDeleteChallengeMutation = (options = {}) => {
       if (variables?.challengeId) {
         queryClient.removeQueries({ queryKey: challengeDetailKey(variables.challengeId) });
       }
-
       onSuccess?.(data, variables, context);
     },
     ...restOptions,
