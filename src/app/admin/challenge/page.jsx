@@ -152,7 +152,10 @@ export default function AdminChallengeListPage() {
 
       {!isLoading && !isError && (
         <>
-          <section className={styles.list} style={items.length === 0 ? EMPTY_SECTION_STYLE : undefined}>
+          <section
+            className={styles.list}
+            style={items.length === 0 ? EMPTY_SECTION_STYLE : undefined}
+          >
             {items.length === 0 ? (
               <div className={styles.empty} style={EMPTY_TEXT_STYLE}>
                 조건에 맞는 챌린지가 없어요.
