@@ -165,7 +165,7 @@
   }
 }
 
-@media (max-width: 744px) {
+@include m.tablet {
   .feature {
     grid-template-columns: 1fr; /* 한 컬럼 스택 */
     row-gap: 16px;
@@ -185,8 +185,7 @@
   }
 }
 
-/* Mobile (≤480px) */
-@media (max-width: 480px) {
+@include m.mobile {
   .hero {
     height: 320px;
   }

@@ -1,3 +1,5 @@
+@use '@/styles/mixin' as m;
+
 .page {
   background: #fafafa;
   min-height: 100vh;
@@ -54,7 +56,7 @@
 }
 
 /* 반응형 (iPad mini ~ 모바일) */
-@media (max-width: 744px) {
+@include m.tablet {
   .header,
   .list,
   .pagination {
