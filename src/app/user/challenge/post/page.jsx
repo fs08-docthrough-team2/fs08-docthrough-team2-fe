@@ -116,8 +116,9 @@ export default function ChallengePostPage() {
     setForm((prev) => ({ ...prev, [key]: event.target.value }));
 
   const handleCapacityChange = (event) => {
-    const digits = event.target.value.replace(/\D/g, '');
-    setForm((prev) => ({ ...prev, capacity: digits }));
+    const digitsOnly = event.target.value.replace(/\D/g, '');
+    const normalized = digitsOnly === '' ? '' : String(Number(digitsOnly));
+    setForm((prev) => ({ ...prev, capacity: normalized }));
   };
 
   const handleSubmit = (event) => {
