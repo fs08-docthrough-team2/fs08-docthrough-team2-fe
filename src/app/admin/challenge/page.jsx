@@ -206,14 +206,16 @@ export default function AdminChallengeListPage() {
             )}
           </section>
 
-          <nav className={styles.paginationWrapper}>
-            <Pagination
-              currentPage={Math.min(pagination.page, pagination.totalPages)}
-              totalPages={pagination.totalPages}
-              maxPages={5}
-              onPageChange={setPage}
-            />
-          </nav>
+          {items.length > 0 && (
+            <nav className={styles.paginationWrapper}>
+              <Pagination
+                currentPage={Math.min(pagination.page, pagination.totalPages)}
+                totalPages={pagination.totalPages}
+                maxPages={5}
+                onPageChange={setPage}
+              />
+            </nav>
+          )}
 
           {/* 삭제 모달 */}
           {isDeleteOpen && (

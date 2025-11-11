@@ -73,6 +73,7 @@
     font-size: 22px;
     font-weight: 600;
     line-height: normal;
+    word-break: break-word;
 
     @include m.mobile {
       font-size: 20px;

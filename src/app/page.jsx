@@ -23,7 +23,7 @@ export default function LandingPage() {
     <main>
       {/* ── Hero ───────────────────────── */}
       <section className={styles.hero}>
-        <Image src="/image/Bg.svg" alt="" fill priority sizes="100vw" className={styles.heroBg} />
+        <Image src="/image/Bg.svg" alt="" fill priority sizes="100vw" className={styles.heroBg} draggable={false} />
         <div className={styles.heroInner}>
           {/* 로고 이미지 */}
           <div className={styles.logoWrap}>
@@ -33,6 +33,7 @@ export default function LandingPage() {
               width={126}
               height={28.35}
               priority
+              draggable={false}
             />
           </div>
 
@@ -54,7 +55,7 @@ export default function LandingPage() {
         {/* 1 */}
         <div className={styles.feature}>
           <div className={styles.text}>
-            <img src="/icons/trophy.svg" alt="" className={styles.icon} />
+            <img src="/icons/trophy.svg" alt="" className={styles.icon} draggable={false} />
             <h3>
               혼자서는 막막했던 번역,
               <br />
@@ -67,7 +68,7 @@ export default function LandingPage() {
             </p>
           </div>
           <div className={styles.image}>
-            <img src="/image/card1.png" alt="번역 리스트 카드" width={570} height={411} />
+            <img src="/image/card1.png" alt="번역 리스트 카드" width={570} height={411} draggable={false} />
           </div>
         </div>
 
@@ -76,7 +77,7 @@ export default function LandingPage() {
         {/* 2 */}
         <div className={styles.feature}>
           <div className={styles.text}>
-            <img src="/icons/heart.svg" alt="" className={styles.icon} />
+            <img src="/icons/heart.svg" alt="" className={styles.icon} draggable={false} />
             <h3>
               내가 좋아하는 기술 번역,
               <br />
@@ -89,7 +90,7 @@ export default function LandingPage() {
             </p>
           </div>
           <div className={styles.image}>
-            <img src="/image/card2.png" alt="기술/미션 UI" className={styles.card} />
+            <img src="/image/card2.png" alt="기술/미션 UI" className={styles.card} draggable={false} />
           </div>
         </div>
 
@@ -98,7 +99,7 @@ export default function LandingPage() {
         {/* 3 */}
         <div className={styles.feature}>
           <div className={styles.text}>
-            <img src="/icons/message.svg" alt="" className={styles.icon} />
+            <img src="/icons/message.svg" alt="" className={styles.icon} draggable={false} />
             <h3>피드백으로 함께 성장하기</h3>
             <p>
               번역 작업물에 대해 피드백을 주고 받으며
@@ -107,7 +108,7 @@ export default function LandingPage() {
             </p>
           </div>
           <div className={styles.image}>
-            <img src="/image/card3.png" alt="피드백 UI" className={styles.card} />
+            <img src="/image/card3.png" alt="피드백 UI" className={styles.card} draggable={false} />
           </div>
         </div>
       </section>
