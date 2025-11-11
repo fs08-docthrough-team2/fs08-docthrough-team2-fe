@@ -1,0 +1,107 @@
+{
+  "config": {
+    "configFile": "/Users/minjun/Desktop/code/codeit/project/fs08-docthrough-team2/fs08-docthrough-team2-fe/playwright.config.js",
+    "rootDir": "/Users/minjun/Desktop/code/codeit/project/fs08-docthrough-team2/fs08-docthrough-team2-fe/tests",
+    "forbidOnly": false,
+    "fullyParallel": true,
+    "globalSetup": null,
+    "globalTeardown": null,
+    "globalTimeout": 0,
+    "grep": {},
+    "grepInvert": null,
+    "maxFailures": 0,
+    "metadata": {},
+    "preserveOutput": "always",
+    "reporter": [
+      [
+        "html",
+        null
+      ],
+      [
+        "list",
+        null
+      ],
+      [
+        "json",
+        {
+          "outputFile": "test-results/results.json"
+        }
+      ]
+    ],
+    "reportSlowTests": {
+      "max": 5,
+      "threshold": 300000
+    },
+    "quiet": false,
+    "projects": [
+      {
+        "outputDir": "/Users/minjun/Desktop/code/codeit/project/fs08-docthrough-team2/fs08-docthrough-team2-fe/test-results",
+        "repeatEach": 1,
+        "retries": 1,
+        "metadata": {},
+        "id": "chromium",
+        "name": "chromium",
+        "testDir": "/Users/minjun/Desktop/code/codeit/project/fs08-docthrough-team2/fs08-docthrough-team2-fe/tests",
+        "testIgnore": [],
+        "testMatch": [
+          "**/*.@(spec|test).?(c|m)[jt]s?(x)"
+        ],
+        "timeout": 30000
+      },
+      {
+        "outputDir": "/Users/minjun/Desktop/code/codeit/project/fs08-docthrough-team2/fs08-docthrough-team2-fe/test-results",
+        "repeatEach": 1,
+        "retries": 1,
+        "metadata": {},
+        "id": "firefox",
+        "name": "firefox",
+        "testDir": "/Users/minjun/Desktop/code/codeit/project/fs08-docthrough-team2/fs08-docthrough-team2-fe/tests",
+        "testIgnore": [],
+        "testMatch": [
+          "**/*.@(spec|test).?(c|m)[jt]s?(x)"
+        ],
+        "timeout": 30000
+      },
+      {
+        "outputDir": "/Users/minjun/Desktop/code/codeit/project/fs08-docthrough-team2/fs08-docthrough-team2-fe/test-results",
+        "repeatEach": 1,
+        "retries": 1,
+        "metadata": {},
+        "id": "webkit",
+        "name": "webkit",
+        "testDir": "/Users/minjun/Desktop/code/codeit/project/fs08-docthrough-team2/fs08-docthrough-team2-fe/tests",
+        "testIgnore": [],
+        "testMatch": [
+          "**/*.@(spec|test).?(c|m)[jt]s?(x)"
+        ],
+        "timeout": 30000
+      }
+    ],
+    "shard": null,
+    "updateSnapshots": "missing",
+    "updateSourceMethod": "patch",
+    "version": "1.56.1",
+    "workers": 4,
+    "webServer": {
+      "command": "npm run dev",
+      "url": "http://localhost:3000",
+      "reuseExistingServer": true,
+      "timeout": 120000
+    }
+  },
+  "suites": [],
+  "errors": [
+    {
+      "message": "Error: Cannot find module '/Users/minjun/Desktop/code/codeit/project/fs08-docthrough-team2/fs08-docthrough-team2-fe/helpers/auth.js' imported from /Users/minjun/Desktop/code/codeit/project/fs08-docthrough-team2/fs08-docthrough-team2-fe/tests/auth.spec.js",
+      "stack": "Error: Cannot find module '/Users/minjun/Desktop/code/codeit/project/fs08-docthrough-team2/fs08-docthrough-team2-fe/helpers/auth.js' imported from /Users/minjun/Desktop/code/codeit/project/fs08-docthrough-team2/fs08-docthrough-team2-fe/tests/auth.spec.js"
+    }
+  ],
+  "stats": {
+    "startTime": "2025-11-11T07:29:47.129Z",
+    "duration": 227.505,
+    "expected": 0,
+    "skipped": 0,
+    "unexpected": 0,
+    "flaky": 0
+  }
+}

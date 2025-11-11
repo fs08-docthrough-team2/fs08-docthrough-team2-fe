@@ -23,7 +23,9 @@ export async function login(page, { email, password }) {
  */
 export async function logout(page) {
   // GNB에서 로그아웃 버튼 클릭
-  const logoutButton = page.locator('button:has-text("로그아웃")').or(page.locator('[aria-label="로그아웃"]'));
+  const logoutButton = page
+    .locator('button:has-text("로그아웃")')
+    .or(page.locator('[aria-label="로그아웃"]'));
   if (await logoutButton.isVisible()) {
     await logoutButton.click();
     await page.waitForURL(/\/auth\/login|\//, { timeout: 5000 });
@@ -35,20 +37,19 @@ export async function logout(page) {
  */
 export const testUsers = {
   admin: {
-    email: 'admin@test.com',
-    password: 'password123',
+    email: 'admin@example.com',
+    password: 'admin1234',
     role: 'ADMIN',
   },
   user: {
-    email: 'user@test.com',
-    password: 'password123',
+    email: 'test@master.com',
+    password: 'test1234',
     role: 'USER',
   },
   expert: {
-    email: 'expert@test.com',
-    password: 'password123',
+    email: 'expert1@example.com',
+    password: 'expert11234',
     role: 'USER',
     grade: 'EXPERT',
   },
 };
-
