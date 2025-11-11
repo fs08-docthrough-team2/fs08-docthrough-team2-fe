@@ -97,9 +97,7 @@ const ChallengeEditPageClient = ({ challengeId: challengeIdProp }) => {
         kind: 'success',
         title: '챌린지를 수정했어요.',
       });
-      router.push(
-        isAdmin ? `/admin/${challengeId}/status` : `/user/challenge/detail/${challengeId}`,
-      );
+      router.push(isAdmin ? `/admin/challenge` : `/user/challenge/detail/${challengeId}`);
     },
     onError: () => {
       showToast({
