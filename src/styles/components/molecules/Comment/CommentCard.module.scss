@@ -161,12 +161,12 @@
   background: #fff;
 }
 /* ── 반응형 ───────────────────────────────────────── */
-@media (max-width: 744px) {
+@include m.tablet {
   .card {
     width: 100%;
   }
 }
-@media (max-width: 375px) {
+@include m.mobile {
   .body {
     padding: 8px 10px 10px 10px;
   }
