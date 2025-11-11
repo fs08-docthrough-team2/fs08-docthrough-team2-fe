@@ -1,3 +1,6 @@
+@use '@/styles/mixin' as m;
+@use '@/styles/variable' as v;
+
 .card {
   width: 100%;
   min-height: 100px; /* 네 값 유지 */
@@ -166,6 +169,7 @@
     width: 100%;
   }
 }
+
 @include m.mobile {
   .body {
     padding: 8px 10px 10px 10px;
