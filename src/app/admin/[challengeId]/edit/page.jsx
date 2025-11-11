@@ -1,5 +1,6 @@
 import ChallengeEditPageClient from '@/components/pages/ChallengeEditPageClient';
 
-export default function AdminChallengeEditPage({ params }) {
-  return <ChallengeEditPageClient challengeId={params.challengeId} />;
+export default async function AdminChallengeEditPage({ params }) {
+  const resolvedParams = await params;
+  return <ChallengeEditPageClient challengeId={resolvedParams.challengeId} />;
 }

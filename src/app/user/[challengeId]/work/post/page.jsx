@@ -112,7 +112,7 @@ const WorkPostPage = () => {
           });
           const attendId = data?.data?.attendId;
           if (attendId) {
-            router.push(`/user/${challengeId}/work/${attendId}`);
+            router.replace(`/user/${challengeId}/work/${attendId}`);
           }
         },
         onError: () => {
@@ -151,7 +151,7 @@ const WorkPostPage = () => {
   };
 
   const handleQuit = () => {
-    router.push(`/user/challenge/detail/${challengeId}`);
+    router.replace(`/user/challenge/detail/${challengeId}`);
   };
 
   return (

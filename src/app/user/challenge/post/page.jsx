@@ -124,6 +124,31 @@ export default function ChallengePostPage() {
     event.preventDefault();
     if (isBusy) return;
 
+    if (new Date(requestBody.deadline) <= new Date()) {
+      showToast({
+        kind: 'error',
+        title: '마감일은 오늘 이후의 날짜로 설정해주세요.',
+      });
+      return;
+    }
+
+    const capacityValue = Number(form.capacity);
+    if (!Number.isFinite(capacityValue) || capacityValue < 2) {
+      showToast({
+        kind: 'error',
+        title: '최대 참여 인원은 최소 2명입니다.',
+      });
+      return;
+    }
+
+    if (form.content.trim().length < 10) {
+      showToast({
+        kind: 'error',
+        title: '내용은 최소 10자 이상이어야 합니다.',
+      });
+      return;
+    }
+
     startCooldown();
 
     createChallengeMutation.mutate(requestBody, {
@@ -133,7 +158,7 @@ export default function ChallengePostPage() {
           kind: 'success',
           title: '챌린지 등록에 성공했어요',
         });
-        router.push(`/user/my-challenge/${challengeId}/status`);
+        router.replace(`/user/my-challenge/${challengeId}/status`);
       },
       onError: (error) => {
         const message = error.response?.data?.message ?? '챌린지 등록에 실패했어요';
