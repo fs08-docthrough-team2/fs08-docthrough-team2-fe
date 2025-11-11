@@ -24,6 +24,14 @@ import styles from '@/styles/pages/challenge/detail/ChallengeDetailPage.module.s
 
 const ITEMS_PER_PAGE = 5;
 
+const TYPE_CHIP_MAP = {
+  NEXT: { label: 'Next.js', color: 'green' },
+  API: { label: 'API', color: 'orange' },
+  CAREER: { label: 'Career', color: 'blue' },
+  MODERN: { label: 'Modern JS', color: 'red' },
+  WEB: { label: 'Web', color: 'yellow' },
+};
+
 const ChallengeDetailPageClient = ({ isAdmin = false }) => {
   const router = useRouter();
   const { challengeId } = useParams();
@@ -65,6 +73,16 @@ const ChallengeDetailPageClient = ({ isAdmin = false }) => {
   const isPageLoading =
     isChallengeLoading || isParticipantsLoading || deleteChallengeMutation.isPending;
   const challenge = challengeDetailRes?.data ?? {};
+  const challengeField = challenge?.field ?? '';
+  const challengeTypeMeta = useMemo(() => {
+    if (!challengeField) {
+      return { label: '', color: 'green' };
+    }
+    const normalizedField = String(challengeField).toUpperCase();
+    const matchedType = TYPE_CHIP_MAP[normalizedField];
+    if (matchedType) return matchedType;
+    return { label: challengeField, color: 'green' };
+  }, [challengeField]);
   const participantsResponse = participantsRes ?? null;
   const participants = participantsResponse?.data?.participates ?? [];
   const pagination = participantsResponse?.pagination ?? {
@@ -144,7 +162,14 @@ const ChallengeDetailPageClient = ({ isAdmin = false }) => {
   const canPrev = page > 1;
   const canNext = page < inferredTotalPages;
 
-  const closedStatusSet = new Set(['DEADLINE', 'ISCLOSED', 'ISCOMPLETED', 'CANCELLED']);
+  const closedStatusSet = new Set([
+    'DEADLINE',
+    'ISCLOSED',
+    'ISCOMPLETED',
+    'CANCELLED',
+    'PENDING',
+    'REJECTED',
+  ]);
   const isClosedByStatus = closedStatusSet.has(challenge?.status);
   const isClosedByDeadline =
     challenge?.deadline && new Date(challenge.deadline).getTime() < Date.now();
@@ -231,6 +256,8 @@ const ChallengeDetailPageClient = ({ isAdmin = false }) => {
               <ChallengeCardDetail
                 challengeName={challenge.title ?? ''}
                 type={challenge.field ?? ''}
+                typeLabel={challengeTypeMeta.label}
+                typeColor={challengeTypeMeta.color}
                 category={challenge.type ?? ''}
                 description={challenge.content ?? ''}
                 user={authorName}

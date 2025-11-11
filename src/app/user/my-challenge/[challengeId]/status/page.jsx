@@ -1,7 +1,7 @@
 'use client';
 
 import Image from 'next/image';
-import { useState } from 'react';
+import { useMemo, useState } from 'react';
 import { useParams, useRouter } from 'next/navigation';
 import {
   useGetChallengeDetail,
@@ -19,6 +19,14 @@ import ic_stroke from '/public/stroke.svg';
 import styles from '@/styles/pages/my-challenge/ChallengeApprovalDetailPage.module.scss';
 import Spinner from '@/components/common/Spinner';
 
+const TYPE_CHIP_MAP = {
+  NEXT: { label: 'Next.js', color: 'green' },
+  API: { label: 'API', color: 'orange' },
+  CAREER: { label: 'Career', color: 'blue' },
+  MODERN: { label: 'Modern JS', color: 'red' },
+  WEB: { label: 'Web', color: 'yellow' },
+};
+
 const ChallengeApprovalDetailPage = () => {
   const router = useRouter();
   const { challengeId } = useParams();
@@ -30,6 +38,13 @@ const ChallengeApprovalDetailPage = () => {
     useGetChallengeApprovalDetail(challengeId);
 
   const cancelChallengeMutation = useCancelChallengeMutation();
+
+  const challengeField = challengeDetail?.data?.field ?? '';
+  const challengeTypeMeta = useMemo(() => {
+    if (!challengeField) return { label: '', color: 'green' };
+    const normalized = String(challengeField).toUpperCase();
+    return TYPE_CHIP_MAP[normalized] ?? { label: challengeField, color: 'green' };
+  }, [challengeField]);
 
   const isPending =
     challengeApprovalDetail?.data?.isApprove === false &&
@@ -101,7 +116,9 @@ const ChallengeApprovalDetailPage = () => {
           <ChallengeCardDetail
             isMyChallenge={true}
             challengeName={challengeDetail?.data?.title}
-            type={challengeDetail?.data?.field}
+            type={challengeField}
+            typeLabel={challengeTypeMeta.label}
+            typeColor={challengeTypeMeta.color}
             category={challengeDetail?.data?.type}
             description={challengeDetail?.data?.content}
             dueDate={challengeDetail?.data?.deadline}

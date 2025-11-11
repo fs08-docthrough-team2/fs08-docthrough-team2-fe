@@ -21,6 +21,14 @@ import Button from '@/components/atoms/Button/Button';
 import TextModal from '@/components/molecules/Modal/TextModal';
 import styles from '@/styles/pages/admin/AdminChallengeStatusPage.module.scss';
 
+const TYPE_CHIP_MAP = {
+  NEXT: { label: 'Next.js', color: 'green' },
+  API: { label: 'API', color: 'orange' },
+  CAREER: { label: 'Career', color: 'blue' },
+  MODERN: { label: 'Modern JS', color: 'red' },
+  WEB: { label: 'Web', color: 'yellow' },
+};
+
 const APPROVAL_STATUS_MAP = {
   PENDING: 'pending',
   APPROVED: 'approved',
@@ -127,14 +135,17 @@ export default function AdminChallengeStatusPage() {
     return APPROVAL_STATUS_MAP[challenge.status] ?? 'pending';
   }, [challenge?.status]);
 
-  const typeLabel = useMemo(
-    () => TYPE_LABEL_MAP[challenge?.type] ?? challenge?.type ?? '-',
-    [challenge?.type],
-  );
   const fieldLabel = useMemo(
     () => FIELD_LABEL_MAP[challenge?.field] ?? challenge?.field ?? '-',
     [challenge?.field],
   );
+
+  const challengeField = challenge?.field ?? '';
+  const challengeTypeMeta = useMemo(() => {
+    if (!challengeField) return { label: '', color: 'green' };
+    const normalized = String(challengeField).toUpperCase();
+    return TYPE_CHIP_MAP[normalized] ?? { label: challengeField, color: 'green' };
+  }, [challengeField]);
 
   const rejectionReasonValue =
     adminData?.rejectReason ?? challenge?.rejectReason ?? challenge?.rejectionReason ?? '';
@@ -210,7 +221,9 @@ export default function AdminChallengeStatusPage() {
             isMyChallenge
             challengeName={challenge.title}
             description={challenge.content}
-            type={typeLabel}
+            type={challengeField}
+            typeLabel={challengeTypeMeta.label}
+            typeColor={challengeTypeMeta.color}
             category={fieldLabel}
             dueDate={challenge.deadline}
             total={challenge.maxParticipants}
