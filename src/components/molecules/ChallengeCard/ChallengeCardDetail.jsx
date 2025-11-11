@@ -15,6 +15,8 @@ const ChallengeCardDetail = ({
   isMyChallenge = false,
   challengeName = '',
   type = '',
+  typeLabel = '',
+  typeColor = 'green',
   category = '',
   description = '',
   user = '',
@@ -40,7 +42,7 @@ const ChallengeCardDetail = ({
             ))}
         </div>
         <div className={styles.headerBottom}>
-          <TypeChip label={type} color="green" />
+          <TypeChip label={typeLabel || type} color={typeColor} />
           <CategoryChip label={category} />
         </div>
       </div>
